@@ -1,0 +1,861 @@
+<title>Presupuesto CABA 2027 en perspectiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cascadia+Code:wght@400;600;700&display=swap">
+<style>
+/* Layout: barra superior fija con controles de unidad; secciones a ancho completo, grilla de 12 col, bordes rectos */
+:root{
+  --bg:#07090d; --panel:#0e1219; --panel2:#131926; --line:#1f2734; --line2:#2b3545;
+  --fg:#eaf0f8; --fg2:#b6c0cf; --muted:#7d889a;
+  --accent:#2f86ff; --accent2:#19c3ff; --accentbg:rgba(47,134,255,.12);
+  --pos:#2fd39a; --neg:#ff5d6c; --warn:#ffb547;
+  --proj:#ff6a3d; --hist1:#4d8df0; --hist2:#b9d0f5; --hist3:#2c5aa8;
+  --m1:#6f93c9; --m2:#c7a46a; --m3:#6fa79a; --m4:#b2789c; --m5:#8c95a8; --m6:#c4806a; --m7:#8a86c4;
+  --i1:#3b6fe0; --i2:#00b0f0; --i3:#ffc000; --i4:#00b050; --i5:#7f9ccf; --i6:#ff3b3b; --i7:#e8edf5;
+  --c1:#3d8bff; --c2:#e6c34f; --c3:#109fb8; --c4:#d64a8f; --c5:#9b7cf0; --c6:#22a874; --c7:#e8633f; --c8:#6b7687;
+  --mono:"Cascadia Code","Cascadia Mono",Consolas,"SFMono-Regular",Menlo,monospace;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#f4f6fa; --panel:#ffffff; --panel2:#eef2f8; --line:#dde3ec; --line2:#c9d2df;
+  --fg:#0b1220; --fg2:#3a4558; --muted:#6a7487;
+  --accent:#1560e6; --accent2:#0a8fd1; --accentbg:rgba(21,96,230,.08);
+  --pos:#0c9b68; --neg:#d9364a; --warn:#b77400;
+  --proj:#e04e1f; --hist1:#1a56c4; --hist2:#8fb0e3; --hist3:#0b2a5c;
+  --m1:#3f679e; --m2:#9a7433; --m3:#3f7a6c; --m4:#8a4b6f; --m5:#6b7487; --m6:#a1543c; --m7:#5b56a0;
+  --i1:#0735ad; --i2:#00a3df; --i3:#e6ac00; --i4:#00a14a; --i5:#002060; --i6:#e61e1e; --i7:#a5adbb;
+  --c1:#1f6fe5; --c2:#d4a52a; --c3:#0891b2; --c4:#c2307a; --c5:#7c5cdb; --c6:#0f9f6e; --c7:#e0532f; --c8:#7a8496;
+  color-scheme:light;}}
+:root[data-theme="light"]{
+  --bg:#f4f6fa; --panel:#ffffff; --panel2:#eef2f8; --line:#dde3ec; --line2:#c9d2df;
+  --fg:#0b1220; --fg2:#3a4558; --muted:#6a7487;
+  --accent:#1560e6; --accent2:#0a8fd1; --accentbg:rgba(21,96,230,.08);
+  --pos:#0c9b68; --neg:#d9364a; --warn:#b77400;
+  --proj:#e04e1f; --hist1:#1a56c4; --hist2:#8fb0e3; --hist3:#0b2a5c;
+  --m1:#3f679e; --m2:#9a7433; --m3:#3f7a6c; --m4:#8a4b6f; --m5:#6b7487; --m6:#a1543c; --m7:#5b56a0;
+  --i1:#0735ad; --i2:#00a3df; --i3:#e6ac00; --i4:#00a14a; --i5:#002060; --i6:#e61e1e; --i7:#a5adbb;
+  --c1:#1f6fe5; --c2:#d4a52a; --c3:#0891b2; --c4:#c2307a; --c5:#7c5cdb; --c6:#0f9f6e; --c7:#e0532f; --c8:#7a8496;
+  color-scheme:light;}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box;border-radius:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.55;font-feature-settings:"cv11","ss01";-webkit-font-smoothing:antialiased}
+.num,td.n,.kpi b{font-variant-numeric:tabular-nums}
+a{color:var(--accent2)}
+:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.topin{max-width:1280px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{height:26px;display:block}
+.logo.l{display:none}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .logo.d{display:none}:root:not([data-theme="dark"]) .logo.l{display:block}}
+:root[data-theme="light"] .logo.d{display:none}:root[data-theme="light"] .logo.l{display:block}
+nav.sec{display:flex;gap:2px;flex-wrap:wrap;flex:1;min-width:0}
+nav.sec a{color:var(--fg2);text-decoration:none;font-size:13px;font-weight:500;padding:6px 10px;border:1px solid transparent}
+nav.sec a:hover{color:var(--fg);border-color:var(--line2)}
+.ctrl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line2)}
+.seg button{font:500 12.5px var(--font);background:transparent;color:var(--fg2);border:0;padding:6px 10px;cursor:pointer;border-right:1px solid var(--line2)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.iconbtn{font:500 12.5px var(--font);background:transparent;color:var(--fg2);border:1px solid var(--line2);padding:6px 10px;cursor:pointer}
+main{max-width:1280px;margin:0 auto;padding-inline:20px;padding-block:0 80px}
+.hero{padding-block:44px 28px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:40px;align-items:end}
+.eyebrow{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);font-weight:600}
+h1{font-size:clamp(30px,4.4vw,54px);line-height:1.02;letter-spacing:-.035em;margin:.25em 0 .3em;font-weight:800;text-wrap:balance}
+h1 em{font-style:normal;color:inherit}
+.lead{color:var(--fg2);font-size:16.5px;max-width:62ch;margin:0}
+.unitnote{font-size:12.5px;color:var(--muted);margin-top:14px;max-width:70ch}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.kpi{background:var(--panel);padding:14px 16px}
+.kpi span{display:block;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.kpi b{display:block;font-size:26px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+.kpi small{font-size:12.5px;color:var(--fg2)}
+.up{color:var(--pos)}.dn{color:var(--neg)}
+section{padding-block:46px 8px;scroll-margin-top:70px}
+h2{font-size:clamp(22px,2.6vw,32px);letter-spacing:-.025em;margin:0 0 6px;font-weight:750;text-wrap:balance}
+h2 .tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);display:block;margin-bottom:6px;font-weight:600}
+.sub{color:var(--fg2);max-width:72ch;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);padding:16px 18px;min-width:0}
+.span12{grid-column:span 12}.span8{grid-column:span 8}.span7{grid-column:span 7}.span6{grid-column:span 6}.span5{grid-column:span 5}.span4{grid-column:span 4}
+.card h3{font-size:15px;margin:0 0 2px;font-weight:650;letter-spacing:-.01em}
+.card .cap{font-size:12.5px;color:var(--muted);margin:0 0 12px}
+.card .src{font-size:11.5px;color:var(--muted);margin-top:10px}
+.chart{position:relative;height:320px}
+.chart.tall{height:420px}.chart.short{height:240px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-weight:600;text-align:left;color:var(--fg2);border-bottom:1px solid var(--line2);padding:7px 8px;white-space:nowrap;cursor:default}
+th.n,td.n{text-align:right}
+td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:middle}
+tr:hover td{background:var(--panel2)}
+.barcell{position:relative;width:160px;min-width:120px}
+.barcell i{position:absolute;top:50%;height:10px;transform:translateY(-50%)}
+.barcell .mid{position:absolute;left:50%;top:2px;bottom:2px;width:1px;background:var(--line2)}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border:1px solid}
+.pill.ok{color:var(--pos);border-color:var(--pos)}.pill.mid{color:var(--warn);border-color:var(--warn)}.pill.bad{color:var(--neg);border-color:var(--neg)}
+.promesas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.prom{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--line2);padding:18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.prom.ok{border-top-color:var(--pos)}.prom.mid{border-top-color:var(--warn)}.prom.bad{border-top-color:var(--neg)}
+.prom q{font-size:17px;font-weight:650;letter-spacing:-.01em;quotes:"“" "”";line-height:1.3}
+.prom .who{font-size:12px;color:var(--muted)}
+.prom p{margin:0;color:var(--fg2);font-size:14px}
+.prom .facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.prom .facts div{background:var(--panel2);padding:8px 10px}
+.prom .facts span{display:block;font-size:11px;color:var(--muted);line-height:1.3}
+.prom .facts b{font-size:17px;font-variant-numeric:tabular-nums}
+.chart.mini{height:170px}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;padding:14px;background:var(--panel);border:1px solid var(--line);margin-bottom:16px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+select,input[type=search]{font:500 13px var(--font);background:var(--panel2);color:var(--fg);border:1px solid var(--line2);padding:7px 8px;max-width:260px}
+.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.mover{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.mover span:first-child{min-width:0;overflow-wrap:anywhere}
+.crumbs{font-size:13px;color:var(--fg2);margin-bottom:8px;display:flex;gap:6px;flex-wrap:wrap}
+.crumbs button{font:600 13px var(--font);background:none;border:0;color:var(--accent2);cursor:pointer;padding:0}
+.drill td.lab{cursor:pointer;color:var(--fg)}
+.drill td.lab:hover{color:var(--accent2);text-decoration:underline}
+.conc{counter-reset:c;display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.conc li{list-style:none;background:var(--panel);border:1px solid var(--line);padding:14px 16px 14px 52px;position:relative;color:var(--fg2);font-size:14.5px}
+.conc li::before{counter-increment:c;content:counter(c,decimal-leading-zero);position:absolute;left:16px;top:14px;font-weight:800;color:var(--accent);font-size:15px}
+.conc li b{color:var(--fg)}
+.method{font-size:13.5px;color:var(--fg2);columns:2;column-gap:32px}
+.method p{margin:0 0 10px;break-inside:avoid}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:20px;color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+
+/* v2: pestañas, texto justificado, estética más sobria */
+.tabs{display:flex;gap:0;flex:1;min-width:0}
+.tabs button{font:600 14px var(--font);background:transparent;color:var(--muted);border:0;border-bottom:2px solid transparent;padding:10px 14px;cursor:pointer;letter-spacing:-.005em}
+.tabs button:hover{color:var(--fg)}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.lead,.sub,.prom p,.conc li,.method p,.unitnote,.card .cap{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+.eyebrow{color:var(--muted);letter-spacing:.02em;text-transform:none;font-size:13px;font-weight:500}
+h2{border-top:2px solid var(--fg);padding-top:14px}
+h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;font-weight:500;margin-bottom:2px}
+.card h3{padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:8px}
+.kpis{background:transparent;border:0;border-top:2px solid var(--fg);gap:0}
+.kpi{background:transparent;border-bottom:1px solid var(--line2);padding:14px 4px}
+.kpi:nth-child(odd){border-right:1px solid var(--line2);padding-right:16px}
+.kpi:nth-child(even){padding-left:16px}
+.kpi span{text-transform:none;letter-spacing:0;font-size:13px}
+.filters{background:transparent;border:0;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2);padding:12px 0}
+.f label{text-transform:none;letter-spacing:0;font-size:12px}
+.hero.ej{grid-template-columns:minmax(0,1fr)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+
+/* v3 */
+.pill{white-space:nowrap}
+.prom .facts b,.conc li::before,.kpi b,.minikpis b,.mono{font-family:var(--mono);letter-spacing:-.01em}
+.conc li::before{font-family:var(--mono);font-weight:700}
+.prom p b{color:var(--fg)}
+.minikpis{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+.minikpis div{background:var(--panel2);padding:10px 12px}
+.minikpis span{display:block;font-size:12px;color:var(--muted)}
+.minikpis b{font-size:19px}
+.lupatxt{color:var(--fg2);font-size:14px;margin:0 0 10px;text-align:justify;hyphens:auto}
+.seg.lupa{flex-wrap:wrap}
+.banner{background:#05070a;color:#e9eef6;margin-top:56px;border-top:2px solid #1d2532}
+.bannerin{max-width:1280px;margin:0 auto;padding:28px 20px calc(28px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.bl{display:flex;flex-direction:column;gap:6px;min-width:0}
+.blogo{height:30px;width:auto;align-self:flex-start}
+.bl span{font-size:14px;font-weight:600}
+.bl .bsrc{font-size:12px;font-weight:400;color:#8f9bb0}
+.social{display:flex;gap:10px;flex-wrap:wrap}
+.social a{display:inline-flex;align-items:center;gap:8px;color:#e9eef6;text-decoration:none;border:1px solid #2a3444;padding:9px 14px;font-size:13.5px;font-weight:500}
+.social a:hover{border-color:#e9eef6}
+.social svg{display:block}
+@media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}.span8,.span7,.span6,.span5,.span4{grid-column:span 12}.promesas,.list,.conc{grid-template-columns:minmax(0,1fr)}.method{columns:1}}
+@media (max-width:520px){.prom .facts{grid-template-columns:minmax(0,1fr)}.kpi b{font-size:22px}.barcell{width:90px;min-width:80px}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top">
+  <div class="topin">
+    <img class="logo d" alt="CEER" src="__LOGO_NEG__">
+    <img class="logo l" alt="CEER" src="__LOGO_POS__">
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button role="tab" id="tabbtn-p27" data-tab="p27" aria-selected="true">Presupuesto 2027</button>
+      <button role="tab" id="tabbtn-ej" data-tab="ej" aria-selected="false">Ejecución</button>
+      <button role="tab" id="tabbtn-tb" data-tab="tb" aria-selected="false">Tablero</button>
+    </nav>
+    <div class="ctrl">
+      <div class="seg" role="group" aria-label="Unidad">
+        <button id="u-p27" data-u="p27" aria-pressed="true" title="Pesos de 2027: hoy + 2% mensual oct–dic 2026 + 18% de inflación 2027 (pauta del proyecto)">$ 2027</button>
+        <button id="u-hoy" data-u="hoy" aria-pressed="false" title="Pesos de septiembre de 2026 (IPCBA)">$ Hoy</button>
+        <button id="u-nom" data-u="nom" aria-pressed="false" title="Pesos corrientes de cada año">$ Nominal</button>
+      </div>
+      <button class="iconbtn" id="themebtn" aria-label="Cambiar tema">◐ Tema</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="tab" id="tab-p27" role="tabpanel" aria-labelledby="tabbtn-p27">
+<section class="hero" id="resumen" style="padding-top:44px">
+  <div>
+    <div class="eyebrow">CEER · Proyecto de Presupuesto 2027 · Ciudad de Buenos Aires</div>
+    <h1>El presupuesto 2027, <em>en perspectiva</em> de treinta años</h1>
+    <p class="lead">El Ejecutivo promete bajar impuestos, invertir el 18% del gasto en obra y cerrar con equilibrio. Comparamos el proyecto con lo que la Ciudad presupuestó y ejecutó desde 1995, con todo llevado a pesos constantes.</p>
+    <p class="unitnote" id="unitnote"></p>
+  </div>
+  <div class="kpis" id="kpis"></div>
+</section>
+
+<section>
+  <h2><span class="tag">Conclusiones</span>Lo que cambia en 2027</h2>
+  <ol class="conc" id="conc" style="padding:0;margin:0"></ol>
+</section>
+
+<section id="promesas">
+  <h2><span class="tag">Promesas del Ejecutivo</span>Lo que dijo el ministro, contra los números</h2>
+  <p class="sub">Frases de la presentación del 30 de septiembre y de la exposición en la Comisión de Presupuesto del 7 de octubre de 2026. Cada una lleva un veredicto y los datos que lo sostienen, en pesos de 2027.</p>
+  <div class="promesas" id="proms"></div>
+</section>
+
+<section id="comparar">
+  <h2><span class="tag">2027 contra presupuestos y ejecuciones previas</span>Quién gana y quién pierde</h2>
+  <p class="sub">Proyecto 2027 frente al sancionado y al vigente 2026 (al 2.º trimestre) y al ejecutado 2025, por jurisdicción y por función. Los años anteriores se expresan en pesos de 2027.</p>
+  <div class="filters">
+    <div class="f"><label for="cmp-base">Comparar contra</label>
+      <select id="cmp-base"><option value="vig26">Vigente 2026 (2.º trim.)</option><option value="san26">Sancionado 2026</option><option value="dev25">Ejecutado 2025</option><option value="dev24">Ejecutado 2024</option><option value="dev23">Ejecutado 2023</option></select></div>
+    <div class="f"><label for="cmp-dim">Apertura</label>
+      <select id="cmp-dim"><option value="jur">Jurisdicción</option><option value="fun">Función</option><option value="inc">Inciso (objeto)</option></select></div>
+  </div>
+  <div class="grid">
+    <div class="card span7"><h3>Variación real 2027</h3><p class="cap" id="cmp-cap"></p><div class="tablewrap"><table id="cmp-table"></table></div><p class="src">Fuente: Planillas Anexas del Proyecto 2027 (Planillas 3 y 4) y presupuesto ejecutado trimestral (BA Data). Servicio de la deuda sin amortizaciones, para que sea comparable con el proyecto.</p></div>
+    <div class="card span5"><h3>Lo que más crece y lo que más cae</h3><p class="cap">Variación real, en miles de millones de pesos 2027</p><div class="list" style="grid-template-columns:minmax(0,1fr)"><div id="movers"></div></div></div>
+    <div class="card span12"><h3>Totales del esquema ahorro-inversión-financiamiento</h3><p class="cap" id="caifcap">Billones de pesos. Ejecutado 1995–2025 y proyecto 2027.</p><div class="chart" id="w-caif"><canvas id="ch-caif" aria-label="Recursos, gasto total y gasto primario 1995-2027"></canvas></div><p class="src">Fuente: IDECBA, Esquema AIF consolidado (2025 provisorio) y Planilla 16 del Proyecto 2027.</p></div>
+    <div class="card span6"><h3>Cálculo de recursos 2027 por rubro</h3><p class="cap">Billones de pesos 2027. El 11,6% depende de un pago de Nación que no llega</p><div class="chart"><canvas id="ch-rec27" aria-label="Recursos 2027 por rubro"></canvas></div><p class="src">Fuente: Planilla 11, Proyecto 2027.</p></div>
+    <div class="card span6"><h3>Recaudación propia: enero–agosto</h3><p class="cap">Variación real de 2026 contra años anteriores. Es el punto de partida del cálculo 2027</p><div class="tablewrap"><table id="ytd-table"></table></div><p class="src">Fuente: IDECBA sobre datos de AGIP.</p></div>
+  </div>
+</section>
+
+</div>
+<div class="tab" id="tab-ej" role="tabpanel" aria-labelledby="tabbtn-ej" hidden>
+<section class="hero ej">
+  <div>
+    <h1>La ejecución, <em>año por año</em></h1>
+    <p class="lead">Qué gastó y qué recaudó la Ciudad desde 1995: la base trimestral 2019–2026 abierta hasta partida subparcial, el esquema ahorro-inversión-financiamiento y la recaudación mensual de fuente propia.</p>
+    <p class="unitnote" id="unitnote2"></p>
+  </div>
+</section>
+
+
+<section id="recursos">
+  <h2><span class="tag">Recursos</span>De dónde sale la plata</h2>
+  <p class="sub">La serie larga usa el esquema ahorro-inversión-financiamiento (IDECBA). Las aperturas tributarias salen de la recaudación mensual de fuente propia (AGIP vía IDECBA) hasta agosto de 2026.</p>
+  <div class="grid">
+    <div class="card span6"><h3>Ingresos totales de la Ciudad</h3><p class="cap" id="cap-rec">Recursos totales (corrientes + capital)</p><div class="chart"><canvas id="ch-rec" aria-label="Recursos totales 1995-2027"></canvas></div><p class="src">Fuente: IDECBA (esquema AIF) y Proyecto 2027.</p></div>
+    <div class="card span6"><h3>Recursos por tipo</h3><p class="cap">Composición de los recursos totales</p><div class="seg" style="margin-bottom:10px" role="group" aria-label="Vista recursos por tipo"><button data-rv="abs" aria-pressed="true">Montos</button><button data-rv="pct" aria-pressed="false">% del total</button></div><div class="chart"><canvas id="ch-rectipo" aria-label="Recursos por tipo"></canvas></div><p class="src">Fuente: IDECBA (esquema AIF). Los tributarios incluyen coparticipación.</p></div>
+    <div class="card span12"><h3>Ingresos Brutos, mes a mes</h3><p class="cap">Recaudación mensual y promedio móvil de 12 meses</p><div class="chart"><canvas id="ch-iibb" aria-label="Ingresos Brutos mensual"></canvas></div><p class="src">Fuente: IDECBA sobre datos de AGIP. Deflactado con IPCBA mensual.</p></div>
+    <div class="card span6"><h3>Otros tributos propios</h3><p class="cap">ABL, Patentes, Sellos y resto, por año</p><div class="chart"><canvas id="ch-otros" aria-label="Otros tributos"></canvas></div><p class="src">2026: enero a agosto.</p></div>
+    <div class="card span6"><h3>Composición de la recaudación propia</h3><p class="cap">Participación, promedio móvil de 12 meses</p><div class="chart"><canvas id="ch-comp" aria-label="Composición de la recaudación"></canvas></div></div>
+    <div class="card span12"><h3>Recursos propios y nacionales por provincia, 2023</h3><p class="cap">La Ciudad es el distrito que menos depende de la coparticipación</p><div class="chart tall"><canvas id="ch-ronrop" aria-label="Recursos de origen provincial y nacional por provincia"></canvas></div><p class="src">Fuente: Informe CEER sobre la base de DNAP.</p></div>
+  </div>
+</section>
+
+<section id="gasto">
+  <h2><span class="tag">Gasto histórico</span>En qué gasta la Ciudad</h2>
+  <div class="grid">
+    <div class="card span6"><h3>Gasto público total</h3><p class="cap" id="cap-gt">1998–2025 ejecutado y proyecto 2027</p><div class="chart"><canvas id="ch-gt" aria-label="Gasto total"></canvas></div><p class="src">Fuente: IDECBA, gasto por finalidad. 2027: Planilla 3.</p></div>
+    <div class="card span6"><h3>Gasto por finalidad</h3><p class="cap" id="cap-fin">Montos o participación</p><div class="seg" style="margin-bottom:10px" role="group" aria-label="Vista finalidad"><button data-fv="abs" aria-pressed="true">Montos</button><button data-fv="pct" aria-pressed="false">% del total</button></div><div class="chart"><canvas id="ch-fin" aria-label="Gasto por finalidad"></canvas></div></div>
+    <div class="card span6"><h3>Gasto por inciso</h3><p class="cap" id="cap-inc"></p><div class="chart"><canvas id="ch-inc" aria-label="Gasto por inciso"></canvas></div></div>
+    <div class="card span6"><h3>Gasto por jurisdicción</h3><p class="cap" id="cap-jur"></p><div class="chart tall"><canvas id="ch-jur" aria-label="Gasto por jurisdicción"></canvas></div></div>
+    <div class="card span12"><h3>El subte</h3><p class="cap">Programas Subterráneos de Buenos Aires y Obras en la red, devengado anual por destino. 2027: inversión anunciada en la red ($917.000 millones nominales)</p><div class="chart"><canvas id="ch-subte" aria-label="Gasto en subte"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data) y exposición del ministro de Hacienda. Las categorías siguen la apertura subparcial publicada.</p></div>
+  </div>
+</section>
+
+<section id="empleo">
+  <h2><span class="tag">Empleo público</span>Cuántos trabajan para la Ciudad</h2>
+  <p class="sub">Cargos de la administración central por planta (IDECBA, 2002–2021), dotación prevista para 2027 por jurisdicción (Planilla 17 del Proyecto) y gasto en personal en pesos constantes. El Ejecutivo afirma que redujo 15% la planta administrativa (8.954 cargos) desde 2023.</p>
+  <div class="grid">
+    <div class="card span7"><h3>Cargos por planta, 2002–2021</h3><p class="cap">Administración central, a diciembre de cada año</p><div class="chart"><canvas id="ch-emp-cargos" aria-label="Cargos por planta"></canvas></div><p class="src">Fuente: IDECBA sobre datos de la Dirección General de Planeamiento de Recursos Humanos. La serie se discontinuó en 2021.</p></div>
+    <div class="card span5"><h3>Dotación 2027 por jurisdicción</h3><p class="cap" id="cap-emp27">Cargos previstos en el Proyecto 2027</p><div class="tablewrap" style="max-height:360px;overflow-y:auto"><table id="emp27-table"></table></div><p class="src">Fuente: Planilla 17, Proyecto 2027. Poder Ejecutivo; no incluye Legislatura, Justicia ni organismos de control.</p></div>
+    <div class="card span6"><h3>Composición de la dotación 2027</h3><p class="cap">Docentes, policías y salud explican cuatro de cada cinco cargos</p><div class="chart"><canvas id="ch-emp27" aria-label="Composición de la dotación 2027"></canvas></div></div>
+    <div class="card span6"><h3>Gasto en personal</h3><p class="cap" id="cap-emp-gasto">Inciso 1, devengado anual y proyecto 2027</p><div class="chart"><canvas id="ch-emp-gasto" aria-label="Gasto en personal"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data) y Planilla 4.</p></div>
+  </div>
+</section>
+<section id="fiscal">
+  <h2><span class="tag">Sostenibilidad</span>Resultado fiscal y deuda</h2>
+  <div class="grid">
+    <div class="card span12"><h3>Recursos, gasto primario y resultado primario</h3><p class="cap" id="cap-fis">1995–2025 y proyecto 2027, por gestión</p><div class="chart tall"><canvas id="ch-fis" aria-label="Resultado primario"></canvas></div><p class="src">Fuente: IDECBA (esquema AIF) y Planilla 16. Gestiones: De la Rúa/Olivera (1996–2000), Ibarra/Telerman (2000–2007), M. Macri (2007–2015), Rodríguez Larreta (2015–2023), J. Macri (2023–).</p></div>
+    <div class="card span6"><h3>Intereses de la deuda</h3><p class="cap">Como porcentaje de los recursos totales</p><div class="chart short"><canvas id="ch-int" aria-label="Intereses sobre recursos"></canvas></div></div>
+    <div class="card span6"><h3>Stock de deuda</h3><p class="cap" id="cap-deuda">Al 31 de diciembre de cada año</p><div class="chart short"><canvas id="ch-deuda" aria-label="Stock de deuda"></canvas></div><p class="src">Fuente: IDECBA sobre datos de la Dirección General de Crédito Público.</p></div>
+  </div>
+</section>
+
+</div>
+<div class="tab" id="tab-tb" role="tabpanel" aria-labelledby="tabbtn-tb" hidden>
+<section class="hero ej">
+  <div>
+    <h1>Tablero</h1>
+    <p class="lead">Elegí un ministerio y mirá cómo cambió su presupuesto desde 2019, seguí la deuda por fuente de financiamiento, revisá partidas que suelen generar polémica y filtrá la base completa por cualquier dimensión.</p>
+    <p class="unitnote" id="unitnote3"></p>
+  </div>
+</section>
+<section id="ministerio">
+  <h2><span class="tag">Por ministerio</span>Un ministerio, año por año</h2>
+  <div class="filters">
+    <div class="f"><label for="mi-jur">Jurisdicción</label><select id="mi-jur"></select></div>
+    <div class="f"><label for="mi-etapa">Etapa</label><select id="mi-etapa"><option value="2">Devengado</option><option value="1">Vigente</option><option value="0">Sancionado</option></select></div>
+    <div class="f"><label for="mi-fte">Fuente</label><select id="mi-fte"></select></div>
+    <div class="f"><label for="mi-by">Abrir por</label><select id="mi-by"><option value="inc">Inciso</option><option value="fun">Función</option><option value="fte">Fuente</option></select></div>
+    <div class="f"><label for="mi-year">Año de detalle</label><select id="mi-year"></select></div>
+  </div>
+  <div class="grid">
+    <div class="card span8"><h3 id="mi-title">Evolución</h3><p class="cap" id="mi-cap"></p><div class="chart tall"><canvas id="ch-mi" aria-label="Evolución del ministerio"></canvas></div></div>
+    <div class="card span4"><h3>En números</h3><p class="cap" id="mi-kcap"></p><div id="mi-kpis" class="minikpis"></div></div>
+    <div class="card span12"><h3>Programas</h3><p class="cap" id="mi-pcap"></p><div class="tablewrap" style="max-height:460px;overflow-y:auto"><table id="mi-prog"></table></div></div>
+  </div>
+</section>
+<section id="deuda">
+  <h2><span class="tag">Deuda</span>Intereses y amortizaciones, por fuente</h2>
+  <p class="sub">Servicio de la deuda devengado (incluye amortizaciones, que en el presupuesto son aplicaciones financieras) y stock al cierre de cada año. Filtrá por fuente de financiamiento para ver qué se paga con recursos del Tesoro y qué con endeudamiento.</p>
+  <div class="filters">
+    <div class="f"><label for="de-fte">Fuente</label><select id="de-fte"></select></div>
+    <div class="f"><label for="de-etapa">Etapa</label><select id="de-etapa"><option value="2">Devengado</option><option value="1">Vigente</option><option value="0">Sancionado</option></select></div>
+  </div>
+  <div class="grid">
+    <div class="card span8"><h3>Servicio de la deuda por concepto</h3><p class="cap" id="de-cap"></p><div class="chart tall"><canvas id="ch-de" aria-label="Servicio de la deuda por concepto"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data). 2027: Planilla 16 (intereses) y Planilla 15 (amortizaciones).</p></div>
+    <div class="card span4"><h3>Por fuente de financiamiento</h3><p class="cap" id="de-fcap"></p><div class="tablewrap"><table id="de-ftable"></table></div></div>
+    <div class="card span12"><h3>Stock de deuda e intereses</h3><p class="cap" id="de-scap"></p><div class="chart"><canvas id="ch-de-stock" aria-label="Stock de deuda"></canvas></div><p class="src">Fuente: IDECBA (stock al 31/12) y esquema AIF (intereses).</p></div>
+  </div>
+</section>
+<section id="lupa">
+  <h2><span class="tag">Bajo la lupa</span>Partidas que dan que hablar</h2>
+  <p class="sub">Publicidad oficial, vigilancia privada, consultorías, alquileres, ceremonial y ayudas sociales. Montos devengados por año y quién los gasta.</p>
+  <div class="seg lupa" role="group" aria-label="Partida" id="lupa-btns"></div>
+  <div class="grid" style="margin-top:16px">
+    <div class="card span8"><h3 id="lupa-title"></h3><p class="cap" id="lupa-cap"></p><p class="lupatxt" id="lupa-txt"></p><div class="chart"><canvas id="ch-lupa" aria-label="Partida bajo la lupa"></canvas></div></div>
+    <div class="card span4"><h3>Quién la gasta</h3><p class="cap" id="lupa-jcap"></p><div class="tablewrap"><table id="lupa-jur"></table></div></div>
+  </div>
+</section>
+<section id="general">
+  <h2><span class="tag">Tablero general</span>Filtrá todo</h2>
+  <p class="sub">Base trimestral 2019–2026 (2.º trimestre) del presupuesto ejecutado, completada con la base anual propia para 2020 y 2021. Montos acumulados al trimestre. Combiná jurisdicción, función, inciso, partida y fuente; abrí el resultado por cualquiera de esas dimensiones y bajá por la clasificación por objeto hasta la partida subparcial.</p>
+  <div class="filters" id="tb-filters">
+    <div class="f"><label for="tb-etapa">Etapa</label><select id="tb-etapa"><option value="2">Devengado</option><option value="1">Vigente</option><option value="0">Sancionado</option></select></div>
+    <div class="f"><label for="tb-trim">Trimestre</label><select id="tb-trim"><option value="4">Cierre anual (T4)</option><option value="1">T1 acumulado</option><option value="2">T2 acumulado</option><option value="3">T3 acumulado</option><option value="last">Último disponible</option></select></div>
+    <div class="f"><label for="tb-jur">Jurisdicción</label><select id="tb-jur"></select></div>
+        <div class="f"><label for="tb-fun">Función</label><select id="tb-fun"></select></div>
+    <div class="f"><label for="tb-inc">Inciso</label><select id="tb-inc"></select></div>
+    <div class="f"><label for="tb-ppal">Partida principal</label><select id="tb-ppal"></select></div>
+    <div class="f"><label for="tb-fte">Fuente</label><select id="tb-fte"></select></div>
+    <div class="f"><label for="tb-by">Abrir por</label><select id="tb-by"><option value="inc">Inciso</option><option value="ppal">Partida principal</option><option value="fte">Fuente</option><option value="fun">Función</option><option value="jur">Jurisdicción</option></select></div>
+  </div>
+  <div class="grid">
+    <div class="card span8"><h3 id="tb-title">Evolución</h3><p class="cap" id="tb-cap"></p><div class="chart" id="w-tb"><canvas id="ch-tb" aria-label="Evolución del gasto filtrado"></canvas></div></div>
+    <div class="card span4"><h3>Composición</h3><p class="cap" id="tb-comp-cap"></p><div class="tablewrap"><table id="tb-comp"></table></div></div>
+    <div class="card span7"><h3>Clasificación por objeto: de inciso a subparcial</h3><p class="cap" id="dr-cap">Tocá un renglón para abrirlo. Usa el año y la etapa de arriba; no se cruza con jurisdicción.</p>
+      <div class="f" style="margin-bottom:10px"><label for="dr-year">Año</label><select id="dr-year"></select></div>
+      <div class="crumbs" id="dr-crumbs"></div><div class="tablewrap"><table id="dr-table" class="drill"></table></div></div>
+    <div class="card span5"><h3>Programas</h3><p class="cap">Mismo año y etapa, filtrado por la jurisdicción elegida</p>
+      <div class="f" style="margin-bottom:10px"><label for="pg-q">Buscar programa</label><input type="search" id="pg-q" placeholder="ej.: subterráneos, vivienda, alimentaria"></div>
+      <div class="tablewrap" style="max-height:440px;overflow-y:auto"><table id="pg-table"></table></div></div>
+  </div>
+</section>
+</div>
+<section id="metodo">
+  <h2><span class="tag">Metodología</span>Cómo leer estos números</h2>
+  <div class="method" id="method"></div>
+
+</section>
+</main>
+<footer class="banner">
+  <div class="bannerin">
+    <div class="bl"><img class="blogo" alt="CEER" src="__LOGO_NEG__"><span>Centro de Estudios Económicos Renovación</span><span class="bsrc">Bases: presupuesto ejecutado y sancionado (BA Data), IDECBA, Planillas Anexas 2027 · Octubre de 2026</span></div>
+    <nav class="social" aria-label="Redes del CEER">
+      <a href="https://www.instagram.com/ceerenovacion/" target="_blank" rel="noopener" aria-label="Instagram del CEER"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg><span>Instagram</span></a>
+      <a href="https://x.com/ceerenovacion" target="_blank" rel="noopener" aria-label="X (Twitter) del CEER"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.2h1.7L7.4 4.7H5.57l11.1 14.5Z"/></svg><span>Twitter / X</span></a>
+      <a href="https://estudiosrenovacion.com/pages/ceer.html" target="_blank" rel="noopener" aria-label="Sitio del CEER"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3Z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span>estudiosrenovacion.com</span></a>
+    </nav>
+  </div>
+</footer>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script id="data" type="application/json">__DATA__</script>
+<script>
+(function(){
+const D=JSON.parse(document.getElementById('data').textContent);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let U='p27';
+try{const s=localStorage.getItem('ceer-unit');if(s)U=s;}catch(e){}
+const F=D.defl;
+// ---------- deflation
+const R27=1.02**3*1.18; // hoy -> p27
+function fac(year,ytdTrim){ // year: number|'2027P'
+  if(U==='nom') return 1;
+  if(year==='2027P'||year===2027) return U==='p27'?1:1/R27;
+  const y=String(year);
+  if(ytdTrim && ytdTrim<4 && F.hoy_ytd[y+'-'+ytdTrim]){return U==='p27'?F.p2027_ytd[y+'-'+ytdTrim]:F.hoy_ytd[y+'-'+ytdTrim];}
+  return U==='p27'?F.p2027[y]:F.hoy[y];
+}
+const ipcm={};D.ipcm.forEach(r=>ipcm[r[0]+'-'+r[1]]=r[2]);
+const HOY=ipcm['2026-9'];
+function facM(y,m){ if(U==='nom')return 1; const v=ipcm[y+'-'+m]; if(!v) return fac(y); const f=HOY/v; return U==='p27'?f*R27:f;}
+const unitLabel=()=>U==='p27'?'pesos de 2027':U==='hoy'?'pesos de septiembre de 2026':'pesos corrientes';
+// millones -> string
+function fmt(m,dec){ if(m==null||isNaN(m))return '–'; const a=Math.abs(m);
+  if(a>=1e6) return '$'+(m/1e6).toLocaleString('es-AR',{minimumFractionDigits:dec??2,maximumFractionDigits:dec??2})+' billones';
+  if(a>=1e3) return '$'+(m/1e3).toLocaleString('es-AR',{maximumFractionDigits:0})+' mil M';
+  return '$'+m.toLocaleString('es-AR',{maximumFractionDigits:0})+' M';}
+const pct=(x,d=1)=>(x>0?'+':'')+(x*100).toLocaleString('es-AR',{minimumFractionDigits:d,maximumFractionDigits:d})+'%';
+const n1=x=>x.toLocaleString('es-AR',{minimumFractionDigits:1,maximumFractionDigits:1});
+// ---------- CAIF helpers
+const CA={}; D.caif.forEach((c,i)=>{let k=c.concepto; if(CA[k]) k=k+' (gasto)'; CA[k]=c.vals;});
+const YRS=[];for(let y=1995;y<=2025;y++)YRS.push(String(y));
+const YRS2=[...YRS,'2026P','2027P']; const LAB=y=>y==='2027P'?'2027 P':y==='2026P'?'2026 Pres.':y;
+const cv=(k,y)=>{const v=CA[k]&&CA[k][y]; return v==null?null:v*fac(y==='2027P'?'2027P':y==='2026P'?2026:+y);};
+// ---------- charts infra
+Chart.defaults.font.family=css('--font')||'Inter';
+const charts={};
+function themeChart(){Chart.defaults.color=css('--muted');Chart.defaults.borderColor=css('--line');}
+themeChart();
+const COL=()=>['--c1','--c2','--c3','--c4','--c5','--c6','--c7','--c8'].map(css);
+const INF=()=>['--i1','--i2','--i3','--i4','--i5','--i6','--i7'].map(css);
+const MUT=()=>['--m1','--m2','--m3','--m4','--m5','--m6','--m7'].map(css);
+const PJ=()=>css('--proj'), H1=()=>css('--hist1'), H2=()=>css('--hist2'), H3=()=>css('--hist3');
+function mk(id,cfg){ if(charts[id]) charts[id].destroy(); const el=document.getElementById(id); if(!el) return; charts[id]=new Chart(el,cfg); return charts[id];}
+function baseOpts(o={}){return Object.assign({responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
+  plugins:{legend:{position:'bottom',labels:{boxWidth:10,boxHeight:10,useBorderRadius:false,color:css('--fg2'),font:{size:12}}},
+  tooltip:{backgroundColor:css('--panel2'),titleColor:css('--fg'),bodyColor:css('--fg2'),borderColor:css('--line2'),borderWidth:1,padding:10,cornerRadius:0,
+    callbacks:{label:c=>' '+c.dataset.label+': '+(o.pctAxis?n1(c.parsed.y??c.parsed.x)+'%':fmt((o.valScale||1)*(c.parsed.y??c.parsed.x)))}}},
+  scales:{x:{grid:{display:false},ticks:{color:css('--muted'),maxRotation:0,autoSkipPadding:12}},y:{grid:{color:css('--line')},ticks:{color:css('--muted'),callback:v=>o.pctAxis?v+'%':(v/ (o.div||1e6)).toLocaleString('es-AR',{maximumFractionDigits:1})},title:{display:!!o.ytitle,text:o.ytitle,color:css('--muted')}}}},o.extra||{});}
+const ytBill=()=>'Billones de '+unitLabel();
+// ---------- KPIs + conclusions
+function kpis(){
+  const g27=cv('10) Gastos totales (7+9)','2027P'), g25=cv('10) Gastos totales (7+9)','2025'), g23=cv('10) Gastos totales (7+9)','2023');
+  const r27=cv('6) Recursos totales (1+4)','2027P'), r25=cv('6) Recursos totales (1+4)','2025'), r23=cv('6) Recursos totales (1+4)','2023');
+  const k27=cv('5) Gastos de capital','2027P'), k25=cv('5) Gastos de capital','2025');
+  const i27=cv('9) Intereses de la deuda pública','2027P'), i25=cv('9) Intereses de la deuda pública','2025');
+  const real=U!=='nom';
+  const vs=(a,b,lab)=>real?`<small class="${a>=b?'up':'dn'}">${pct(a/b-1)} vs. ${lab}</small>`:`<small>${lab}: ${fmt(b)}</small>`;
+  document.getElementById('kpis').innerHTML=[
+   ['Gasto total 2027',fmt(g27),vs(g27,g25,'2025')+' · '+vs(g27,g23,'2023')],
+   ['Recursos totales 2027',fmt(r27),vs(r27,r25,'2025')+' · '+vs(r27,r23,'2023')],
+   ['Gasto de capital 2027',fmt(k27),vs(k27,k25,'2025')],
+   ['Intereses de la deuda 2027',fmt(i27),vs(i27,i25,'2025')]
+  ].map(k=>`<div class="kpi"><span>${k[0]}</span><b>${k[1]}</b>${k[2]}</div>`).join('');
+  const _un='Montos en '+unitLabel()+'. '+(U==='p27'?'Los años anteriores se llevan a 2027 con IPCBA hasta septiembre de 2026, 2% mensual de octubre a diciembre y la pauta de 18% del proyecto.':U==='hoy'?'Deflactado con IPCBA (promedio anual o del período acumulado). El proyecto 2027 se descuenta con la pauta del 18% y el 2% mensual del último trimestre de 2026.':'Sin ajustar por inflación.'); document.getElementById('unitnote').textContent=_un; document.getElementById('unitnote2').textContent=_un; document.getElementById('unitnote3').textContent=_un;
+}
+const CONC=[
+ `<b>El gasto 2027 queda en el mismo nivel real que el ejecutado en 2025</b> (+0,3%) y 7,7% debajo del pico de 2023. Contra el vigente 2026 al segundo trimestre, cae cerca de 10% real.`,
+ `<b>Los recursos dependen de $2,79 billones que Nación no gira.</b> La transferencia por el fallo de la Corte (diferencial de coparticipación del 1,55%) es el 11,6% del cálculo. Sin ella, el "equilibrio" es un déficit del mismo tamaño.`,
+ `<b>Ingresos Brutos se proyecta 6,4% arriba de lo que cerraría 2026</b>, con una actividad que el propio proyecto estima en +4% y una recaudación que en enero–agosto cae 7,8% real. Aun así, queda 28% debajo de 2023.`,
+ `<b>Patentes es la única baja de impuestos visible:</b> 41% real menos que lo que se recaudaría en 2026. Sellos (+10%) y el resto de los tributos propios suben.`,
+ `<b>Los intereses se triplican en términos reales</b> frente a 2025: pasan del 0,8% al 2,5% de los recursos, por la nueva deuda en dólares (Tango 13 y 14).`,
+ `<b>La obra pública baja en términos reales:</b> el 18% anunciado es menos que el 19% ejecutado en 2025 y el gasto de capital cae 5% real. El subte es la excepción.`,
+ `<b>Crecen Justicia, Tribunal Superior y Desarrollo Económico;</b> caen Espacio Público e Higiene Urbana, Movilidad e Infraestructura y Cultura frente al vigente 2026.`,
+ `<b>La masa salarial sigue perdiendo peso:</b> 41,3% del gasto, el mínimo de la serie desde 1995, y 12% real menos que en 2023.`
+];
+document.getElementById('conc').innerHTML=CONC.map(c=>`<li>${c}</li>`).join('');
+// ---------- Promesas
+const PROMS=[
+ {q:'Baja de impuestos: casi un millón de vehículos pagarán menos y ningún vecino pagará más patente que este año',who:'Ministro de Hacienda, Comisión de Presupuesto',v:'mid',vl:'Cumple a medias',
+  p:'Patentes cae fuerte. <b>Pero el cálculo de recursos supone más recaudación real en el resto</b>: Ingresos Brutos +6,4% y Sellos +10% contra el cierre estimado de 2026. La carga total propia no baja; se reparte distinto.',
+  f:[['Patentes 2027 vs. 2026','−41% real'],['IIBB 2027 vs. 2026','+6,4% real'],['Sellos 2027 vs. 2026','+10% real']],chart:'tax'},
+ {q:'Invertiremos un 18% del presupuesto en gasto de capital, por encima del promedio histórico del 16%',who:'Presentación y exposición del ministro',v:'bad',vl:'Mentira',
+  p:'El promedio 2006–2025 fue 16,9%, no 16%. <b>En 2025 se ejecutó 19%, y en 2017–2019 entre 18,6% y 20,4%.</b> En pesos de 2027, el gasto de capital proyectado es 5% menor que el ejecutado en 2025.',
+  f:[['Capital / gasto 2025','19,0%'],['Promedio 2006–2025','16,9%'],['Capital 2027 vs. 2025','−5,3% real']],chart:'cap'},
+ {q:'Equilibrio fiscal: resultado financiero superavitario del orden de los $1.000 millones',who:'Ministro de Hacienda',v:'bad',vl:'No se sostiene',
+  p:'El superávit de $1.316 millones <b>descansa en $2,79 billones de transferencias de Nación por la causa ante la Corte, que no se pagaron en 2025 ni en 2026.</b> 2025 ya cerró con déficit primario.',
+  f:[['Superávit 2027','$1,3 mil M'],['Depende de Nación','$2,79 billones'],['Resultado primario 2025','−1,3% de recursos']],chart:'fis'},
+ {q:'La masa salarial bajó del 44% en 2023 al 41,3%, el mínimo histórico',who:'Ministro de Hacienda',v:'mid',vl:'Más de lo mismo',
+  p:'En el esquema ejecutado, Remuneraciones fue 43,5% del gasto en 2023 y 42,4% en 2025. <b>El 41,3% es un número de proyecto y sería el más bajo desde 1995.</b> En pesos de 2027, el gasto en personal cae 2,3% contra 2025 y 12% contra 2023.',
+  f:[['Personal 2023 (ejec.)','43,5%'],['Personal 2025 (ejec.)','42,4%'],['Personal 2027 (proy.)','41,3%']],chart:'rem'},
+ {q:'Educación y Salud serán nuevamente las que cuenten con la mayor asignación: 19,7% y 16,5%',who:'Ministro de Hacienda',v:'mid',vl:'Sin cambios',
+  p:'<b>Las participaciones son las mismas que vienen ejecutándose</b> (Educación 19,4% y Salud 16,0% en 2025). En pesos de 2027, ambas funciones quedan casi planas o en baja frente al vigente 2026. Promoción social sigue debajo del 10% desde 2023.',
+  f:[['Educación 2025 (ejec.)','19,4%'],['Salud 2025 (ejec.)','16,0%'],['Seguridad 2027','14,9%']],chart:'fun'},
+ {q:'Obtuvimos la tasa de interés más baja en la historia de la Ciudad',who:'Ministro de Hacienda',v:'mid',vl:'Cierto, con costo',
+  p:'La tasa de colocación bajó (7,375% en dólares), pero el stock en dólares creció y <b>los intereses vuelven a pesar: de 0,8% de los recursos en 2025 a 2,5% en 2027, el triple en términos reales.</b>',
+  f:[['Intereses / recursos 2025','0,8%'],['Intereses / recursos 2027','2,5%'],['Intereses 2027 vs. 2025','×3,1 real']],chart:'int'},
+ {q:'Ingresos Brutos, el reflejo más fiel del consumo, sufrió una caída del 6,9% en el primer semestre',who:'Ministro de Hacienda',v:'ok',vl:'Cierto',
+  p:'Con IPCBA, enero–agosto 2026 da −7,8% real contra 2025 y −30,6% contra 2023. El diagnóstico coincide; <b>lo que no cierra es suponer que en 2027 IIBB rebota más que la actividad.</b>',
+  f:[['IIBB ene–ago 26 vs. 25','−7,8% real'],['vs. ene–ago 2023','−30,6% real'],['IIBB 2027 proyectado','$13,28 billones']],chart:'iibb'}
+];
+document.getElementById('proms').innerHTML=PROMS.map((p,i)=>`<article class="prom ${p.v}"><div style="display:flex;justify-content:space-between;gap:10px;align-items:start"><q>${p.q}</q><span class="pill ${p.v}">${p.vl}</span></div><div class="who">${p.who}</div><p>${p.p}</p><div class="facts">${p.f.map(x=>`<div><span>${x[0]}</span><b>${x[1]}</b></div>`).join('')}</div><div class="chart mini"><canvas id="pc-${i}" aria-label="Datos de la promesa"></canvas></div></article>`).join('');
+
+// ---------- cube
+const CB=D.cube, dims=CB.dims;
+const AMORT=dims.inc_desc.indexOf('Amortización de deuda');
+function q(filter){ // returns rows
+  return CB.rows.filter(r=>filter(r));
+}
+const lastTrim={}; CB.rows.forEach(r=>{lastTrim[r[0]]=Math.max(lastTrim[r[0]]||0,r[1]);});
+// comparisons
+function sumBy(rows,idx,valIdx,y,t){const m={};rows.forEach(r=>{const k=r[idx];m[k]=(m[k]||0)+r[valIdx];});return m;}
+const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+const FUNMAP={'seguridad':'Seguridad interior'};
+function p27By(dim){
+  const out={};
+  if(dim==='jur'){Object.entries(D.p2027_jur).forEach(([j,v])=>{out[j]=Object.values(v).reduce((a,b)=>a+b,0);});}
+  else if(dim==='inc'){Object.values(D.p2027_jur).forEach(v=>Object.entries(v).forEach(([k,x])=>{out[k]=(out[k]||0)+x;}));}
+  else {const fn={};dims.fun_desc.forEach(f=>fn[norm(f)]=f);Object.entries(D.p2027_fun).forEach(([k,v])=>{if(k==='_fin')return; let name=FUNMAP[norm(k)]||fn[norm(k)]||k; out[name]=(out[name]||0)+v;});}
+  return out;
+}
+function baseBy(dim,base){
+  const di={jur:2,fin:3,fun:4,inc:5}[dim]; const dn={jur:'jur_desc',fin:'fin_desc',fun:'fun_desc',inc:'inc_desc'}[dim];
+  let y,t,vi; if(base==='vig26'){y=2026;t=2;vi=7;} else if(base==='san26'){y=2026;t=2;vi=6;} else {y=+base.slice(3)+2000;t=4;vi=8;}
+  const rows=CB.rows.filter(r=>r[0]===y&&r[1]===t&&r[5]!==AMORT);
+  const m={}; rows.forEach(r=>{const k=dims[dn][r[di]]; m[k]=(m[k]||0)+r[vi];});
+  const f=(vi===8)?fac(y):fac(y); return {m,f,y};
+}
+function cmp(){
+  const base=document.getElementById('cmp-base').value, dim=document.getElementById('cmp-dim').value;
+  const p=p27By(dim), b=baseBy(dim,base); const f27=fac('2027P');
+  const keys={}; const nk=s=>norm(s);
+  Object.keys(p).forEach(k=>keys[nk(k)]={name:k,p:p[k]*f27,b:0});
+  Object.entries(b.m).forEach(([k,v])=>{const kk=nk(k); if(!keys[kk]) keys[kk]={name:k,p:0,b:0}; keys[kk].b+=v*b.f; if(keys[kk].p===0) keys[kk].name=k;});
+  let rows=Object.values(keys).filter(r=>r.p>0||r.b>1000);
+  rows.forEach(r=>{r.v=r.b>0?r.p/r.b-1:null; r.d=r.p-r.b;});
+  rows.sort((a,b)=>(b.v??-9)-(a.v??-9));
+  const labB={vig26:'Vigente 2026',san26:'Sancionado 2026',dev25:'Ejecutado 2025',dev24:'Ejecutado 2024',dev23:'Ejecutado 2023'}[base];
+  document.getElementById('cmp-cap').textContent=`${labB} contra Proyecto 2027, en ${unitLabel()}. ${U==='nom'?'En nominal la variación no descuenta inflación.':''}`;
+  const maxv=Math.max(...rows.map(r=>Math.abs(r.v??0)).filter(x=>x<3),0.3);
+  const tp=rows.reduce((a,r)=>a+r.p,0), tb=rows.reduce((a,r)=>a+r.b,0);
+  document.getElementById('cmp-table').innerHTML=`<thead><tr><th>${{jur:'Jurisdicción',fun:'Función',inc:'Inciso'}[dim]}</th><th class="n">${labB}</th><th class="n">Proyecto 2027</th><th class="n">Var.</th><th></th></tr></thead><tbody>`+
+   rows.map(r=>{const v=r.v; const w=v==null?0:Math.min(Math.abs(v)/maxv,1)*50; const col=v>=0?'var(--pos)':'var(--neg)';
+     return `<tr><td>${r.name}</td><td class="n">${fmt(r.b)}</td><td class="n">${fmt(r.p)}</td><td class="n ${v>=0?'up':'dn'}">${v==null?'nuevo':pct(v)}</td><td class="barcell"><span class="mid"></span><i style="background:${col};${v>=0?'left:50%':'right:50%'};width:${w}%"></i></td></tr>`}).join('')+
+   `<tr><td><b>Total</b></td><td class="n"><b>${fmt(tb)}</b></td><td class="n"><b>${fmt(tp)}</b></td><td class="n ${tp>=tb?'up':'dn'}"><b>${pct(tp/tb-1)}</b></td><td></td></tr></tbody>`;
+  const mv=[...rows].sort((a,b)=>b.d-a.d); const top=mv.slice(0,6), bot=mv.slice(-6).reverse();
+  document.getElementById('movers').innerHTML=`<div class="cap" style="margin:4px 0">Crecen</div>`+top.map(r=>`<div class="mover"><span>${r.name}</span><span class="up num">${r.d>0?'+':''}${n1(r.d/1e3)}</span></div>`).join('')+`<div class="cap" style="margin:14px 0 4px">Caen</div>`+bot.map(r=>`<div class="mover"><span>${r.name}</span><span class="dn num">${n1(r.d/1e3)}</span></div>`).join('');
+}
+['cmp-base','cmp-dim'].forEach(id=>document.getElementById(id).addEventListener('change',cmp));
+
+// ---------- CAIF chart
+function caifChart(){
+  const yrs=YRS2; const C=COL(); const n=yrs.length;
+  const s=k=>yrs.map(y=>cv(k,y));
+  const sets=[['Recursos totales','6) Recursos totales (1+4)',C[0]],['Gasto total','10) Gastos totales (7+9)',C[1]],['Gasto de capital','5) Gastos de capital',C[2]],['Remuneraciones','Remuneraciones al personal',C[4]]];
+  mk('ch-caif',{type:'line',data:{labels:yrs.map(LAB),datasets:sets.map(([l,k,c])=>({label:l,data:s(k),borderColor:c,backgroundColor:c,borderWidth:2,pointRadius:yrs.map(y=>y==='2027P'?6:y==='2026P'?4:0),pointBackgroundColor:yrs.map(y=>y==='2027P'?PJ():c),pointBorderColor:yrs.map(y=>y==='2027P'?PJ():c),segment:{borderDash:ctx=>ctx.p1DataIndex>=n-2?[5,4]:undefined,borderColor:ctx=>ctx.p1DataIndex===n-1?PJ():undefined}}))},
+    options:baseOpts({ytitle:ytBill()})});
+  document.getElementById('caifcap').textContent='Billones de '+unitLabel()+'. Ejecutado 1995–2025 (2025 provisorio), presupuesto 2026 (proyecto) y proyecto 2027 (punto naranja).';
+}
+// ---------- Tablero
+function fillSel(id,arr,allLabel){const el=document.getElementById(id); el.innerHTML=`<option value="-1">${allLabel}</option>`+arr.map((x,i)=>`<option value="${i}">${x}</option>`).join('');}
+
+// ======== cubo G: [y,t,jur,fun,inc,ppal,fte,s,v,d]
+const G=D.G, GD=G.dims; const GAM=GD.inc_desc.indexOf('Amortización de deuda');
+const KI={jur:2,fun:3,inc:4,ppal:5,fte:6}, KN={jur:'jur_desc',fun:'fun_desc',inc:'inc_desc',ppal:'ppal_desc',fte:'fte_desc'};
+const lastT={}; G.rows.forEach(r=>{lastT[r[0]]=Math.max(lastT[r[0]]||0,r[1]);});
+const GY=Object.keys(lastT).map(Number).sort();
+function opts(el,arr,all,sel){el.innerHTML=(all?`<option value="-1">${all}</option>`:'')+arr.map((x,i)=>`<option value="${i}" ${sel===x?'selected':''}>${x}</option>`).join('');}
+opts(document.getElementById('tb-jur'),GD.jur_desc,'Todas');opts(document.getElementById('tb-fun'),GD.fun_desc,'Todas');opts(document.getElementById('tb-ppal'),GD.ppal_desc,'Todas');opts(document.getElementById('tb-fte'),GD.fte_desc,'Todas');
+document.getElementById('tb-inc').innerHTML='<option value="-2">Todos (sin amortización)</option><option value="-1">Todos (con amortización)</option>'+GD.inc_desc.map((x,i)=>`<option value="${i}">${x}</option>`).join('');
+const C8=()=>[...COL().slice(0,7)];
+function stackBar(id,labels,series,yt,proj){ // series: [{label,data,color}]
+  const ds=series.map(s=>({label:s.label,data:s.data,backgroundColor:s.color,borderColor:css('--panel'),borderWidth:1,stack:'s'}));
+  if(proj) ds.push({label:proj.label,data:proj.data,backgroundColor:PJ(),borderColor:css('--panel'),borderWidth:1,stack:'s'});
+  const c=mk(id,{type:'bar',data:{labels,datasets:ds},options:baseOpts({ytitle:yt})}); c.options.scales.x.stacked=true;c.options.scales.y.stacked=true;c.update(); return c;}
+function tb(){
+  const g=id=>+document.getElementById(id).value;
+  const et=g('tb-etapa'), tsel=document.getElementById('tb-trim').value, by=document.getElementById('tb-by').value; const vi=7+et;
+  const f={jur:g('tb-jur'),fun:g('tb-fun'),inc:g('tb-inc'),ppal:g('tb-ppal'),fte:g('tb-fte')};
+  const ok=r=>(f.jur<0||r[2]===f.jur)&&(f.fun<0||r[3]===f.fun)&&(f.inc>=0?r[4]===f.inc:(f.inc===-2?r[4]!==GAM:true))&&(f.ppal<0||r[5]===f.ppal)&&(f.fte<0||r[6]===f.fte);
+  const tOf=y=>tsel==='last'?lastT[y]:+tsel;
+  const yrs=GY.filter(y=>G.rows.some(r=>r[0]===y&&r[1]===tOf(y)));
+  const bi=KI[by], bn=KN[by]; const agg={}, tot={};
+  G.rows.forEach(r=>{const t=tOf(r[0]); if(r[1]!==t||!ok(r))return; const v=r[vi]*fac(r[0],et===2?t:4); tot[r[0]]=(tot[r[0]]||0)+v; const k=r[bi]; (agg[k]=agg[k]||{})[r[0]]=(agg[k][r[0]]||0)+v;});
+  const ly=yrs[yrs.length-1]; const keys=Object.keys(agg).sort((a,b)=>(agg[b][ly]||0)-(agg[a][ly]||0));
+  const C=C8(); const top=keys.slice(0,7), rest=keys.slice(7);
+  const ser=top.map((k,i)=>({label:GD[bn][k],data:yrs.map(y=>agg[k][y]||0),color:C[i]}));
+  if(rest.length) ser.push({label:'Resto',data:yrs.map(y=>rest.reduce((a,k)=>a+(agg[k][y]||0),0)),color:css('--c8')});
+  stackBar('ch-tb',yrs.map(y=>y+(tOf(y)<4?' T'+tOf(y):'')),ser,ytBill());
+  const et_l=['Sancionado','Vigente','Devengado'][et];
+  document.getElementById('tb-title').textContent=et_l+' por '+{inc:'inciso',fun:'función',jur:'jurisdicción',ppal:'partida principal',fte:'fuente'}[by];
+  document.getElementById('tb-cap').textContent='Billones de '+unitLabel()+'. '+(tsel==='last'?'Último trimestre disponible de cada año (2026: T2). ':'')+(et===2&&tsel!=='4'?'Acumulado al trimestre. ':'')+'2020 y 2021 solo al cierre.';
+  const lt=tot[ly]||1;
+  document.getElementById('tb-comp-cap').textContent=ly+' · '+et_l+(tOf(ly)<4?' al T'+tOf(ly):'')+' · '+fmt(lt);
+  document.getElementById('tb-comp').innerHTML='<thead><tr><th>'+{inc:'Inciso',fun:'Función',jur:'Jurisdicción',ppal:'Partida principal',fte:'Fuente'}[by]+'</th><th class="n">Monto</th><th class="n">%</th></tr></thead><tbody>'+keys.map(k=>`<tr><td>${GD[bn][k]}</td><td class="n">${fmt(agg[k][ly]||0)}</td><td class="n">${n1((agg[k][ly]||0)/lt*100)}</td></tr>`).join('')+'</tbody>';
+  drill(); prog();
+}
+['tb-etapa','tb-trim','tb-jur','tb-fun','tb-inc','tb-ppal','tb-fte','tb-by'].forEach(id=>document.getElementById(id).addEventListener('change',tb));
+const yearsAll=GY;
+document.getElementById('dr-year').innerHTML=yearsAll.map(y=>`<option ${y===2025?'selected':''}>${y}</option>`).join('');
+
+// drill objeto
+const OB=D.objeto; let path=[];
+function drill(){
+  const y=+document.getElementById('dr-year').value; const et=+document.getElementById('tb-etapa').value; const vi=6+et;
+  const t=document.getElementById('tb-trim').value==='last'?lastT[y]:Math.min(+document.getElementById('tb-trim').value||4,lastT[y]);
+  const lvl=path.length; const dn=['inc_desc','ppal_desc','par_desc','spar_desc'];
+  const m={}; let tot=0;
+  OB.rows.forEach(r=>{ if(r[0]!==y||r[1]!==t) return; for(let i=0;i<lvl;i++){ if(r[2+i]!==path[i]) return;} const k=r[2+lvl]; const v=r[vi]*fac(y,et===2?t:4); m[k]=(m[k]||0)+v; tot+=v;});
+  const ks=Object.keys(m).map(Number).sort((a,b)=>m[b]-m[a]);
+  document.getElementById('dr-crumbs').innerHTML=`<button data-l="0">Todos los incisos</button>`+path.map((p,i)=>` › <button data-l="${i+1}">${OB.dims[dn[i]][p]}</button>`).join('');
+  document.getElementById('dr-cap').textContent=`${y}${t<4?' al T'+t:''} · ${['Sancionado','Vigente','Devengado'][et]} · ${fmt(tot)} · ${['Inciso','Principal','Parcial','Subparcial'][Math.min(lvl,3)]}`;
+  document.getElementById('dr-table').innerHTML='<thead><tr><th>'+['Inciso','Partida principal','Partida parcial','Partida subparcial'][Math.min(lvl,3)]+'</th><th class="n">Monto</th><th class="n">%</th></tr></thead><tbody>'+
+    ks.map(k=>`<tr><td class="${lvl<3?'lab':''}" data-k="${k}">${OB.dims[dn[lvl]][k]||'Sin dato'}</td><td class="n">${fmt(m[k])}</td><td class="n">${n1(m[k]/tot*100)}</td></tr>`).join('')+'</tbody>';
+}
+document.getElementById('dr-table').addEventListener('click',e=>{const td=e.target.closest('td.lab'); if(!td)return; path.push(+td.dataset.k); drill();});
+document.getElementById('dr-crumbs').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return; path=path.slice(0,+b.dataset.l); drill();});
+document.getElementById('dr-year').addEventListener('change',()=>{path=[];drill();prog();});
+const PG=D.P;
+function prog(){
+  const y=+document.getElementById('dr-year').value; const et=+document.getElementById('tb-etapa').value; const vi=6+et;
+  const t=document.getElementById('tb-trim').value==='last'?lastT[y]:Math.min(+document.getElementById('tb-trim').value||4,lastT[y]);
+  const jsel=+document.getElementById('tb-jur').value; const jname=jsel>=0?GD.jur_desc[jsel]:null; const jidx=jname?PG.dims.jur_desc.indexOf(jname):-1;
+  const fsel=+document.getElementById('tb-fte').value; const fidx=fsel>=0?PG.dims.fte_desc.indexOf(GD.fte_desc[fsel]):-1;
+  const qq=norm(document.getElementById('pg-q').value||'');
+  const m={}; PG.rows.forEach(r=>{ if(r[0]!==y||r[1]!==t||(jidx>=0&&r[2]!==jidx)||(fidx>=0&&r[5]!==fidx)) return; const name=PG.dims.prog_desc[r[3]]; if(qq&&!norm(name).includes(qq)) return; const k=r[2]+'|'+r[3]; m[k]=(m[k]||0)+r[vi];});
+  const rows=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,250);
+  document.getElementById('pg-table').innerHTML='<thead><tr><th>Programa</th><th>Jurisdicción</th><th class="n">Monto</th></tr></thead><tbody>'+rows.map(([k,v])=>{const [j,p]=k.split('|').map(Number); return `<tr><td>${PG.dims.prog_desc[p]}</td><td style="color:var(--muted);font-size:12px">${PG.dims.jur_desc[j]}</td><td class="n">${fmt(v*fac(y,et===2?t:4))}</td></tr>`}).join('')+'</tbody>';
+}
+document.getElementById('pg-q').addEventListener('input',prog);
+
+// ---------- Recursos
+let RV='abs', FV='abs';
+function recCharts(){
+  const C=COL(); const yrs=YRS2; const L=yrs.map(LAB);
+  mk('ch-rec',{type:'bar',data:{labels:L,datasets:[{label:'Recursos totales',data:yrs.map(y=>cv('6) Recursos totales (1+4)',y)),backgroundColor:yrs.map(y=>y==='2027P'?PJ():y==='2026P'?H2():H1())}]},options:baseOpts({ytitle:ytBill(),extra:{}})});
+  charts['ch-rec'].options.plugins.legend.display=false; charts['ch-rec'].update();
+  document.getElementById('cap-rec').textContent='Recursos totales (corrientes + capital), billones de '+unitLabel();
+  const tipos=[['Ingresos tributarios','Tributarios (incl. coparticipación)'],['Transferencias corrientes','Transferencias corrientes'],['Rentas de la propiedad','Rentas de la propiedad'],['Ingresos no tributarios','No tributarios'],['Venta de bienes y servicios','Venta de bienes y servicios'],['4) Recursos de capital','Recursos de capital']];
+  const tot=yrs.map(y=>cv('6) Recursos totales (1+4)',y)||1);
+  mk('ch-rectipo',{type:'bar',data:{labels:L,datasets:tipos.map(([k,l],i)=>{const d=yrs.map((y,j)=>{const v=cv(k,y)||0; return RV==='pct'?v/tot[j]*100:v;}); return {label:l,data:d,borderColor:css('--panel'),backgroundColor:[INF()[0],INF()[4],INF()[3],INF()[6],INF()[5],INF()[2]][i],borderWidth:0,stack:'s'};})},
+    options:baseOpts(RV==='pct'?{pctAxis:true,extra:{}}:{ytitle:ytBill()})});
+  {const o=charts['ch-rectipo'].options;o.scales.x.stacked=true;o.scales.y.stacked=true;if(RV==='pct')o.scales.y.max=100;charts['ch-rectipo'].update();}
+  // IIBB monthly
+  const rc=D.reca.rows.filter(r=>r[0]>=2007);
+  const lab=rc.map(r=>r[0]+'-'+String(r[1]).padStart(2,'0'));
+  const v=rc.map(r=>r[3]*facM(r[0],r[1]));
+  const mm=v.map((x,i)=>i<11?null:v.slice(i-11,i+1).reduce((a,b)=>a+b,0)/12);
+  mk('ch-iibb',{type:'line',data:{labels:lab,datasets:[{label:'IIBB mensual',data:v,borderColor:css('--m5'),backgroundColor:css('--m5'),borderWidth:1,pointRadius:0},{label:'Promedio móvil 12 meses',data:mm,borderColor:css('--fg'),backgroundColor:css('--fg'),borderWidth:2,pointRadius:0}]},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})});
+  // YTD table
+  const yy={}; D.reca.rows.forEach(r=>{if(r[1]>8)return; const f=facM(r[0],r[1]); (yy[r[0]]=yy[r[0]]||[0,0,0,0,0]); [2,3,4,5,6].forEach((c,j)=>yy[r[0]][j]+=r[c]*f);});
+  const b26=yy[2026];
+  document.getElementById('ytd-table').innerHTML='<thead><tr><th>Ene–ago 2026 vs.</th><th class="n">Total</th><th class="n">IIBB</th><th class="n">ABL</th><th class="n">Pat.</th><th class="n">Sellos</th></tr></thead><tbody>'+[2025,2024,2023,2022,2019,2017].map(y=>`<tr><td>${y}</td>${b26.map((x,j)=>{const vv=x/yy[y][j]-1;return `<td class="n ${vv>=0?'up':'dn'}">${U==='nom'?pct(vv,0):pct(vv,1)}</td>`}).join('')}</tr>`).join('')+'</tbody>';
+  // otros tributos annual
+  const ann={}; D.reca.rows.forEach(r=>{if(r[0]<2007)return; const f=facM(r[0],r[1]); const a=(ann[r[0]]=ann[r[0]]||[0,0,0,0]); a[0]+=r[4]*f;a[1]+=r[5]*f;a[2]+=r[6]*f;a[3]+=(r[7]+r[8]+r[9])*f;});
+  const ay=Object.keys(ann);
+  mk('ch-otros',{type:'line',data:{labels:ay.map(y=>y==='2026'?'2026*':y),datasets:['ABL','Patentes','Sellos','Planes, publicidad y otros'].map((l,i)=>({label:l,data:ay.map(y=>ann[y][i]),borderColor:C[i+1],backgroundColor:C[i+1],borderWidth:2,pointRadius:0}))},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})});
+  // composition MM12
+  const cols=[3,4,5,6,7,8,9]; const nm=['IIBB','ABL','Patentes','Sellos','Planes de pago','Publicidad','Otros'];
+  const rr=D.reca.rows.filter(r=>r[0]>=2006);
+  const sh=cols.map(()=>[]); const labs=[];
+  for(let i=11;i<rr.length;i++){ const win=rr.slice(i-11,i+1); const tt=win.reduce((a,r)=>a+r[2],0); if(rr[i][0]<2007)continue; labs.push(rr[i][0]+'-'+String(rr[i][1]).padStart(2,'0')); cols.forEach((c,j)=>sh[j].push(win.reduce((a,r)=>a+r[c],0)/tt*100)); }
+  mk('ch-comp',{type:'line',data:{labels:labs,datasets:nm.map((l,j)=>({label:l,data:sh[j],borderColor:css('--bg'),backgroundColor:C[j],fill:true,borderWidth:1,pointRadius:0,stack:'s'}))},options:baseOpts({pctAxis:true})});
+  charts['ch-comp'].options.scales.y.stacked=true; charts['ch-comp'].options.scales.y.max=100; charts['ch-comp'].options.scales.y.min=0; charts['ch-comp'].update();
+  // 2027 rubros
+  const f27=fac('2027P'); const R27s=[...D.rec2027].sort((a,b)=>b[1]-a[1]);
+  mk('ch-rec27',{type:'bar',data:{labels:R27s.map(r=>r[0]),datasets:[{label:'Proyecto 2027',data:R27s.map(r=>r[1]*1e3*f27),backgroundColor:R27s.map(r=>r[0].includes('CSJN')?css('--fg'):PJ())}]},options:baseOpts({extra:{indexAxis:'y'}})});
+  const o=charts['ch-rec27'].options; o.plugins.legend.display=false; o.scales.x.ticks.callback=v=>(v/1e6).toLocaleString('es-AR',{maximumFractionDigits:1}); o.scales.y.ticks.callback=function(v){const s=this.getLabelForValue(v);return s.length>34?s.slice(0,33)+'…':s}; o.scales.x.grid={color:css('--line')}; o.scales.y.grid={display:false}; o.interaction={mode:'nearest',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.label=c=>' '+fmt(c.parsed.x); charts['ch-rec27'].update();
+  // RON/ROP
+  const rr1=D.ronrop['1']; const provs=rr1[0].data.map(d=>d[0]);
+  mk('ch-ronrop',{type:'bar',data:{labels:provs,datasets:rr1.map((s,i)=>({label:s.name==='Provinciales'?'Recursos de origen provincial (propios)':'Recursos de origen nacional (coparticipación)',data:s.data.map(d=>d[1]*100),backgroundColor:i?C[1]:C[0],stack:'s'}))},options:baseOpts({pctAxis:true,extra:{indexAxis:'y'}})});
+  const o2=charts['ch-ronrop'].options; o2.scales.x.stacked=true;o2.scales.y.stacked=true;o2.scales.x.max=100;o2.scales.x.ticks.callback=v=>v+'%';o2.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)};o2.scales.y.ticks.autoSkip=false;o2.scales.y.grid={display:false};o2.scales.x.grid={color:css('--line')};o2.interaction={mode:'index',axis:'y',intersect:false};o2.plugins.tooltip.callbacks.label=c=>' '+c.dataset.label+': '+n1(c.parsed.x)+'%';charts['ch-ronrop'].update();
+}
+document.querySelectorAll('[data-rv]').forEach(b=>b.addEventListener('click',()=>{RV=b.dataset.rv;document.querySelectorAll('[data-rv]').forEach(x=>x.setAttribute('aria-pressed',x===b));recCharts();}));
+// ---------- Gasto histórico
+function gastoCharts(){
+  const C=COL(); const FN=D.finalidad; const yrs=Object.keys(FN['Total']).filter(y=>+y>=1998);
+  const yrs2=[...yrs,'2026','2027P']; const L=yrs2.map(y=>y==='2027P'?'2027 P':y==='2026'?'2026 Vig.':y);
+  const v26={}; CB.rows.forEach(r=>{if(r[0]===2026&&r[1]===2&&r[5]!==AMORT){const f=dims.fin_desc[r[3]]; v26[f]=(v26[f]||0)+r[7];}}); const nf=s=>norm(s).replace('servicio de seguridad','servicios de seguridad').replace(/deuda publica.*/,'deuda publica');
+  const v26n={}; Object.entries(v26).forEach(([k,v])=>{v26n[nf(k)]=(v26n[nf(k)]||0)+v;});
+  const p27f=D.p2027_fun._fin; const finKeys=[['Servicios sociales','Servicios Sociales'],['Servicio de seguridad','Servicios de Seguridad'],['Administración gubernamental','Administración Gubernamental'],['Servicios económicos','Servicios Económicos'],['Deuda pública','Deuda Pública - Intereses y Gastos']];
+  const val=(k,y,pk)=>y==='2027P'?p27f[pk]*fac('2027P'):y==='2026'?(v26n[nf(pk)]||0)*fac(2026):(FN[k][y]||0)*fac(+y);
+  const tot=yrs2.map(y=>y==='2027P'?Object.values(p27f).reduce((a,b)=>a+b,0)*fac('2027P'):y==='2026'?Object.values(v26).reduce((a,b)=>a+b,0)*fac(2026):FN['Total'][y]*fac(+y));
+  mk('ch-gt',{type:'bar',data:{labels:L,datasets:[{label:'Gasto total',data:tot,backgroundColor:yrs2.map(y=>y==='2027P'?PJ():y==='2026'?H2():H1())}]},options:baseOpts({ytitle:ytBill()})});
+  charts['ch-gt'].options.plugins.legend.display=false; charts['ch-gt'].update();
+  document.getElementById('cap-gt').textContent='Billones de '+unitLabel()+'. 1998–2025 ejecutado, 2026 vigente al 2.º trimestre, 2027 proyecto.';
+  mk('ch-fin',{type:'bar',data:{labels:L,datasets:finKeys.map(([k,pk],i)=>({label:k,data:yrs2.map((y,j)=>{const v=val(k,y,pk);return FV==='pct'?v/tot[j]*100:v;}),backgroundColor:[INF()[1],INF()[4],INF()[2],INF()[5],INF()[3]][i],borderWidth:0,stack:'s'}))},options:baseOpts(FV==='pct'?{pctAxis:true}:{ytitle:ytBill()})});
+  {const o=charts['ch-fin'].options;o.scales.x.stacked=true;o.scales.y.stacked=true;if(FV==='pct')o.scales.y.max=100;charts['ch-fin'].update();}
+  // inciso last year & 2027
+  const y=2025; const rows=CB.rows.filter(r=>r[0]===y&&r[1]===4&&r[5]!==AMORT);
+  const m={}; rows.forEach(r=>{const k=dims.inc_desc[r[5]]; m[k]=(m[k]||0)+r[8];});
+  const r26=CB.rows.filter(r=>r[0]===2026&&r[1]===2&&r[5]!==AMORT); const m26={}; r26.forEach(r=>{const k=dims.inc_desc[r[5]]; m26[k]=(m26[k]||0)+r[7];});
+  const p=p27By('inc'); const ks=Object.keys(m).sort((a,b)=>m[b]-m[a]).filter(k=>m[k]>1000);
+  const short=s=>s.replace('Servicio De La Deuda Y Disminución De Otros Pasivos','Servicio de la deuda (intereses)');
+  mk('ch-inc',{type:'bar',data:{labels:ks.map(short),datasets:[{label:'Ejecutado 2025',data:ks.map(k=>m[k]*fac(2025)),backgroundColor:H1()},{label:'Vigente 2026',data:ks.map(k=>(m26[k]||0)*fac(2026)),backgroundColor:H2()},{label:'Proyecto 2027',data:ks.map(k=>(p[k]||0)*fac('2027P')),backgroundColor:PJ()}]},options:baseOpts({extra:{indexAxis:'y'}})});
+  const o=charts['ch-inc'].options; o.scales.x.ticks.callback=v=>(v/1e6).toLocaleString('es-AR',{maximumFractionDigits:1});o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)};o.scales.y.grid={display:false};o.scales.x.grid={color:css('--line')};o.interaction={mode:'index',axis:'y',intersect:false};o.plugins.tooltip.callbacks.label=c=>' '+c.dataset.label+': '+fmt(c.parsed.x);charts['ch-inc'].update();
+  document.getElementById('cap-inc').textContent='Ejecutado 2025, vigente 2026 (2.º trimestre) y proyecto 2027, billones de '+unitLabel();
+  // jurisdicción
+  const mj={}; rows.forEach(r=>{const k=dims.jur_desc[r[2]]; mj[k]=(mj[k]||0)+r[8];}); const mj26={}; r26.forEach(r=>{const k=dims.jur_desc[r[2]]; mj26[k]=(mj26[k]||0)+r[7];});
+  const pj=p27By('jur'); const all=[...new Set([...Object.keys(pj),...Object.keys(mj)])].filter(k=>(pj[k]||0)+(mj[k]||0)>20000).sort((a,b)=>(pj[b]||0)-(pj[a]||0));
+  const sh2=s=>s.replace('Ministerio De ','Min. ').replace('De La Ciudad De Buenos Aires','');
+  mk('ch-jur',{type:'bar',data:{labels:all.map(sh2),datasets:[{label:'Ejecutado 2025',data:all.map(k=>(mj[k]||0)*fac(2025)),backgroundColor:H1()},{label:'Vigente 2026',data:all.map(k=>(mj26[k]||0)*fac(2026)),backgroundColor:H2()},{label:'Proyecto 2027',data:all.map(k=>(pj[k]||0)*fac('2027P')),backgroundColor:PJ()}]},options:baseOpts({extra:{indexAxis:'y'}})});
+  const oj=charts['ch-jur'].options; oj.scales.x.ticks.callback=v=>(v/1e6).toLocaleString('es-AR',{maximumFractionDigits:1});oj.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)};oj.scales.y.ticks.autoSkip=false;oj.scales.y.grid={display:false};oj.scales.x.grid={color:css('--line')};oj.interaction={mode:'index',axis:'y',intersect:false};oj.plugins.tooltip.callbacks.label=c=>' '+c.dataset.label+': '+fmt(c.parsed.x);charts['ch-jur'].update();
+  document.getElementById('cap-jur').textContent='Ejecutado 2025, vigente 2026 y proyecto 2027, billones de '+unitLabel()+'. Las jurisdicciones cambiaron de nombre y funciones entre gestiones.';
+  // subte
+  const SB=D.subte.filter(r=>r[1]===4); const sy=[...new Set(SB.map(r=>r[0]))].sort();
+  const cats={}; SB.forEach(r=>{let c=r[2]; if(/Fondo Subte|Contrato|Operaci/i.test(c))c='Operación (Fondo Subte / contrato)'; else if(/Expansi|Ampliaci|Obra/i.test(c))c='Ampliación de la red'; else if(/Vigilancia|Seguridad/i.test(c))c='Seguridad'; else c='Resto'; (cats[c]=cats[c]||{})[r[0]]=(cats[c][r[0]]||0)+r[3];});
+  const ck=['Operación (Fondo Subte / contrato)','Ampliación de la red','Seguridad','Resto'].filter(k=>cats[k]);
+  const SBC=[H1(),H2(),H3(),css('--m5')]; const ds=ck.map((k,i)=>({label:k,data:[...sy.map(y=>(cats[k][y]||0)*fac(y)),null],backgroundColor:SBC[i],stack:'s'}));
+  ds.push({label:'Inversión anunciada 2027',data:[...sy.map(()=>null),917000*fac('2027P')],backgroundColor:PJ(),stack:'s'});
+  mk('ch-subte',{type:'bar',data:{labels:[...sy.map(String),'2027 P'],datasets:ds},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})});
+  charts['ch-subte'].options.scales.x.stacked=true;charts['ch-subte'].options.scales.y.stacked=true;charts['ch-subte'].update();
+}
+document.querySelectorAll('[data-fv]').forEach(b=>b.addEventListener('click',()=>{FV=b.dataset.fv;document.querySelectorAll('[data-fv]').forEach(x=>x.setAttribute('aria-pressed',x===b));gastoCharts();}));
+// ---------- Fiscal
+const GEST=[[1996,2000,'De la Rúa / Olivera'],[2000,2007,'Ibarra / Telerman'],[2007,2015,'M. Macri'],[2015,2023,'Rodríguez Larreta'],[2023,2027,'J. Macri']];
+const bands={id:'bands',beforeDraw(ch,a,o){ if(!o||!o.on)return; const {ctx,chartArea:ca,scales:{x}}=ch; ctx.save(); GEST.forEach((g,i)=>{ const i0=x.getPixelForValue(o.labels.indexOf(String(g[0]))), i1=o.labels.indexOf(String(g[1]))>=0?x.getPixelForValue(o.labels.indexOf(String(g[1]))):ca.right; if(isNaN(i0))return; ctx.fillStyle=i%2?css('--panel2'):'transparent'; ctx.fillRect(i0,ca.top,i1-i0,ca.bottom-ca.top); ctx.fillStyle=css('--muted'); ctx.font='11px '+css('--font'); ctx.fillText(g[2],i0+4,ca.top+12);}); ctx.restore();}};
+function fisCharts(){
+  const C=COL(); const yrs=YRS2; const L=yrs.map(LAB);
+  mk('ch-fis',{data:{labels:L,datasets:[
+   {type:'bar',label:'Resultado primario',data:yrs.map(y=>cv('8) Resultado primario (6-7)',y)),backgroundColor:yrs.map(y=>(cv('8) Resultado primario (6-7)',y)||0)>=0?css('--pos'):css('--neg')),order:2},
+   {type:'line',label:'Recursos totales',data:yrs.map(y=>cv('6) Recursos totales (1+4)',y)),borderColor:H1(),backgroundColor:H1(),borderWidth:2,pointRadius:0,order:1},
+   {type:'line',label:'Gasto primario',data:yrs.map(y=>cv('7) Gasto primario (2+5)',y)),borderColor:H2(),backgroundColor:H2(),borderDash:[6,4],borderWidth:2,pointRadius:0,order:1}]},
+   options:Object.assign(baseOpts({ytitle:ytBill()}),{plugins:Object.assign(baseOpts().plugins,{bands:{on:true,labels:YRS2.map(LAB)}})}),plugins:[bands]});
+  document.getElementById('cap-fis').textContent='Billones de '+unitLabel()+'. 1995–2025 ejecutado y proyecto 2027.';
+  const ir=yrs.map(y=>{const a=CA['9) Intereses de la deuda pública'][y], b=CA['6) Recursos totales (1+4)'][y]; return a&&b?a/b*100:null;});
+  mk('ch-int',{type:'bar',data:{labels:L,datasets:[{label:'Intereses / recursos',data:ir,backgroundColor:yrs.map(y=>y==='2027P'?PJ():y==='2026P'?H2():H1())}]},options:baseOpts({pctAxis:true})});
+  charts['ch-int'].options.plugins.legend.display=false; charts['ch-int'].update();
+  const dy=Object.keys(D.deuda);
+  mk('ch-deuda',{type:'bar',data:{labels:dy,datasets:[{label:'Stock de deuda',data:dy.map(y=>D.deuda[y]*fac(+y===2025?2025:+y)),backgroundColor:H1()}]},options:baseOpts({ytitle:ytBill()})});
+  charts['ch-deuda'].options.plugins.legend.display=false; charts['ch-deuda'].update();
+  document.getElementById('cap-deuda').textContent='Al 31 de diciembre, billones de '+unitLabel()+' (deflactado por el promedio anual)';
+}
+// ---------- promesa mini charts
+function promCharts(){
+  const C=COL(); const mini=(id,cfg)=>{const c=mk(id,cfg); if(!c)return; c.options.plugins.legend.display=false; c.options.scales.y.ticks.maxTicksLimit=4; c.update();};
+  const yrsK=['2005','2007','2009','2011','2013','2015','2017','2019','2021','2023','2025','2027P'];
+  PROMS.forEach((p,i)=>{const id='pc-'+i;
+   if(p.chart==='tax'){ const yy={}; D.reca.rows.forEach(r=>{if(r[0]<2019)return; const f=facM(r[0],r[1]); (yy[r[0]]=yy[r[0]]||[0,0]); yy[r[0]][0]+=r[5]*f; yy[r[0]][1]+=r[6]*f;}); const ys=['2019','2020','2021','2022','2023','2024','2025'];
+     const e26=yy[2026]; const r25={};D.reca.rows.forEach(r=>{if(r[0]===2025){const f=facM(r[0],r[1]);(r25.a=r25.a||[0,0]);r25.a[0]+=r[5]*f;r25.a[1]+=r[6]*f; if(r[1]<=8){(r25.b=r25.b||[0,0]);r25.b[0]+=r[5]*f;r25.b[1]+=r[6]*f;}}});
+     const est=[e26[0]*r25.a[0]/r25.b[0],e26[1]*r25.a[1]/r25.b[1]];
+     mini(id,{type:'bar',data:{labels:[...ys,'2026e','2027P'],datasets:[{label:'Patentes',data:[...ys.map(y=>yy[y][0]),est[0],467162*fac('2027P')],backgroundColor:[...ys.map(()=>H1()),H2(),PJ()]}]},options:baseOpts({div:1e3})}); }
+   if(p.chart==='cap'){ mini(id,{type:'line',data:{labels:YRS2,datasets:[{label:'Capital / gasto',data:YRS2.map(y=>CA['5) Gastos de capital'][y]/CA['10) Gastos totales (7+9)'][y]*100),borderColor:H1(),backgroundColor:H1(),borderWidth:2,pointRadius:YRS2.map(y=>y==='2027P'?5:0),pointBackgroundColor:PJ(),pointBorderColor:PJ()}]},options:baseOpts({pctAxis:true})}); }
+   if(p.chart==='fis'){ mini(id,{type:'bar',data:{labels:['Recursos 2027','sin fallo CSJN','Gasto 2027'],datasets:[{label:'2027',data:[CA['6) Recursos totales (1+4)']['2027P']*fac('2027P'),(CA['6) Recursos totales (1+4)']['2027P']-2789861)*fac('2027P'),CA['10) Gastos totales (7+9)']['2027P']*fac('2027P')],backgroundColor:[H1(),css('--fg'),PJ()]}]},options:baseOpts()}); }
+   if(p.chart==='subte'){ const SB=D.subte.filter(r=>r[1]===4); const sy=[...new Set(SB.map(r=>r[0]))].sort(); mini(id,{type:'bar',data:{labels:[...sy.map(String),'2027P'],datasets:[{label:'Subte',data:[...sy.map(y=>SB.filter(r=>r[0]===y).reduce((a,r)=>a+r[3],0)*fac(y)),917000*fac('2027P')],backgroundColor:[...sy.map(()=>C[0]),PJ()]}]},options:baseOpts({div:1e3})}); }
+   if(p.chart==='rem'){ mini(id,{type:'line',data:{labels:YRS2,datasets:[{label:'Remuneraciones / gasto',data:YRS2.map(y=>CA['Remuneraciones al personal'][y]/CA['10) Gastos totales (7+9)'][y]*100),borderColor:H1(),backgroundColor:H1(),borderWidth:2,pointRadius:YRS2.map(y=>y==='2027P'?5:0),pointBackgroundColor:PJ(),pointBorderColor:PJ()}]},options:baseOpts({pctAxis:true})}); }
+   if(p.chart==='fun'){ const fs=['Educación','Salud','Seguridad interior','Promoción y acción social']; const ys=[2019,2020,2021,2022,2023,2024,2025]; const P27=p27By('fun'); const t27=Object.values(P27).reduce((a,b)=>a+b,0);
+     const sh=fs.map(f=>{const fi=dims.fun_desc.indexOf(f); return [...ys.map(y=>{let a=0,t=0;CB.rows.forEach(r=>{if(r[0]===y&&r[1]===4&&r[5]!==AMORT){t+=r[8]; if(r[4]===fi)a+=r[8];}});return a/t*100;}),(P27[f]||0)/t27*100];});
+     const FC=[H1(),H2(),css('--m2'),css('--m4')]; const c=mk(id,{type:'line',data:{labels:[...ys.map(String),'2027P'],datasets:fs.map((f,j)=>({label:f,data:sh[j],borderColor:FC[j],backgroundColor:FC[j],borderWidth:2,pointRadius:0}))},options:baseOpts({pctAxis:true})}); c.options.plugins.legend.labels.font={size:10}; c.options.scales.y.ticks.maxTicksLimit=4; c.update(); }
+   if(p.chart==='int'){ mini(id,{type:'bar',data:{labels:YRS2.slice(10),datasets:[{label:'Intereses / recursos',data:YRS2.slice(10).map(y=>CA['9) Intereses de la deuda pública'][y]/CA['6) Recursos totales (1+4)'][y]*100),backgroundColor:YRS2.slice(10).map(y=>y==='2027P'?PJ():H1())}]},options:baseOpts({pctAxis:true})}); }
+   if(p.chart==='iibb'){ const yy={}; D.reca.rows.forEach(r=>{if(r[1]>8||r[0]<2017)return; yy[r[0]]=(yy[r[0]]||0)+r[3]*facM(r[0],r[1]);}); const ys=Object.keys(yy); mini(id,{type:'bar',data:{labels:ys,datasets:[{label:'IIBB ene–ago',data:ys.map(y=>yy[y]),backgroundColor:ys.map(y=>y==='2026'?H2():H1())}]},options:baseOpts({div:1e3})}); }
+  });
+}
+// ---------- method
+document.getElementById('method').innerHTML=[
+ '<p><b>Pesos constantes.</b> Se deflacta con el IPC de la Ciudad (IPCBA, IDECBA). Para años completos se usa el promedio anual; para la ejecución acumulada a un trimestre, el promedio de los meses transcurridos. Antes de julio de 2012 no hay IPCBA y el IPC del INDEC 2007–2015 no es confiable: ese tramo se empalma con la serie alternativa de la base CEER (IPC provincias).</p>',
+ '<p><b>Pesos de 2027.</b> Siguiendo la pauta del propio proyecto: los valores se llevan a pesos de septiembre de 2026 (último IPCBA), se les suma 2% mensual por octubre–diciembre de 2026 (6,1% compuesto) y el 18% de inflación 2027 que supone el Presupuesto. Si la inflación real supera la pauta, el proyecto 2027 es menor en términos reales de lo que aquí se muestra.</p>',
+ '<p><b>Base de gasto.</b> Presupuesto ejecutado trimestral de BA Data (2019 a 2.º trimestre de 2026; 2020 y 2021 al cierre desde la base propia, porque los trimestrales no están completos). Se agregó por carácter, jurisdicción, programa, finalidad, función, objeto hasta subparcial y fuente. Se quitaron las filas de totales que traen algunos archivos y se corrigieron montos exportados en notación científica.</p>',
+ '<p><b>Comparabilidad con el proyecto.</b> En la ejecución, el inciso Servicio de la deuda incluye amortizaciones; en el proyecto 2027 las amortizaciones son aplicaciones financieras. Por eso, en las comparaciones y en el tablero por defecto, las amortizaciones se muestran aparte. El vigente 2026 corresponde al 2.º trimestre, último publicado.</p>',
+ '<p><b>Recursos.</b> La serie larga es el esquema ahorro-inversión-financiamiento consolidado de IDECBA (1995–2025, 2025 provisorio). Las aperturas tributarias son la recaudación de fuente propia mensual (AGIP vía IDECBA, hasta agosto de 2026). El cierre 2026 se estima aplicando a enero–agosto la estacionalidad de 2025.</p>',
+ '<p><b>Proyecto 2027.</b> Planillas Anexas del Proyecto de Ley (Planillas 3, 4, 11 y 16), la presentación del 30 de septiembre y la versión taquigráfica de la Comisión de Presupuesto del 7 de octubre de 2026. Las cifras de la presentación están en miles de millones de pesos.</p>'
+].join('');
+// ======== Por ministerio
+const P27J=D.p2027_jur||{};
+opts(document.getElementById('mi-jur'),GD.jur_desc,null,'Ministerio De Educación');
+opts(document.getElementById('mi-fte'),GD.fte_desc,'Todas');
+document.getElementById('mi-year').innerHTML=GY.filter(y=>y<2026).map(y=>`<option ${y===2025?'selected':''}>${y}</option>`).join('');
+function ministerio(){
+  const g=id=>+document.getElementById(id).value;
+  const j=g('mi-jur'), et=g('mi-etapa'), fte=g('mi-fte'), by=document.getElementById('mi-by').value, yd=g('mi-year'); const vi=7+et;
+  const jn=GD.jur_desc[j]; const bi=KI[by], bn=KN[by];
+  const agg={}, tot={}, tlab={};
+  G.rows.forEach(r=>{ if(r[2]!==j||r[4]===GAM||(fte>=0&&r[6]!==fte)) return; const t=r[0]===2026?lastT[2026]:4; if(r[1]!==t) return; const v=r[vi]*fac(r[0],et===2?t:4); tot[r[0]]=(tot[r[0]]||0)+v; tlab[r[0]]=t; (agg[r[bi]]=agg[r[bi]]||{})[r[0]]=(agg[r[bi]][r[0]]||0)+v; });
+  const yrs=GY.filter(y=>tot[y]!=null); const ly=yrs.filter(y=>y<2026).pop();
+  const keys=Object.keys(agg).sort((a,b)=>(agg[b][ly]||0)-(agg[a][ly]||0)); const C=C8();
+  const ser=keys.slice(0,7).map((k,i)=>({label:GD[bn][k],data:[...yrs.map(y=>agg[k][y]||0),null],color:C[i]}));
+  if(keys.length>7) ser.push({label:'Resto',data:[...yrs.map(y=>keys.slice(7).reduce((a,k)=>a+(agg[k][y]||0),0)),null],color:css('--c8')});
+  const p27=P27J[jn]?Object.values(P27J[jn]).reduce((a,b)=>a+b,0)*fac('2027P'):null;
+  const labels=[...yrs.map(y=>y+(tlab[y]<4?' T'+tlab[y]:'')),'2027 P'];
+  stackBar('ch-mi',labels,ser,ytBill(),fte<0&&p27?{label:'Proyecto 2027',data:[...yrs.map(()=>null),p27]}:null);
+  const etl=['Sancionado','Vigente','Devengado'][et];
+  document.getElementById('mi-title').textContent=jn;
+  document.getElementById('mi-cap').textContent=etl+' por '+{inc:'inciso',fun:'función',fte:'fuente'}[by]+', billones de '+unitLabel()+'. 2019–2025 al cierre; 2026 al 2.º trimestre'+(et===2?' (acumulado, todavía incompleto)':'')+'. Sin amortizaciones de deuda.';
+  // kpis
+  const val=(y,t,vi2)=>{let s=0;G.rows.forEach(r=>{if(r[0]===y&&r[1]===t&&r[2]===j&&r[4]!==GAM&&(fte<0||r[6]===fte))s+=r[vi2];});return s;};
+  const d25=val(2025,4,9)*fac(2025), d19=val(2019,4,9)*fac(2019), v26=val(2026,lastT[2026],8)*fac(2026), s26=val(2026,lastT[2026],7)*fac(2026);
+  const kp=[['Ejecutado 2025',fmt(d25)],['Variación real 2019–2025',d19?pct(d25/d19-1):'–'],['Sancionado 2026',fmt(s26)],['Vigente 2026 (T2)',fmt(v26)],['Proyecto 2027',p27&&fte<0?fmt(p27):'–'],['2027 vs. vigente 2026',p27&&v26&&fte<0?pct(p27/v26-1):'–']];
+  document.getElementById('mi-kpis').innerHTML=kp.map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  document.getElementById('mi-kcap').textContent='En '+unitLabel()+(U==='nom'?' (las variaciones no descuentan inflación)':'');
+  // programas
+  const PJx=PG.dims.jur_desc.indexOf(jn); const fx=fte>=0?PG.dims.fte_desc.indexOf(GD.fte_desc[fte]):-1;
+  const pm=(y,vi2)=>{const m={};PG.rows.forEach(r=>{if(r[0]===y&&r[1]===4&&r[2]===PJx&&(fx<0||r[5]===fx))m[r[3]]=(m[r[3]]||0)+r[vi2];});return m;};
+  const a=pm(yd,8), b=pm(yd-1,8); const ks=Object.keys(a).sort((x,y)=>a[y]-a[x]);
+  document.getElementById('mi-pcap').textContent=`Devengado ${yd} contra ${yd-1}, en ${unitLabel()}`;
+  document.getElementById('mi-prog').innerHTML=`<thead><tr><th>Programa</th><th class="n">${yd-1}</th><th class="n">${yd}</th><th class="n">Var.</th></tr></thead><tbody>`+ks.map(k=>{const x=a[k]*fac(yd), y0=(b[k]||0)*fac(yd-1); const v=y0?x/y0-1:null; return `<tr><td>${PG.dims.prog_desc[k]}</td><td class="n">${fmt(y0)}</td><td class="n">${fmt(x)}</td><td class="n ${v==null?'':v>=0?'up':'dn'}">${v==null?'nuevo':pct(v)}</td></tr>`}).join('')+'</tbody>';
+}
+['mi-jur','mi-etapa','mi-fte','mi-by','mi-year'].forEach(id=>document.getElementById(id).addEventListener('change',ministerio));
+// ======== Deuda
+const O=D.O, OD=O.dims; const DINC=[OD.inc_desc.indexOf('Servicio De La Deuda Y Disminución De Otros Pasivos'),OD.inc_desc.indexOf('Amortización de deuda')];
+opts(document.getElementById('de-fte'),OD.fte_desc,'Todas');
+function concepto(r){const par=OD.par_desc[r[5]]||'', pp=OD.ppal_desc[r[4]]||''; const ext=/Extern/i.test(pp+par);
+  if(/Amortizaci|Disminución De Préstamos|Préstamos Recibidos/i.test(par+pp)) return ext?'Amortización deuda externa':'Amortización deuda interna';
+  if(/Inter/i.test(par)) return ext?'Intereses deuda externa':'Intereses deuda interna'; return 'Comisiones y otros gastos';}
+function deuda(){
+  const fte=+document.getElementById('de-fte').value, et=+document.getElementById('de-etapa').value; const vi=7+et;
+  const agg={}, byF={}; const tl={};
+  O.rows.forEach(r=>{ if(!DINC.includes(r[3])) return; const t=r[0]===2026?lastT[2026]:4; if(r[1]!==t) return; tl[r[0]]=t;
+    const v=r[vi]*fac(r[0],et===2?t:4); if(r[0]===2025&&r[1]===4) byF[OD.fte_desc[r[6]]]=(byF[OD.fte_desc[r[6]]]||0)+r[9]*fac(2025);
+    if(fte>=0&&r[6]!==fte) return; const c=concepto(r); (agg[c]=agg[c]||{})[r[0]]=(agg[c][r[0]]||0)+v; });
+  const yrs=GY; const order=['Intereses deuda externa','Intereses deuda interna','Amortización deuda externa','Amortización deuda interna','Comisiones y otros gastos'];
+  const col=[H1(),H2(),H3(),css('--m5'),css('--c2')];
+  const ser=order.filter(k=>agg[k]).map((k,i)=>({label:k,data:[...yrs.map(y=>agg[k][y]||0),null,null],color:col[order.indexOf(k)]}));
+  const labels=[...yrs.map(y=>y+(tl[y]<4?' T'+tl[y]:'')),'2027 P intereses','2027 P amortización'];
+  const c=stackBar('ch-de',labels,ser,ytBill(),null);
+  if(fte<0){ c.data.datasets.push({label:'Proyecto 2027',data:[...yrs.map(()=>null),591887.3*fac('2027P'),613916.3*fac('2027P')],backgroundColor:PJ(),stack:'s'}); c.update(); }
+  document.getElementById('de-cap').textContent=['Sancionado','Vigente','Devengado'][et]+', billones de '+unitLabel()+'. 2026 al 2.º trimestre.';
+  const tf=Object.values(byF).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('de-fcap').textContent='Servicio de la deuda devengado 2025, '+unitLabel();
+  document.getElementById('de-ftable').innerHTML='<thead><tr><th>Fuente</th><th class="n">Monto</th><th class="n">%</th></tr></thead><tbody>'+Object.entries(byF).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${k}</td><td class="n">${fmt(v)}</td><td class="n">${n1(v/tf*100)}</td></tr>`).join('')+'</tbody>';
+  const dy=Object.keys(D.deuda);
+  const cs=mk('ch-de-stock',{type:'bar',data:{labels:dy,datasets:[{label:'Stock de deuda',data:dy.map(y=>D.deuda[y]*fac(+y)),backgroundColor:H1()}]},options:baseOpts({ytitle:ytBill()})}); cs.options.plugins.legend.display=false; cs.update();
+  document.getElementById('de-scap').textContent='Stock al 31 de diciembre, billones de '+unitLabel()+'. Intereses sobre recursos: 9,1% en 2019, 0,8% en 2025 y 2,5% previsto para 2027.';
+}
+['de-fte','de-etapa'].forEach(id=>document.getElementById(id).addEventListener('change',deuda));
+// ======== Lupa
+const LUPA=[
+ {k:'pub',t:'Publicidad oficial',m:['ppal',['Publicidad Y Propaganda']],d:'Partida principal Publicidad y propaganda. Suele subir en años electorales.'},
+ {k:'vig',t:'Vigilancia privada',m:['par',['Servicio De Vigilancia']],d:'Contratos de seguridad privada para edificios y dependencias públicas, aparte de la Policía de la Ciudad.'},
+ {k:'con',t:'Consultorías y estudios',m:['par',['Servicios De Consultoria','Estudios, Investigaciones Y Proyectos De Factibilidad']],d:'Contratación de consultoras, estudios e investigaciones.'},
+ {k:'alq',t:'Alquiler de edificios',m:['par',['Alquiler De Edificios Y Locales']],d:'Alquileres de oficinas y locales que paga la Ciudad.'},
+ {k:'cer',t:'Ceremonial y eventos',m:['par',['Servicios De Ceremonial','Pasajes, Movilidad Y Hospedaje Para La Organización De Eventos De La Ciudad']],d:'Ceremonial, pasajes y hospedaje para eventos organizados por la Ciudad.'},
+ {k:'ayu',t:'Ayudas sociales a personas',m:['par',['Ayudas Sociales A Personas']],d:'Transferencias directas a personas: subsidios habitacionales, asistencia alimentaria y otros programas sociales.'}];
+let LK='pub';
+document.getElementById('lupa-btns').innerHTML=LUPA.map(l=>`<button data-lk="${l.k}" aria-pressed="${l.k===LK}">${l.t}</button>`).join('');
+document.getElementById('lupa-btns').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return; LK=b.dataset.lk; document.querySelectorAll('[data-lk]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.lk===LK)); lupa();});
+function lupa(){
+  const L=LUPA.find(l=>l.k===LK); const lvl=L.m[0]==='ppal'?4:5; const ids=L.m[1].map(n=>OD[L.m[0]+'_desc'].indexOf(n));
+  const dev={}, v26={}, s26={}, byJ={};
+  O.rows.forEach(r=>{ if(!ids.includes(r[lvl])) return; if(r[1]===4) dev[r[0]]=(dev[r[0]]||0)+r[9]*fac(r[0]); if(r[0]===2026&&r[1]===lastT[2026]){v26.v=(v26.v||0)+r[8]*fac(2026); s26.v=(s26.v||0)+r[7]*fac(2026);} if(r[0]===2025&&r[1]===4) byJ[OD.jur_desc[r[2]]]=(byJ[OD.jur_desc[r[2]]]||0)+r[9]*fac(2025); });
+  const ys=Object.keys(dev).map(Number).filter(y=>y<2026).sort();
+  const labels=[...ys.map(String),'2026 Sanc.','2026 Vig.'];
+  const c=mk('ch-lupa',{type:'bar',data:{labels,datasets:[{label:L.t,data:[...ys.map(y=>dev[y]),s26.v||0,v26.v||0],backgroundColor:[...ys.map(()=>H1()),H2(),H2()]}]},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})}); c.options.plugins.legend.display=false; c.update();
+  document.getElementById('lupa-title').textContent=L.t;
+  document.getElementById('lupa-cap').textContent='Devengado anual 2019–2025 y crédito 2026 (sancionado y vigente al T2), '+unitLabel();
+  const pk=ys.reduce((a,y)=>dev[y]>dev[a]?y:a,ys[0]); const ch=dev[2025]/dev[2019]-1;
+  document.getElementById('lupa-txt').innerHTML=L.d+(U!=='nom'?` <b>Entre 2019 y 2025 varió ${pct(ch)} en términos reales; el máximo fue en ${pk}.</b>`:'');
+  const tj=Object.values(byJ).reduce((a,b)=>a+b,0)||1;
+  document.getElementById('lupa-jcap').textContent='Devengado 2025 por jurisdicción';
+  document.getElementById('lupa-jur').innerHTML='<thead><tr><th>Jurisdicción</th><th class="n">Monto</th><th class="n">%</th></tr></thead><tbody>'+Object.entries(byJ).sort((a,b)=>b[1]-a[1]).slice(0,12).map(([k,v])=>`<tr><td>${k}</td><td class="n">${fmt(v)}</td><td class="n">${n1(v/tj*100)}</td></tr>`).join('')+'</tbody>';
+}
+// ======== Empleo
+function empleo(){
+  const C=COL(); const E=D.empleo; const cg=E.cargos; const yrs=Object.keys(cg['Total ']||cg['Total']||{}).filter(y=>/^\d{4}$/.test(y));
+  const grp={'Docentes':['Docentes titulares','Docentes interinos','Docentes suplentes','Docentes transitorios'],'Planta permanente':['Planta permanente'],'Médicos/as':['Médicos/ as'],'Residencias y guardias':['Residencias hospitalarias','Suplentes de guardia'],'Planta transitoria':['Planta transitoria']};
+  const used=new Set(Object.values(grp).flat()); const totK=Object.keys(cg).find(k=>k.trim()==='Total');
+  const ser=Object.entries(grp).map(([g,ks],i)=>({label:g,data:yrs.map(y=>ks.reduce((a,k)=>a+((cg[k]||{})[y]||0),0)),color:C[i]}));
+  ser.push({label:'Resto',data:yrs.map((y,j)=>(cg[totK][y]||0)-ser.reduce((a,s)=>a+s.data[j],0)),color:css('--c8')});
+  const c=mk('ch-emp-cargos',{type:'bar',data:{labels:yrs,datasets:ser.map(s=>({label:s.label,data:s.data,backgroundColor:s.color,stack:'s'}))},options:baseOpts({div:1e3,ytitle:'Miles de cargos'})});
+  c.options.scales.x.stacked=true;c.options.scales.y.stacked=true;c.options.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': '+Math.round(x.parsed.y).toLocaleString('es-AR');c.update();
+  const P17=E.p17; const rows=Object.entries(P17).filter(([k])=>k!=='Total').sort((a,b)=>b[1].Total-a[1].Total);
+  document.getElementById('cap-emp27').textContent='Cargos previstos en 2027: '+P17.Total.Total.toLocaleString('es-AR');
+  document.getElementById('emp27-table').innerHTML='<thead><tr><th>Jurisdicción</th><th class="n">Cargos</th><th class="n">Admin.</th></tr></thead><tbody>'+rows.map(([k,v])=>`<tr><td>${k}</td><td class="n">${v.Total.toLocaleString('es-AR')}</td><td class="n">${v['Carrera administrativa'].toLocaleString('es-AR')}</td></tr>`).join('')+'</tbody>';
+  const cats=Object.entries(P17.Total).filter(([k])=>k!=='Total').sort((a,b)=>b[1]-a[1]);
+  const c2=mk('ch-emp27',{type:'bar',data:{labels:cats.map(x=>x[0]),datasets:[{label:'Cargos 2027',data:cats.map(x=>x[1]),backgroundColor:PJ()}]},options:baseOpts({extra:{indexAxis:'y'}})});
+  const o=c2.options;o.plugins.legend.display=false;o.scales.x.ticks.callback=v=>(v/1e3).toLocaleString('es-AR')+' mil';o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)};o.scales.y.ticks.autoSkip=false;o.scales.y.grid={display:false};o.scales.x.grid={color:css('--line')};o.interaction={mode:'nearest',axis:'y',intersect:false};o.plugins.tooltip.callbacks.label=x=>' '+x.parsed.x.toLocaleString('es-AR')+' cargos';c2.update();
+  const inc=GD.inc_desc.indexOf('Gastos En Personal'); const dv={}; let v26=0;
+  G.rows.forEach(r=>{if(r[4]!==inc)return; if(r[1]===4) dv[r[0]]=(dv[r[0]]||0)+r[9]*fac(r[0]); if(r[0]===2026&&r[1]===lastT[2026]) v26+=r[8]*fac(2026);});
+  const ys=Object.keys(dv).map(Number).sort();
+  const c3=mk('ch-emp-gasto',{type:'bar',data:{labels:[...ys.map(String),'2026 Vig.','2027 P'],datasets:[{label:'Gasto en personal',data:[...ys.map(y=>dv[y]),v26,9950480.7*fac('2027P')],backgroundColor:[...ys.map(()=>H1()),H2(),PJ()]}]},options:baseOpts({ytitle:ytBill()})}); c3.options.plugins.legend.display=false; c3.update();
+  document.getElementById('cap-emp-gasto').textContent='Inciso 1, billones de '+unitLabel()+'. Devengado 2019–2025, vigente 2026 y proyecto 2027.';
+}
+// ---------- tabs
+document.documentElement.lang='es';
+let TAB='p27';
+function showTab(t,scroll){TAB=t;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));['p27','ej','tb'].forEach(k=>document.getElementById('tab-'+k).hidden=t!==k);try{localStorage.setItem('ceer-tab',t)}catch(e){} renderAll(); if(scroll)window.scrollTo(0,0);}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab,true)));
+// ---------- render all
+function renderAll(){ themeChart(); kpis(); if(TAB==='p27'){cmp(); caifChart(); promCharts(); recCharts();} if(TAB==='ej'){recCharts(); gastoCharts(); empleo(); fisCharts();} if(TAB==='tb'){ministerio(); deuda(); lupa(); tb();} }
+document.querySelectorAll('[data-u]').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.u===U); b.addEventListener('click',()=>{U=b.dataset.u; try{localStorage.setItem('ceer-unit',U);}catch(e){} document.querySelectorAll('[data-u]').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderAll();});});
+document.getElementById('themebtn').addEventListener('click',()=>{const r=document.documentElement; const cur=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'); r.setAttribute('data-theme',cur==='dark'?'light':'dark'); renderAll();});
+matchMedia('(prefers-color-scheme: light)').addEventListener('change',renderAll);
+try{const h=location.hash.replace('#',''); let st=localStorage.getItem('ceer-tab'); if(st==='sg')st='p27'; if(h==='ejecucion')TAB='ej'; else if(h==='presupuesto')TAB='p27'; else if(h==='tablero')TAB='tb'; else if(st)TAB=st;}catch(e){}
+showTab(TAB,false);
+})();
+</script>
