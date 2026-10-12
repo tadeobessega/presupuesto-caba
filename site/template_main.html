@@ -291,6 +291,19 @@ h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;f
   </div>
 </section>
 
+<section id="pauta">
+  <h2><span class="tag">Pauta oficial</span>Se presupuesta poco y se gasta mucho más</h2>
+  <p class="sub" id="pa-lead"></p>
+  <div class="minikpis" id="pa-kpis" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px"></div>
+  <div class="grid">
+    <div class="card span7"><h3>Presupuestado contra gastado</h3><p class="cap" id="pa-cap1"></p><div class="chart tall"><canvas id="ch-pa-ys" aria-label="Pauta sancionada y devengada por año"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data), partida principal Publicidad y propaganda; 2027: descripción de programas del proyecto. * Año con elecciones en la Ciudad.</p></div>
+    <div class="card span5"><h3>Cuántas veces el presupuesto original</h3><p class="cap">Devengado al cierre dividido por el crédito sancionado de cada año</p><div class="chart tall"><canvas id="ch-pa-ratio" aria-label="Sobreejecución de la pauta"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data). * Año con elecciones en la Ciudad.</p></div>
+    <div class="card span6"><h3>Cómo se gasta durante el año</h3><p class="cap" id="pa-cap3"></p><div class="chart"><canvas id="ch-pa-q" aria-label="Pauta acumulada por trimestre"></canvas></div><p class="src">Fuente: presupuesto ejecutado trimestral (BA Data). 2020 y 2021 sin todos los trimestres.</p></div>
+    <div class="card span6"><h3>Quién tiene la pauta en 2027</h3><p class="cap" id="pa-cap4"></p><div class="tablewrap" style="max-height:380px;overflow-y:auto"><table id="pa-table"></table></div><p class="src">Fuente: Proyecto 2027, descripción de programas por jurisdicción (partida Publicidad y propaganda).</p></div>
+  </div>
+</section>
+
+
 </div>
 <div class="tab" id="tab-ej" role="tabpanel" aria-labelledby="tabbtn-ej" hidden>
 <section class="hero ej">
@@ -1011,6 +1024,35 @@ function empleo(){
   document.getElementById('cap-emp-gasto').textContent=ytd?`Inciso 1, devengado acumulado al ${LT}.º trimestre de cada año (acumulado 2T), billones de ${unitLabel()}.`:'Inciso 1, billones de '+unitLabel()+'. Devengado 2019–2025, vigente 2026 y proyecto 2027.';
 }
 
+
+// ======== Pauta oficial
+function pauta(){
+  const PPI=OD.ppal_desc.indexOf('Publicidad Y Propaganda'); const Q={};
+  O.rows.forEach(r=>{ if(r[4]!==PPI) return; const k=r[0]+'-'+r[1]; const a=(Q[k]=Q[k]||[0,0,0]); a[0]+=r[7];a[1]+=r[8];a[2]+=r[9]; });
+  const E=y=>y%2===1; const ys=[2019,2020,2021,2022,2023,2024,2025]; const L=y=>y+(E(y)?'*':'');
+  const f=y=>fac(y); const s=y=>Q[y+'-4'][0]*f(y), d=y=>Q[y+'-4'][2]*f(y);
+  const p27=(D.pauta27||[]).reduce((a,r)=>a+r[3],0)*fac('2027P'); const s26=Q['2026-'+LT][0]*fac(2026), v26=Q['2026-'+LT][1]*fac(2026);
+  const labels=[...ys.map(L),'2026','2027* P'];
+  const c=mk('ch-pa-ys',{type:'bar',data:{labels,datasets:[{label:'Presupuesto sancionado',data:[...ys.map(s),s26,null],backgroundColor:H2()},{label:'Gastado (devengado)',data:[...ys.map(d),null,null],backgroundColor:H1()},{label:'Vigente 2026 (al 2T)',data:[...ys.map(()=>null),v26,null],backgroundColor:H3()},{label:'Proyecto 2027',data:[...ys.map(()=>null),null,p27],backgroundColor:PJ()}]},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})});
+  c.options.datasets={bar:{skipNull:true}}; c.update();
+  document.getElementById('pa-cap1').textContent='Crédito sancionado por la Legislatura y gasto devengado al cierre de cada año, miles de millones de '+unitLabel()+'.';
+  const rat=ys.map(y=>Q[y+'-4'][2]/Q[y+'-4'][0]);
+  const c2=mk('ch-pa-ratio',{type:'bar',data:{labels:ys.map(L),datasets:[{label:'Devengado / sancionado',data:rat,backgroundColor:ys.map(y=>E(y)?H1():H2())}]},options:baseOpts({div:1})}); c2.options.plugins.legend.display=false; c2.options.scales.y.ticks.callback=v=>v.toLocaleString('es-AR')+'×'; c2.options.plugins.tooltip.callbacks.label=x=>' '+n1(x.parsed.y)+' veces lo sancionado'; c2.update();
+  // acumulado por trimestre (real)
+  const qs=[2022,2023,2024,2025,2026]; const QC=[css('--m5'),H1(),H2(),H3(),PJ()];
+  const c3=mk('ch-pa-q',{type:'line',data:{labels:['1.er trim.','2.º trim.','3.er trim.','4.º trim.'],datasets:qs.map((y,i)=>({label:String(y)+(E(y)?'*':''),data:[1,2,3,4].map(t=>Q[y+'-'+t]?Q[y+'-'+t][2]*fac(y,t):null),borderColor:QC[i],backgroundColor:QC[i],borderWidth:y===2026||y===2023?3:2,pointRadius:3}))},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})});
+  document.getElementById('pa-cap3').textContent='Devengado acumulado al cierre de cada trimestre, miles de millones de '+unitLabel()+'.';
+  // tabla 2027
+  const P=(D.pauta27||[]).map(r=>({j:r[0],prog:r[1].replace(/^\d+\s*/,''),ue:r[2],v:r[3]*fac('2027P')})).sort((a,b)=>b.v-a.v); const T=P.reduce((a,r)=>a+r.v,0);
+  document.getElementById('pa-cap4').textContent='Crédito 2027 por unidad ejecutora y programa, '+unitLabel()+'. Total: '+fmt(T,2)+'.';
+  document.getElementById('pa-table').innerHTML='<thead><tr><th>Unidad ejecutora</th><th>Programa</th><th class="n">Monto</th><th class="n">%</th></tr></thead><tbody>'+P.map(r=>`<tr><td>${cap1(r.ue.toLowerCase())}</td><td style="color:var(--muted);font-size:12px">${r.prog}</td><td class="n nw">${fmt(r.v,1)}</td><td class="n">${n1(r.v/T*100)}</td></tr>`).join('')+'</tbody>';
+  // textos
+  const mx=Math.max(...rat), ymx=ys[rat.indexOf(mx)], mn=Math.min(...rat); const jg=P.filter(r=>r.j==='20').reduce((a,r)=>a+r.v,0);
+  const h26=Q['2026-2'][2]*fac(2026,2), h25=Q['2025-2'][2]*fac(2025,2);
+  document.getElementById('pa-kpis').innerHTML=[['Pauta 2027 (proyecto)',fmt(p27)],['2027 vs. vigente 2026',pct(p27/v26-1)+' real'],['Gastado / sancionado, 2019–2025',n1(mn).replace(/,0$/,'')+'× a '+n1(mx)+'×'],['Jefatura de Gobierno, 2027',n1(jg/T*100)+'% del total']].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  document.getElementById('pa-lead').innerHTML=`<b>En los últimos siete años la Ciudad siempre gastó en publicidad más de lo que aprobó la Legislatura: entre ${n1(mn)} y ${n1(mx)} veces el crédito sancionado.</b> El máximo fue ${ymx}, año de elección de jefe de gobierno. Para 2027, otro año electoral, el proyecto pide ${fmt(p27)}, ${pct(p27/v26-1)} real contra el vigente 2026. En 2026 el crédito ya se amplió: a junio pasó de ${fmt(Q['2026-'+LT][0],0)} sancionados a ${fmt(Q['2026-'+LT][1],0)} vigentes, en pesos corrientes. En el primer semestre de 2026 se devengaron ${fmt(h26)}, ${pct(h26/h25-1)} real contra el mismo período de 2025.`;
+}
+
 // ======== Ajustes 2027 (programa y partida)
 const A27=D.a27||{progs:[],partidas:[],ppj:[]};
 const SJX={'Ministerio Publico':'Ministerio Público Fiscal','Consejo De La Magistratura':'Consejo de la Magistratura','Obligaciones A Cargo Del Tesoro':'Obligaciones del Tesoro','Servicio De La Deuda Publica':'Deuda pública','Tribunal Superior De Justicia':'Tribunal Superior','Procuracion General De La Ciudad':'Procuración General'};
@@ -1098,7 +1140,7 @@ let TAB='p27';
 function showTab(t,scroll){TAB=t;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));['p27','ej','tb'].forEach(k=>document.getElementById('tab-'+k).hidden=t!==k);try{localStorage.setItem('ceer-tab',t)}catch(e){} renderAll(); if(scroll)window.scrollTo(0,0);}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab,true)));
 // ---------- render all
-function renderAll(){ themeChart(); kpis(); if(TAB==='p27'){cmp(); caifChart(); promCharts(); recCharts(); ajustes27();} if(TAB==='ej'){recCharts(); gastoCharts(); empleo(); fisCharts();} if(TAB==='tb'){ministerio(); deuda(); lupa(); tb();} }
+function renderAll(){ themeChart(); kpis(); if(TAB==='p27'){cmp(); caifChart(); promCharts(); recCharts(); ajustes27(); pauta();} if(TAB==='ej'){recCharts(); gastoCharts(); empleo(); fisCharts();} if(TAB==='tb'){ministerio(); deuda(); lupa(); tb();} }
 initPeriodUI(k=>{ if(k==='per'){const t=document.getElementById('tb-trim'); if(t) t.value=PERIOD==='ytd'?'last':'4';} renderAll(); }); initPNG();
 if(PERIOD==='ytd'){const t=document.getElementById('tb-trim'); if(t) t.value='last';}
 document.querySelectorAll('[data-u]').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.u===U); b.addEventListener('click',()=>{U=b.dataset.u; try{localStorage.setItem('ceer-unit',U);}catch(e){} document.querySelectorAll('[data-u]').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderAll();});});
