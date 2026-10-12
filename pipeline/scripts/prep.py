@@ -19,16 +19,19 @@ wbu=openpyxl.load_workbook('/home/claude/in/58287fbc-CAIFdeuda.xlsx',data_only=T
 nat={r[0]:r[1] for r in wbu['ipc'].iter_rows(min_row=2,values_only=True) if isinstance(r[0],int)}
 for yy in range(2013,1994,-1): ann[yy-1]=ann[yy]/(1+nat[yy])
 HOY=ipc[(2026,9)]; PAUTA=0.18; REM=0.2154
+# Pesos promedio 2027: dic-2026 x (1,18)^(k/12), promedio de los 12 meses de 2027
+AVG27=np.mean([ipc[(2026,12)]*(1+PAUTA)**(k/12) for k in range(1,13)]); R27=AVG27/HOY
 ytd={}
 for yy in range(2013,2027):
     for q in range(1,5): ytd[(yy,q)]=np.mean([ipc[(yy,k)] for k in range(1,3*q+1)])
 OUT['deflator']={
  'hoy':{str(k):HOY/v for k,v in sorted(ann.items())},
  'hoy_ytd':{f'{k[0]}-{k[1]}':HOY/v for k,v in sorted(ytd.items())},
- 'p2027':{**{str(k):HOY*1.02**3/v*(1+PAUTA) for k,v in sorted(ann.items())},'2027P':1.0},
- 'p2027_ytd':{f'{k[0]}-{k[1]}':HOY*1.02**3/v*(1+PAUTA) for k,v in sorted(ytd.items())},
+ 'p2027':{**{str(k):HOY*R27/v for k,v in sorted(ann.items())},'2027P':1.0},
+ 'p2027_ytd':{f'{k[0]}-{k[1]}':HOY*R27/v for k,v in sorted(ytd.items())},
+ 'r27':R27,
  'infl_avg':{str(k):ann[k]/ann[k-1]-1 for k in range(1996,2027)},
- 'note':'Pesos de hoy = IPCBA sep-2026. Promedios anuales IPCBA (IDECBA) desde 2013; 1995-2012 empalme con la serie alternativa de la base CEER (IPC provincias). Oct-dic 2026 proyectado al 2% mensual. Pesos 2027 = pesos de hoy (sep-2026) x 1,02^3 (oct-dic 2026 al 2% mensual) x 1,18 (pauta de inflacion 2027 del proyecto).'}
+ 'note':'Pesos de hoy = IPCBA sep-2026. Promedios anuales IPCBA (IDECBA) desde 2013; 1995-2012 empalme con la serie alternativa de la base CEER (IPC provincias). Oct-dic 2026 proyectado al 2% mensual. Pesos 2027 = precios promedio de 2027: dic-2026 (oct-dic al 2% mensual) llevado mes a mes con la pauta de 18% anual del proyecto y promediado.'}
 # ---------- CAIF
 wb=openpyxl.load_workbook('raw/SP_Fi_AX01.xlsx',data_only=True); ws=wb.worksheets[0]
 rows=list(ws.iter_rows(values_only=True))
