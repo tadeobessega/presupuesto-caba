@@ -269,6 +269,28 @@ h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;f
   </div>
 </section>
 
+<section id="ajustes">
+  <h2><span class="tag">Programa por programa</span>Dónde ajusta y dónde suma el 2027</h2>
+  <p class="sub" id="a27-lead"></p>
+  <div class="minikpis" id="a27-kpis" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px"></div>
+  <div class="grid">
+    <div class="card span6"><h3>Los 12 mayores recortes</h3><p class="cap" id="a27-cap-cut"></p><div class="chart tall"><canvas id="ch-a27-cut" aria-label="Mayores recortes por programa"></canvas></div><p class="src">Fuente: Proyecto 2027, descripción de programas por jurisdicción, y presupuesto vigente al 2.º trimestre de 2026 (BA Data).</p></div>
+    <div class="card span6"><h3>Los 12 mayores aumentos</h3><p class="cap" id="a27-cap-up"></p><div class="chart tall"><canvas id="ch-a27-up" aria-label="Mayores aumentos por programa"></canvas></div><p class="src">Fuente: Proyecto 2027, descripción de programas por jurisdicción, y presupuesto vigente al 2.º trimestre de 2026 (BA Data).</p></div>
+    <div class="card span12"><h3>Por partida: qué se compra menos y qué se compra más</h3><p class="cap" id="a27-cap-pp"></p><div class="chart tall"><canvas id="ch-a27-pp" aria-label="Variación por partida principal"></canvas></div><p class="src">Fuente: Proyecto 2027 (partidas principales por programa) y presupuesto vigente al 2.º trimestre de 2026 (BA Data). Sin deuda ni activos financieros (adelantos a contratistas).</p></div>
+  </div>
+  <div class="seg lupa" role="group" aria-label="Foco" id="a27-foco" style="margin-top:22px"><button data-fo="ep" aria-pressed="true">Espacio Público</button><button data-fo="seg" aria-pressed="false">Seguridad</button><button data-fo="obras" aria-pressed="false">Obras</button></div>
+  <div class="grid" style="margin-top:16px">
+    <div class="card span7"><h3 id="a27-fo-title"></h3><p class="cap" id="a27-fo-cap"></p><p class="lupatxt" id="a27-fo-txt"></p><div class="chart tall"><canvas id="ch-a27-fo" aria-label="Foco"></canvas></div><p class="src" id="a27-fo-src">Fuente: Proyecto 2027 por jurisdicción y presupuesto vigente al 2.º trimestre de 2026 (BA Data).</p></div>
+    <div class="card span5"><h3 id="a27-fo-ttitle">Programas</h3><p class="cap" id="a27-fo-tcap"></p><div class="tablewrap" style="max-height:560px;overflow-y:auto"><table id="a27-fo-table"></table></div></div>
+  </div>
+  <div class="grid" style="margin-top:16px">
+    <div class="card span12"><h3>Todos los programas</h3><p class="cap">Vigente 2026 contra proyecto 2027, ordenados por la variación real. Los programas nuevos o eliminados suelen ser reorganizaciones.</p>
+      <div class="filters" style="margin-bottom:8px"><div class="f"><label for="a27-jur">Jurisdicción</label><select id="a27-jur"></select></div><div class="f"><label for="a27-q">Buscar</label><input type="search" id="a27-q" placeholder="ej.: alumbrado, policía, hospitales"></div></div>
+      <div class="tablewrap" style="max-height:520px;overflow-y:auto"><table id="a27-table"></table></div>
+      <p class="src">Fuente: Proyecto 2027, descripción de programas de las 21 jurisdicciones con detalle publicado (sin Jefatura de Gobierno), y presupuesto vigente al 2.º trimestre de 2026 (BA Data). Los totales por jurisdicción y por inciso coinciden con la Planilla 5 del proyecto.</p></div>
+  </div>
+</section>
+
 </div>
 <div class="tab" id="tab-ej" role="tabpanel" aria-labelledby="tabbtn-ej" hidden>
 <section class="hero ej">
@@ -987,13 +1009,95 @@ function empleo(){
   const c3=mk('ch-emp-gasto',{type:'bar',data:{labels:labs,datasets:[{label:'Gasto en personal',data,backgroundColor:ytd?ys.map((y,i)=>i===ys.length-1?H2():H1()):[...ys.map(()=>H1()),H2(),PJ()]}]},options:baseOpts({ytitle:ytBill()})}); c3.options.plugins.legend.display=false; c3.update();
   document.getElementById('cap-emp-gasto').textContent=ytd?`Inciso 1, devengado acumulado al ${LT}.º trimestre de cada año (acumulado 2T), billones de ${unitLabel()}.`:'Inciso 1, billones de '+unitLabel()+'. Devengado 2019–2025, vigente 2026 y proyecto 2027.';
 }
+
+// ======== Ajustes 2027 (programa y partida)
+const A27=D.a27||{progs:[],partidas:[],ppj:[]};
+const SJX={'Ministerio Publico':'Ministerio Público Fiscal','Consejo De La Magistratura':'Consejo de la Magistratura','Obligaciones A Cargo Del Tesoro':'Obligaciones del Tesoro','Servicio De La Deuda Publica':'Deuda pública','Tribunal Superior De Justicia':'Tribunal Superior','Procuracion General De La Ciudad':'Procuración General'};
+const SJ0={'Jefatura De Gabinete De Ministros':'JGM','Ministerio De Movilidad E Infraestructura':'Movilidad','Ministerio De Espacio Publico E Higiene Urbana':'Esp. Público','Ministerio De Desarrollo Humano Y Hábitat':'Des. Humano','Ministerio De Desarrollo Económico':'Des. Económico','Ministerio Publico':'MPF','Consejo De La Magistratura':'Magistratura','Obligaciones A Cargo Del Tesoro':'Tesoro','Servicio De La Deuda Publica':'Deuda','Ministerio De Hacienda Y Finanzas':'Hacienda','Tribunal Superior De Justicia':'TSJ'};
+const SJS=j=>SJ0[j]||SJ(j).split(' ')[0];
+const SJ=j=>SJX[j]||(j||'').replace('Ministerio De ','').replace('Ministerio ','').replace(' E Higiene Urbana','').replace('Jefatura De Gabinete De Ministros','Jefatura de Gabinete').replace(' De La Ciudad De Buenos Aires','').replace('Desarrollo Humano Y Hábitat','Desarrollo Humano').replace('Movilidad E Infraestructura','Movilidad e Infraestructura');
+const cap1=s=>s.charAt(0).toUpperCase()+s.slice(1);
+let FO='ep';
+document.getElementById('a27-jur').innerHTML='<option value="">Todas</option>'+[...new Set(A27.progs.map(p=>p.jur))].sort().map(j=>`<option value="${j}">${SJ(j)}</option>`).join('');
+function a27rows(){ const f6=fac(2026), f7=fac('2027P'); return A27.progs.map(p=>{const a=p.v26*f6, b=p.p27*f7; return Object.assign({},p,{a,b,d:b-a,pc:p.v26>0&&p.p27>0?b/a-1:null});}); }
+function hbar(id,rows,lab,color){
+  const c=mk(id,{type:'bar',data:{labels:rows.map(lab),datasets:[{label:'Variación real',data:rows.map(r=>r.d),backgroundColor:color}]},options:baseOpts({extra:{indexAxis:'y'}})});
+  const o=c.options; o.plugins.legend.display=false; o.scales.x.ticks.callback=v=>(v/1e3).toLocaleString('es-AR',{maximumFractionDigits:0}); o.scales.x.title={display:true,text:'Miles de millones de '+unitLabel(),color:css('--muted')};
+  o.scales.y.ticks.callback=function(v){const s=this.getLabelForValue(v);return s.length>40?s.slice(0,39)+'…':s}; o.scales.y.ticks.autoSkip=false; o.scales.y.grid={display:false}; o.scales.x.grid={color:css('--line')};
+  o.interaction={mode:'nearest',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.title=x=>{const r=rows[x[0].dataIndex];return r.prog+' ('+SJ(r.jur)+')';}; o.plugins.tooltip.callbacks.label=x=>{const r=rows[x.dataIndex];return [' 2026 vigente: '+fmt(r.a),' 2027 proyecto: '+fmt(r.b),' Variación: '+fmt(r.d)+(r.pc!=null?' ('+pct(r.pc)+')':'')];}; c.update(); return c; }
+function ajustes27(){
+  const R=a27rows(); const M=R.filter(r=>r.v26>0&&r.p27>0);
+  const cut=[...M].sort((a,b)=>a.d-b.d).slice(0,12), up=[...M].sort((a,b)=>b.d-a.d).slice(0,12);
+  hbar('ch-a27-cut',cut,r=>SJS(r.jur)+' · '+r.prog,css('--neg'));
+  hbar('ch-a27-up',up,r=>SJS(r.jur)+' · '+r.prog,css('--pos'));
+  const ul=unitLabel(); document.getElementById('a27-cap-cut').textContent='Variación real entre el vigente 2026 y el proyecto 2027, en miles de millones de '+ul+'. Solo programas que existen en los dos años.'; document.getElementById('a27-cap-up').textContent=document.getElementById('a27-cap-cut').textContent;
+  const T6=R.reduce((a,r)=>a+r.a,0), T7=R.reduce((a,r)=>a+r.b,0); const nC=M.filter(r=>r.d<0).length;
+  const gC=M.filter(r=>r.d<0).reduce((a,r)=>a+r.d,0), gU=M.filter(r=>r.d>0).reduce((a,r)=>a+r.d,0);
+  document.getElementById('a27-kpis').innerHTML=[['Gasto con detalle, 2027 vs. 2026',pct(T7/T6-1)+' real'],['Programas con recorte real',nC+' de '+M.length],['Suma de los recortes',fmt(gC)],['Suma de los aumentos',fmt(gU)]].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  const top=cut[0], tu=up[0];
+  document.getElementById('a27-lead').innerHTML=`Abrimos el proyecto 2027 programa por programa y partida por partida (las 21 jurisdicciones con detalle publicado, sin Jefatura de Gobierno) y lo comparamos con el presupuesto vigente de 2026 al 2.º trimestre. <b>${nC} de ${M.length} programas pierden en términos reales.</b> El mayor recorte es ${top.prog} (${SJ(top.jur)}: ${pct(top.pc)}); el mayor aumento, ${tu.prog} (${SJ(tu.jur)}: ${pct(tu.pc)}).`;
+  // partidas
+  const f6=fac(2026), f7=fac('2027P'); const PP=A27.partidas.filter(p=>!/deuda/i.test(p.ppal)&&!/activos financieros/i.test(p.inc)).map(p=>({ppal:p.ppal,inc:p.inc,a:p.v26*f6,b:p.p27*f7})).map(p=>Object.assign(p,{d:p.b-p.a,pc:p.a?p.b/p.a-1:null}));
+  const ps=[...PP].sort((x,y)=>x.d-y.d); const sel=[...ps.slice(0,8),...ps.slice(-8)];
+  const c=mk('ch-a27-pp',{type:'bar',data:{labels:sel.map(p=>cap1(p.ppal.toLowerCase())),datasets:[{label:'Variación real',data:sel.map(p=>p.d),backgroundColor:sel.map(p=>p.d<0?css('--neg'):css('--pos'))}]},options:baseOpts({extra:{indexAxis:'y'}})});
+  {const o=c.options; o.plugins.legend.display=false; o.scales.x.ticks.callback=v=>(v/1e3).toLocaleString('es-AR',{maximumFractionDigits:0}); o.scales.x.title={display:true,text:'Miles de millones de '+ul,color:css('--muted')}; o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)}; o.scales.y.ticks.autoSkip=false; o.scales.y.grid={display:false}; o.scales.x.grid={color:css('--line')}; o.interaction={mode:'nearest',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.label=x=>{const p=sel[x.dataIndex];return [' '+p.inc,' 2026 vigente: '+fmt(p.a),' 2027 proyecto: '+fmt(p.b),' Variación: '+fmt(p.d)+(p.pc!=null?' ('+pct(p.pc)+')':'')];}; c.update();}
+  document.getElementById('a27-cap-pp').textContent='Las 8 partidas principales que más caen y las 8 que más suben, en miles de millones de '+ul+'. Todas las jurisdicciones con detalle.';
+  foco27(R); a27table(R);
+}
+function foco27(R){
+  R=R||a27rows(); const f6=fac(2026), f7=fac('2027P'); const tb=document.getElementById('a27-fo-table'); const ul=unitLabel();
+  const row=r=>`<tr><td>${r.prog}</td><td class="n nw">${fmt(r.a,1)}</td><td class="n nw">${fmt(r.b,1)}</td><td class="n ${r.pc==null?'':r.d>=0?'up':'dn'}">${r.pc==null?(r.p27?'nuevo':'elim.'):pct(r.pc,0)}</td></tr>`;
+  const head='<thead><tr><th>Programa</th><th class="n">2026 vig.</th><th class="n">2027</th><th class="n">Var.</th></tr></thead>';
+  let title, capt, txt, rows;
+  if(FO==='obras'){
+    const J={}; A27.ppj.filter(p=>/^(construcciones|maquinaria y equipo)$/i.test(p.ppal)).forEach(p=>{const j=SJ(p.jur); (J[j]=J[j]||[0,0]); J[j][0]+=p.v26*f6; J[j][1]+=p.p27*f7;});
+    const ks=Object.keys(J).filter(k=>J[k][0]+J[k][1]>5000).sort((a,b)=>(J[a][1]-J[a][0])-(J[b][1]-J[b][0]));
+    const c=mk('ch-a27-fo',{type:'bar',data:{labels:ks,datasets:[{label:'Vigente 2026',data:ks.map(k=>J[k][0]),backgroundColor:H1()},{label:'Proyecto 2027',data:ks.map(k=>J[k][1]),backgroundColor:PJ()}]},options:baseOpts({extra:{indexAxis:'y'}})});
+    const o=c.options; o.scales.x.ticks.callback=v=>(v/1e3).toLocaleString('es-AR',{maximumFractionDigits:0}); o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)}; o.scales.y.ticks.autoSkip=false; o.scales.y.grid={display:false}; o.scales.x.grid={color:css('--line')}; o.interaction={mode:'index',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': '+fmt(x.parsed.x); c.update();
+    const t6=Object.values(J).reduce((a,v)=>a+v[0],0), t7=Object.values(J).reduce((a,v)=>a+v[1],0);
+    const mov=J['Movilidad e Infraestructura']||[0,0], ep=J['Espacio Publico']||[0,0], sa=J['Salud']||[0,0];
+    title='Obras: construcciones y equipamiento'; capt='Partidas Construcciones y Maquinaria y equipo, vigente 2026 contra proyecto 2027, miles de millones de '+ul+'.';
+    txt=`<b>La inversión en obras y equipos cae ${pct(t7/t6-1,0)} real contra el vigente 2026.</b> Movilidad e Infraestructura pierde ${fmt(Math.abs(mov[1]-mov[0]))} y Espacio Público ${fmt(Math.abs(ep[1]-ep[0]))}; Salud es la que más suma (${fmt(sa[1]-sa[0])}).`;
+    rows=R.filter(r=>/Movilidad|Espacio Publico/.test(r.jur)).filter(r=>r.a+r.b>3000).sort((a,b)=>a.d-b.d).slice(0,25);
+    document.getElementById('a27-fo-ttitle').textContent='Programas de obra: Movilidad y Espacio Público';
+  } else {
+    const jn=FO==='ep'?'Ministerio De Espacio Publico E Higiene Urbana':'Ministerio De Seguridad';
+    rows=R.filter(r=>r.jur===jn).sort((a,b)=>(b.a+b.b)-(a.a+a.b));
+    const big=rows.filter(r=>r.a+r.b>2000&&Math.abs(r.d)>300).sort((a,b)=>a.d-b.d);
+    hbar('ch-a27-fo',big,r=>r.prog,big.map(r=>r.d<0?css('--neg'):css('--pos')));
+    const t6=rows.reduce((a,r)=>a+r.a,0), t7=rows.reduce((a,r)=>a+r.b,0);
+    const gi=GD.jur_desc.indexOf(jn); let jv=0; G.rows.forEach(r=>{if(r[0]===2026&&r[1]===LT&&r[2]===gi&&r[4]!==GAM) jv+=r[8];}); jv*=f6;
+    const cut=[...rows].filter(r=>r.pc!=null).sort((a,b)=>a.d-b.d);
+    if(FO==='ep'){
+      const hig=R.filter(r=>/higiene|reciclado|recoleccion/i.test(r.prog)&&/Gabinete/.test(r.jur)); const h6=hig.reduce((a,r)=>a+r.a,0), h7=hig.reduce((a,r)=>a+r.b,0);
+      title='Espacio Público: qué cae de verdad'; capt='Variación real de cada programa que sigue en el ministerio, vigente 2026 contra proyecto 2027, miles de millones de '+ul+'.';
+      txt=`El ministerio aparece con ${pct(jv?(t7/jv-1):0,0)} real porque <b>en 2026 Higiene Urbana pasó a Jefatura de Gabinete</b> y una parte del vigente todavía figura en Espacio Público. Comparando programa por programa, <b>lo que queda cae ${pct(t7/t6-1,1)} real</b>: ${cut.slice(0,3).map(r=>r.prog+' '+pct(r.pc,0)).join(', ')}. Higiene urbana y reciclado, ahora en Jefatura de Gabinete, caen ${pct(h7/h6-1,1)}.`;
+    } else {
+      const pol=rows.find(r=>/Policía/.test(r.prog)); const ks=A27.ppj.filter(p=>p.jur===jn&&/^(construcciones|maquinaria y equipo|equipo de seguridad)$/i.test(p.ppal)); const k6=ks.reduce((a,p)=>a+p.v26*f6,0), k7=ks.reduce((a,p)=>a+p.p27*f7,0);
+      title='Seguridad: programa por programa'; capt='Variación real de cada programa, vigente 2026 contra proyecto 2027, miles de millones de '+ul+'.';
+      txt=`<b>El ministerio cae ${pct(t7/t6-1,1)} real.</b> La Policía de la Ciudad, que es el ${n1(pol.b/t7*100).replace(/,\d$/,'')}% del gasto, pierde ${fmt(Math.abs(pol.b-pol.a))} (${pct(pol.pc,1)}). <b>Obras, maquinaria y equipo de seguridad caen ${pct(k7/k6-1,0)}.</b> Crecen Intervenciones en Emergencias en Vía Pública y Capital Humano.`;
+    }
+    document.getElementById('a27-fo-ttitle').textContent='Todos los programas';
+  }
+  document.getElementById('a27-fo-title').textContent=title; document.getElementById('a27-fo-cap').textContent=capt; document.getElementById('a27-fo-txt').innerHTML=txt;
+  document.getElementById('a27-fo-tcap').textContent='Montos en '+ul+'.';
+  tb.innerHTML=head+'<tbody>'+rows.map(row).join('')+'</tbody>';
+}
+function a27table(R){
+  R=R||a27rows(); const j=document.getElementById('a27-jur').value, q=norm(document.getElementById('a27-q').value||'');
+  const rows=R.filter(r=>(!j||r.jur===j)&&(!q||norm(r.prog).includes(q))).sort((a,b)=>a.d-b.d);
+  document.getElementById('a27-table').innerHTML='<thead><tr><th>Programa</th><th>Jurisdicción</th><th class="n">2026 vig.</th><th class="n">2027</th><th class="n">Dif.</th><th class="n">Var.</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${r.prog}</td><td style="color:var(--muted);font-size:12px">${SJ(r.jur)}</td><td class="n nw">${fmt(r.a,1)}</td><td class="n nw">${fmt(r.b,1)}</td><td class="n nw ${r.d>=0?'up':'dn'}">${fmt(r.d,1)}</td><td class="n ${r.pc==null?'':r.d>=0?'up':'dn'}">${r.pc==null?(r.p27?'nuevo':'elim.'):pct(r.pc,0)}</td></tr>`).join('')+'</tbody>';
+}
+document.getElementById('a27-jur').addEventListener('change',()=>a27table()); document.getElementById('a27-q').addEventListener('input',()=>a27table());
+document.getElementById('a27-foco').addEventListener('click',e=>{const b=e.target.closest('button'); if(!b)return; FO=b.dataset.fo; document.querySelectorAll('[data-fo]').forEach(x=>x.setAttribute('aria-pressed',x===b)); foco27();});
+
 // ---------- tabs
 document.documentElement.lang='es';
 let TAB='p27';
 function showTab(t,scroll){TAB=t;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));['p27','ej','tb'].forEach(k=>document.getElementById('tab-'+k).hidden=t!==k);try{localStorage.setItem('ceer-tab',t)}catch(e){} renderAll(); if(scroll)window.scrollTo(0,0);}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab,true)));
 // ---------- render all
-function renderAll(){ themeChart(); kpis(); if(TAB==='p27'){cmp(); caifChart(); promCharts(); recCharts();} if(TAB==='ej'){recCharts(); gastoCharts(); empleo(); fisCharts();} if(TAB==='tb'){ministerio(); deuda(); lupa(); tb();} }
+function renderAll(){ themeChart(); kpis(); if(TAB==='p27'){cmp(); caifChart(); promCharts(); recCharts(); ajustes27();} if(TAB==='ej'){recCharts(); gastoCharts(); empleo(); fisCharts();} if(TAB==='tb'){ministerio(); deuda(); lupa(); tb();} }
 initPeriodUI(k=>{ if(k==='per'){const t=document.getElementById('tb-trim'); if(t) t.value=PERIOD==='ytd'?'last':'4';} renderAll(); }); initPNG();
 if(PERIOD==='ytd'){const t=document.getElementById('tb-trim'); if(t) t.value='last';}
 document.querySelectorAll('[data-u]').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.u===U); b.addEventListener('click',()=>{U=b.dataset.u; try{localStorage.setItem('ceer-unit',U);}catch(e){} document.querySelectorAll('[data-u]').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderAll();});});
