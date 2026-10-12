@@ -1,5 +1,5 @@
 import json
-D=json.load(open('data.json'))
+D=json.load(open('data2.json'))
 neg=D.pop('logo_neg'); pos=D.pop('logo_pos')
 t=open('site/template.html').read()
 s=json.dumps(D,ensure_ascii=False,separators=(',',':')).replace('</','<\\/')
