@@ -801,9 +801,9 @@ function fisCharts(){
   if(PERIOD==='ytd'&&D.aif2t){ const A=D.aif2t; const ys=Object.keys(A).filter(k=>/^\d{4}$/.test(k)).sort(); const L2=ys.map(y=>y+' T'+LT); const f=y=>fac(+y,LT);
     const rp=ys.map(y=>(A[y][0]-A[y][1])*f(y));
     mk('ch-fis',{data:{labels:L2,datasets:[{type:'bar',label:'Resultado primario',data:rp,backgroundColor:rp.map(v=>v>=0?css('--pos'):css('--neg')),order:2},{type:'line',label:'Recursos totales',data:ys.map(y=>A[y][0]*f(y)),borderColor:H1(),backgroundColor:H1(),borderWidth:2,pointRadius:3,order:1},{type:'line',label:'Gasto primario',data:ys.map(y=>A[y][1]*f(y)),borderColor:H2(),backgroundColor:H2(),borderDash:[6,4],borderWidth:2,pointRadius:3,order:1}]},options:baseOpts({ytitle:ytBill()})});
-    document.getElementById('cap-fis').textContent=`Acumulado 2T: devengado de enero a junio de cada año, billones de ${unitLabel()}. Administración pública no financiera.`;
+    document.getElementById('cap-fis').textContent=`Acumulado 2T: devengado de enero a junio de cada año, billones de ${unitLabel()}. El esquema trimestral se publica desde 2017; para la serie desde 1995, elegí Año completo.`;
     mk('ch-int',{type:'bar',data:{labels:L2,datasets:[{label:'Intereses / recursos',data:ys.map(y=>(A[y][2]-A[y][1])/A[y][0]*100),backgroundColor:ys.map(y=>y==='2026'?H2():H1())}]},options:baseOpts({pctAxis:true})}); charts['ch-int'].options.plugins.legend.display=false; charts['ch-int'].update();
-    document.getElementById('cap-int').textContent='Rentas de la propiedad devengadas sobre ingresos totales, enero–junio de cada año';
+    document.getElementById('cap-int').textContent='Intereses sobre ingresos totales, enero–junio de cada año. El dato trimestral existe desde 2017; la serie desde 1995 está en Año completo.';
   } else {
   const C=COL(); const yrs=YRS2; const L=yrs.map(LAB);
   mk('ch-fis',{data:{labels:L,datasets:[

@@ -1,2 +1,53 @@
-{"_fuente":"Ministerio de Hacienda GCBA, Esquema AIF trimestral (Planilla 1.4), devengado acumulado al 2.º trimestre, Administración Pública No Financiera. Millones de pesos corrientes. [ingresos totales, gastos primarios, gastos totales]",
-"2019":[160463.33,142513.73,156104.99],"2020":[205029.17,173663.92,189401.02],"2021":[288160.95,240750.44,264251.48],"2022":[507040.33,383453.78,409728.73],"2023":[1172133.85,902153.50,942338.68],"2024":[3999068.29,3129335.39,3194173.19],"2025":[6256482.49,5310951.02,5363172.31],"2026":[8021565.99,7013291.13,7104105.89]}
+{
+"2017": [
+83224.28,
+76056.14,
+78651.87
+],
+"2018": [
+112649.17,
+96535.89,
+101582.73
+],
+"2019": [
+160463.33,
+142513.73,
+156104.99
+],
+"2020": [
+205029.17,
+173663.92,
+189401.02
+],
+"2021": [
+288160.95,
+240750.44,
+264251.48
+],
+"2022": [
+507040.33,
+383453.78,
+409728.73
+],
+"2023": [
+1172133.85,
+902153.5,
+942338.68
+],
+"2024": [
+3999068.29,
+3129335.39,
+3194173.19
+],
+"2025": [
+6256482.49,
+5310951.02,
+5363172.31
+],
+"2026": [
+8021565.99,
+7013291.13,
+7104105.89
+],
+"_fuente": "Ministerio de Hacienda GCBA, Esquema AIF trimestral (Planilla 1.4), devengado acumulado al 2.º trimestre, Administración Pública No Financiera. Millones de pesos corrientes. [ingresos totales, gastos primarios, gastos totales] El Ministerio publica el AIF trimestral desde 2017."
+}
