@@ -287,7 +287,7 @@ h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;f
     <div class="card span12"><h3>Todos los programas</h3><p class="cap">Vigente 2026 contra proyecto 2027, ordenados por la variación real. Los programas nuevos o eliminados suelen ser reorganizaciones.</p>
       <div class="filters" style="margin-bottom:8px"><div class="f"><label for="a27-jur">Jurisdicción</label><select id="a27-jur"></select></div><div class="f"><label for="a27-q">Buscar</label><input type="search" id="a27-q" placeholder="ej.: alumbrado, policía, hospitales"></div></div>
       <div class="tablewrap" style="max-height:520px;overflow-y:auto"><table id="a27-table"></table></div>
-      <p class="src">Fuente: Proyecto 2027, descripción de programas de las 21 jurisdicciones con detalle publicado (sin Jefatura de Gobierno), y presupuesto vigente al 2.º trimestre de 2026 (BA Data). Los totales por jurisdicción y por inciso coinciden con la Planilla 5 del proyecto.</p></div>
+      <p class="src">Fuente: Proyecto 2027, descripción de programas de las 22 jurisdicciones, y presupuesto vigente al 2.º trimestre de 2026 (BA Data). Los totales por jurisdicción y por inciso coinciden con la Planilla 5 del proyecto.</p></div>
   </div>
 </section>
 
@@ -965,11 +965,12 @@ function lupa(){
     else { if(r[1]===4&&r[0]<2026) dev[r[0]]=(dev[r[0]]||0)+r[9]*fac(r[0]); if(r[0]===2026&&r[1]===LT){v26+=r[8]*fac(2026); s26+=r[7]*fac(2026);} }
     if(r[0]===2025&&r[1]===4) byJ[OD.jur_desc[r[2]]]=(byJ[OD.jur_desc[r[2]]]||0)+r[9]*fac(2025); });
   const ys=Object.keys(dev).map(Number).sort();
-  const labels=ytd?ys.map(y=>y+' T'+LT):[...ys.map(String),'2026 Sanc.','2026 Vig.'];
-  const data=ytd?ys.map(y=>dev[y]):[...ys.map(y=>dev[y]),s26,v26];
-  const c=mk('ch-lupa',{type:'bar',data:{labels,datasets:[{label:L.t,data,backgroundColor:ytd?ys.map((y,i)=>i===ys.length-1?H2():H1()):[...ys.map(()=>H1()),H2(),H2()]}]},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})}); c.options.plugins.legend.display=false; c.options.scales.x.ticks.autoSkip=false; c.update();
+  const pp27=L.m[0]==='ppal'?(D.a27?D.a27.partidas.filter(p=>L.m[1].some(x=>norm(x)===norm(p.ppal))).reduce((a,p)=>a+p.p27,0)*fac('2027P'):0):0; const has27=pp27>0&&!ytd;
+  const labels=ytd?ys.map(y=>y+' T'+LT):[...ys.map(String),'2026 Sanc.','2026 Vig.',...(has27?['2027 P']:[])];
+  const data=ytd?ys.map(y=>dev[y]):[...ys.map(y=>dev[y]),s26,v26,...(has27?[pp27]:[])];
+  const c=mk('ch-lupa',{type:'bar',data:{labels,datasets:[{label:L.t,data,backgroundColor:ytd?ys.map((y,i)=>i===ys.length-1?H2():H1()):[...ys.map(()=>H1()),H2(),H2(),PJ()]}]},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})}); c.options.plugins.legend.display=false; c.options.scales.x.ticks.autoSkip=false; c.update();
   document.getElementById('lupa-title').textContent=L.t;
-  document.getElementById('lupa-cap').textContent=ytd?`Devengado acumulado al ${LT}.º trimestre de cada año (acumulado 2T), ${unitLabel()}. Comparable con 2026.`:`Devengado anual 2019–2025 y crédito 2026 (sancionado y vigente), ${unitLabel()}. El proyecto 2027 no abre el gasto por partida, así que no hay dato oficial de 2027.`;
+  document.getElementById('lupa-cap').textContent=ytd?`Devengado acumulado al ${LT}.º trimestre de cada año (acumulado 2T), ${unitLabel()}. Comparable con 2026.`:`Devengado anual 2019–2025 y crédito 2026 (sancionado y vigente), ${unitLabel()}.${has27?` 2027: proyecto, suma de la partida principal en la descripción de programas de todas las jurisdicciones (${pct(pp27/v26-1)} real contra el vigente 2026).`:' El proyecto 2027 publica partidas principales, no parciales: para esta partida no hay dato de 2027.'}`;
   const y0=ys[0], y1=ys[ys.length-1]; const pk=ys.reduce((a,y)=>dev[y]>dev[a]?y:a,ys[0]); const ch=dev[y1]/dev[y0]-1;
   document.getElementById('lupa-txt').innerHTML=L.d+(U!=='nom'?` <b>Entre ${y0} y ${y1}${ytd?' (ene–jun)':''} varió ${pct(ch)} en términos reales; el máximo fue en ${pk}.</b>`:'');
   const tj=Object.values(byJ).reduce((a,b)=>a+b,0)||1;
@@ -1033,15 +1034,15 @@ function ajustes27(){
   const ul=unitLabel(); document.getElementById('a27-cap-cut').textContent='Variación real entre el vigente 2026 y el proyecto 2027, en miles de millones de '+ul+'. Solo programas que existen en los dos años.'; document.getElementById('a27-cap-up').textContent=document.getElementById('a27-cap-cut').textContent;
   const T6=R.reduce((a,r)=>a+r.a,0), T7=R.reduce((a,r)=>a+r.b,0); const nC=M.filter(r=>r.d<0).length;
   const gC=M.filter(r=>r.d<0).reduce((a,r)=>a+r.d,0), gU=M.filter(r=>r.d>0).reduce((a,r)=>a+r.d,0);
-  document.getElementById('a27-kpis').innerHTML=[['Gasto con detalle, 2027 vs. 2026',pct(T7/T6-1)+' real'],['Programas con recorte real',nC+' de '+M.length],['Suma de los recortes',fmt(gC)],['Suma de los aumentos',fmt(gU)]].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  document.getElementById('a27-kpis').innerHTML=[['Gasto total, 2027 vs. vigente 2026',pct(T7/T6-1)+' real'],['Programas con recorte real',nC+' de '+M.length],['Suma de los recortes',fmt(gC)],['Suma de los aumentos',fmt(gU)]].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
   const top=cut[0], tu=up[0];
-  document.getElementById('a27-lead').innerHTML=`Abrimos el proyecto 2027 programa por programa y partida por partida (las 21 jurisdicciones con detalle publicado, sin Jefatura de Gobierno) y lo comparamos con el presupuesto vigente de 2026 al 2.º trimestre. <b>${nC} de ${M.length} programas pierden en términos reales.</b> El mayor recorte es ${top.prog} (${SJ(top.jur)}: ${pct(top.pc)}); el mayor aumento, ${tu.prog} (${SJ(tu.jur)}: ${pct(tu.pc)}).`;
+  document.getElementById('a27-lead').innerHTML=`Abrimos el proyecto 2027 programa por programa y partida por partida (las 22 jurisdicciones) y lo comparamos con el presupuesto vigente de 2026 al 2.º trimestre. <b>${nC} de ${M.length} programas pierden en términos reales.</b> El mayor recorte es ${top.prog} (${SJ(top.jur)}: ${pct(top.pc)}); el mayor aumento, ${tu.prog} (${SJ(tu.jur)}: ${pct(tu.pc)}).`;
   // partidas
   const f6=fac(2026), f7=fac('2027P'); const PP=A27.partidas.filter(p=>!/deuda/i.test(p.ppal)&&!/activos financieros/i.test(p.inc)).map(p=>({ppal:p.ppal,inc:p.inc,a:p.v26*f6,b:p.p27*f7})).map(p=>Object.assign(p,{d:p.b-p.a,pc:p.a?p.b/p.a-1:null}));
   const ps=[...PP].sort((x,y)=>x.d-y.d); const sel=[...ps.slice(0,8),...ps.slice(-8)];
   const c=mk('ch-a27-pp',{type:'bar',data:{labels:sel.map(p=>cap1(p.ppal.toLowerCase())),datasets:[{label:'Variación real',data:sel.map(p=>p.d),backgroundColor:sel.map(p=>p.d<0?css('--neg'):css('--pos'))}]},options:baseOpts({extra:{indexAxis:'y'}})});
   {const o=c.options; o.plugins.legend.display=false; o.scales.x.ticks.callback=v=>(v/1e3).toLocaleString('es-AR',{maximumFractionDigits:0}); o.scales.x.title={display:true,text:'Miles de millones de '+ul,color:css('--muted')}; o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)}; o.scales.y.ticks.autoSkip=false; o.scales.y.grid={display:false}; o.scales.x.grid={color:css('--line')}; o.interaction={mode:'nearest',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.label=x=>{const p=sel[x.dataIndex];return [' '+p.inc,' 2026 vigente: '+fmt(p.a),' 2027 proyecto: '+fmt(p.b),' Variación: '+fmt(p.d)+(p.pc!=null?' ('+pct(p.pc)+')':'')];}; c.update();}
-  document.getElementById('a27-cap-pp').textContent='Las 8 partidas principales que más caen y las 8 que más suben, en miles de millones de '+ul+'. Todas las jurisdicciones con detalle.';
+  document.getElementById('a27-cap-pp').textContent='Las 8 partidas principales que más caen y las 8 que más suben, en miles de millones de '+ul+'. Todas las jurisdicciones.';
   foco27(R); a27table(R);
 }
 function foco27(R){

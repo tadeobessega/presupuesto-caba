@@ -2,7 +2,7 @@ import json, collections, unicodedata, re
 def n(s): return re.sub(r'[^a-z0-9 ]','',re.sub(r'\s+',' ',unicodedata.normalize('NFD',s).encode('ascii','ignore').decode().lower())).strip()
 R=json.load(open('p2027_prog.json')); D=json.load(open('data2.json'))
 P=D['P']; pd=P['dims']; O=D['O']; od=O['dims']; f26=D['defl']['p2027']['2026']
-JN={'01':'Legislatura De La Ciudad De Buenos Aires','02':'Auditoria General De La Ciudad De Buenos Aires','03':'Defensoria Del Pueblo','05':'Ministerio Publico','06':'Tribunal Superior De Justicia','07':'Consejo De La Magistratura','08':'Sindicatura General De La Ciudad De Buenos Aires','09':'Procuracion General De La Ciudad','21':'Jefatura De Gabinete De Ministros','24':'Ministerio De Justicia','29':'Ministerio De Seguridad','31':'Ministerio De Movilidad E Infraestructura','35':'Ministerio De Espacio Publico E Higiene Urbana','40':'Ministerio De Salud','45':'Ministerio De Desarrollo Humano Y Hábitat','50':'Ministerio De Cultura','55':'Ministerio De Educación','60':'Ministerio De Hacienda Y Finanzas','75':'Ministerio De Desarrollo Económico','98':'Servicio De La Deuda Publica','99':'Obligaciones A Cargo Del Tesoro'}
+JN={'01':'Legislatura De La Ciudad De Buenos Aires','02':'Auditoria General De La Ciudad De Buenos Aires','03':'Defensoria Del Pueblo','05':'Ministerio Publico','06':'Tribunal Superior De Justicia','07':'Consejo De La Magistratura','08':'Sindicatura General De La Ciudad De Buenos Aires','09':'Procuracion General De La Ciudad','20':'Jefatura De Gobierno','21':'Jefatura De Gabinete De Ministros','24':'Ministerio De Justicia','29':'Ministerio De Seguridad','31':'Ministerio De Movilidad E Infraestructura','35':'Ministerio De Espacio Publico E Higiene Urbana','40':'Ministerio De Salud','45':'Ministerio De Desarrollo Humano Y Hábitat','50':'Ministerio De Cultura','55':'Ministerio De Educación','60':'Ministerio De Hacienda Y Finanzas','75':'Ministerio De Desarrollo Económico','98':'Servicio De La Deuda Publica','99':'Obligaciones A Cargo Del Tesoro'}
 GEN=re.compile(r'^(actividades (centrales|comunes)|conduccion|tecnica administrativa y legal|gestion de comunicacion)')
 # 2027 programs (exclude amortization in 98 and activos financieros of 99 for comparability w/ Planilla 5)
 def keep27(r): return not (r['jcode']=='98' and 'amortiz' in n(r['prog'])) and not (r['jcode']=='99' and r['inc']=='Activos financieros')
@@ -18,7 +18,7 @@ p26=collections.Counter(); s26=collections.Counter(); jur26={}
 for r in P['rows']:
     if r[0]!=2026 or r[1]!=2: continue
     j=pd['jur_desc'][r[2]]
-    if j=='Jefatura De Gobierno' or pd['inc_desc'][r[4]]=='Amortización de deuda' or (j=='Obligaciones A Cargo Del Tesoro' and pd['inc_desc'][r[4]]=='Activos Financieros'): continue
+    if pd['inc_desc'][r[4]]=='Amortización de deuda' or (j=='Obligaciones A Cargo Del Tesoro' and pd['inc_desc'][r[4]]=='Activos Financieros'): continue
     nm=n(pd['prog_desc'][r[3]]); k=(j,nm) if GEN.match(nm) else ('*',nm)
     p26[k]+=r[7]; s26[k]+=r[6]; jur26.setdefault(k,collections.Counter())[j]+=r[7]
 # fuzzy-match renamed / truncated programs (2027 names wrap in the PDF header)
@@ -56,7 +56,7 @@ pp26=collections.Counter(); pp27=collections.Counter(); ppj26=collections.Counte
 for r in O['rows']:
     if r[0]!=2026 or r[1]!=2: continue
     j=od['jur_desc'][r[2]]
-    if j=='Jefatura De Gobierno' or r[3]==amort or (j=='Obligaciones A Cargo Del Tesoro' and od['inc_desc'][r[3]]=='Activos Financieros'): continue
+    if r[3]==amort or (j=='Obligaciones A Cargo Del Tesoro' and od['inc_desc'][r[3]]=='Activos Financieros'): continue
     k=n(od['ppal_desc'][r[4]]); pp26[k]+=r[8]; ppj26[(j,k)]+=r[8]; ppinc.setdefault(k,(od['inc_desc'][r[3]],od['ppal_desc'][r[4]]))
 for r in R:
     if not keep27(r): continue
