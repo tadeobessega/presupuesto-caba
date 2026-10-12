@@ -540,8 +540,8 @@ function kpis(){
 const CONC=[
  `<b>El gasto 2027 cae 2,7% real frente al vigente 2026</b>, aunque supera en 8,1% a lo ejecutado en 2025 y queda en el nivel de 2023 (−0,5%).`,
  `<b>Los recursos dependen de $2,79 billones que Nación no gira.</b> La transferencia por el fallo de la Corte (diferencial de coparticipación del 1,55%) es el 11,6% del cálculo. Sin ella, el "equilibrio" es un déficit del mismo tamaño.`,
- `<b>Ingresos Brutos se proyecta 14,7% arriba de lo que cerraría 2026</b>, con una actividad que el propio proyecto estima en +4% y una recaudación que en enero–agosto cae 7,8% real. Aun así, queda 22% debajo de 2023.`,
- `<b>Patentes es la única baja de impuestos visible:</b> 37% real menos que lo que se recaudaría en 2026. Sellos (+19%) y el resto de los tributos propios suben.`,
+ `<b>Ingresos Brutos se proyecta 5,7% arriba de lo recaudado en 2025</b>, cuando en enero–agosto de 2026 la recaudación cae 7,8% real contra 2025. Aun así, queda 22% debajo de 2023.`,
+ `<b>Patentes es la única baja de impuestos visible:</b> 35% real menos que lo recaudado en 2025. Sellos sube 10,6% real contra 2025.`,
  `<b>Los intereses se multiplican por 3,4 en términos reales</b> frente a 2025: pasan del 0,8% al 2,5% de los recursos, por la nueva deuda en dólares (Tango 13 y 14).`,
  `<b>La obra pública no despega:</b> el 18% anunciado es menos que el 19% ejecutado en 2025 y el gasto de capital apenas sube 2% real. El subte concentra el anuncio, pero en 2026 ejecutó menos de un cuarto de su crédito.`,
  `<b>Crecen Justicia, Tribunal Superior y Desarrollo Económico;</b> caen Espacio Público e Higiene Urbana, Movilidad e Infraestructura y Cultura frente al vigente 2026.`,
@@ -551,8 +551,8 @@ document.getElementById('conc').innerHTML=CONC.map(c=>`<li>${c}</li>`).join('');
 // ---------- Promesas
 const PROMS=[
  {q:'Baja de impuestos: casi un millón de vehículos pagarán menos y ningún vecino pagará más patente que este año',who:'Ministro de Hacienda, Comisión de Presupuesto',v:'mid',vl:'Cumple a medias',
-  p:'Patentes cae fuerte. <b>Pero el cálculo de recursos supone más recaudación real en el resto</b>: Ingresos Brutos +14,7% y Sellos +19% contra el cierre estimado de 2026. La carga total propia no baja; se reparte distinto.',
-  f:[['Patentes 2027 vs. 2026','−37% real'],['IIBB 2027 vs. 2026','+14,7% real'],['Sellos 2027 vs. 2026','+19% real']],chart:'tax'},
+  p:'Patentes cae fuerte. <b>Pero el cálculo de recursos supone más recaudación real en el resto</b>: Ingresos Brutos +5,7% y Sellos +10,6% contra lo recaudado en 2025, aunque en enero–agosto de 2026 IIBB cae 7,8% real. La carga total propia no baja; se reparte distinto.',
+  f:[['Patentes 2027 vs. 2025','−35% real'],['IIBB 2027 vs. 2025','+5,7% real'],['Sellos 2027 vs. 2025','+10,6% real']],chart:'tax'},
  {q:'Invertiremos un 18% del presupuesto en gasto de capital, por encima del promedio histórico del 16%',who:'Presentación y exposición del ministro',v:'bad',vl:'Mentira',
   p:'El promedio 2006–2025 fue 16,9%, no 16%. <b>En 2025 se ejecutó 19%, y en 2017–2019 entre 18,6% y 20,4%.</b> En pesos de 2027, el gasto de capital proyectado apenas supera en 2% al ejecutado en 2025.',
   f:[['Capital / gasto 2025','19,0%'],['Promedio 2006–2025','16,9%'],['Capital 2027 vs. 2025','+2,1% real']],chart:'cap'},
@@ -833,7 +833,7 @@ function promCharts(){
    if(p.chart==='tax'){ const yy={}; D.reca.rows.forEach(r=>{if(r[0]<2019)return; const f=facM(r[0],r[1]); (yy[r[0]]=yy[r[0]]||[0,0]); yy[r[0]][0]+=r[5]*f; yy[r[0]][1]+=r[6]*f;}); const ys=['2019','2020','2021','2022','2023','2024','2025'];
      const e26=yy[2026]; const r25={};D.reca.rows.forEach(r=>{if(r[0]===2025){const f=facM(r[0],r[1]);(r25.a=r25.a||[0,0]);r25.a[0]+=r[5]*f;r25.a[1]+=r[6]*f; if(r[1]<=8){(r25.b=r25.b||[0,0]);r25.b[0]+=r[5]*f;r25.b[1]+=r[6]*f;}}});
      const est=[e26[0]*r25.a[0]/r25.b[0],e26[1]*r25.a[1]/r25.b[1]];
-     mini(id,{type:'bar',data:{labels:[...ys,'2026e','2027P'],datasets:[{label:'Patentes',data:[...ys.map(y=>yy[y][0]),est[0],467162*fac('2027P')],backgroundColor:[...ys.map(()=>H1()),H2(),PJ()]}]},options:baseOpts({div:1e3})}); }
+     mini(id,{type:'bar',data:{labels:[...ys,'2027P'],datasets:[{label:'Patentes',data:[...ys.map(y=>yy[y][0]),467162*fac('2027P')],backgroundColor:[...ys.map(()=>H1()),PJ()]}]},options:baseOpts({div:1e3})}); }
    if(p.chart==='cap'){ mini(id,{type:'line',data:{labels:YRS2,datasets:[{label:'Capital / gasto',data:YRS2.map(y=>CA['5) Gastos de capital'][y]/CA['10) Gastos totales (7+9)'][y]*100),borderColor:H1(),backgroundColor:H1(),borderWidth:2,pointRadius:YRS2.map(y=>y==='2027P'?5:0),pointBackgroundColor:PJ(),pointBorderColor:PJ()}]},options:baseOpts({pctAxis:true})}); }
    if(p.chart==='fis'){ mini(id,{type:'bar',data:{labels:['Recursos 2027','sin fallo CSJN','Gasto 2027'],datasets:[{label:'2027',data:[CA['6) Recursos totales (1+4)']['2027P']*fac('2027P'),(CA['6) Recursos totales (1+4)']['2027P']-2789861)*fac('2027P'),CA['10) Gastos totales (7+9)']['2027P']*fac('2027P')],backgroundColor:[H1(),css('--fg'),PJ()]}]},options:baseOpts()}); }
    if(p.chart==='subte'){ const sp=PG.dims.prog_desc.map((x,i)=>/subterr/i.test(x)?i:-1).filter(i=>i>=0); const ev={},vv={}; PG.rows.forEach(r=>{if(r[1]===LT&&sp.includes(r[3])){ev[r[0]]=(ev[r[0]]||0)+r[8];vv[r[0]]=(vv[r[0]]||0)+r[7];}}); const ys=Object.keys(vv).filter(y=>vv[y]>0).sort(); const c=mini(id,{type:'bar',data:{labels:ys.map(y=>y+' 2T'),datasets:[{label:'Devengado / vigente al 2T',data:ys.map(y=>ev[y]/vv[y]*100),backgroundColor:ys.map(y=>y==='2026'?PJ():H1())}]},options:baseOpts({pctAxis:true})}); }
@@ -946,16 +946,11 @@ function lupa(){
     else { if(r[1]===4&&r[0]<2026) dev[r[0]]=(dev[r[0]]||0)+r[9]*fac(r[0]); if(r[0]===2026&&r[1]===LT){v26+=r[8]*fac(2026); s26+=r[7]*fac(2026);} }
     if(r[0]===2025&&r[1]===4) byJ[OD.jur_desc[r[2]]]=(byJ[OD.jur_desc[r[2]]]||0)+r[9]*fac(2025); });
   const ys=Object.keys(dev).map(Number).sort();
-  // 2027 estimado: el proyecto no abre partidas. Se aplica a cada jurisdicción el peso de la partida dentro de su inciso en el vigente 2026.
-  const pj={}, ij={}; let incN=null; O.rows.forEach(r=>{ if(r[0]===2026&&r[1]===LT&&ids.includes(r[lvl])){ const j=norm(OD.jur_desc[r[2]]); pj[j]=(pj[j]||0)+r[8]; incN=OD.inc_desc[r[3]]; } });
-  O.rows.forEach(r=>{ if(r[0]===2026&&r[1]===LT&&OD.inc_desc[r[3]]===incN){ const j=norm(OD.jur_desc[r[2]]); ij[j]=(ij[j]||0)+r[8]; } });
-  const gr=Object.values(pj).reduce((a,b)=>a+b,0)/(Object.values(ij).reduce((a,b)=>a+b,0)||1);
-  let e27=0; Object.entries(P27J).forEach(([j,o])=>{ const n=norm(j); const rt=ij[n]?(pj[n]||0)/ij[n]:gr; e27+=(o[incN]||0)*rt; }); e27*=fac('2027P');
-  const labels=ytd?ys.map(y=>y+' T'+LT):[...ys.map(String),'2026 Sanc.','2026 Vig.','2027 P (est.)'];
-  const data=ytd?ys.map(y=>dev[y]):[...ys.map(y=>dev[y]),s26,v26,e27];
-  const c=mk('ch-lupa',{type:'bar',data:{labels,datasets:[{label:L.t,data,backgroundColor:ytd?ys.map((y,i)=>i===ys.length-1?H2():H1()):[...ys.map(()=>H1()),H2(),H2(),PJ()]}]},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})}); c.options.plugins.legend.display=false; c.options.scales.x.ticks.autoSkip=false; c.update();
+  const labels=ytd?ys.map(y=>y+' T'+LT):[...ys.map(String),'2026 Sanc.','2026 Vig.'];
+  const data=ytd?ys.map(y=>dev[y]):[...ys.map(y=>dev[y]),s26,v26];
+  const c=mk('ch-lupa',{type:'bar',data:{labels,datasets:[{label:L.t,data,backgroundColor:ytd?ys.map((y,i)=>i===ys.length-1?H2():H1()):[...ys.map(()=>H1()),H2(),H2()]}]},options:baseOpts({div:1e3,ytitle:'Miles de millones de '+unitLabel()})}); c.options.plugins.legend.display=false; c.options.scales.x.ticks.autoSkip=false; c.update();
   document.getElementById('lupa-title').textContent=L.t;
-  document.getElementById('lupa-cap').textContent=ytd?`Devengado acumulado al ${LT}.º trimestre de cada año (acumulado 2T), ${unitLabel()}. Comparable con 2026.`:`Devengado anual 2019–2025 y crédito 2026 (sancionado y vigente), ${unitLabel()}. 2027 estimado: el proyecto no abre partidas, así que a cada jurisdicción se le aplica el peso que la partida tiene en su inciso en el vigente 2026 (${incN||''}).`;
+  document.getElementById('lupa-cap').textContent=ytd?`Devengado acumulado al ${LT}.º trimestre de cada año (acumulado 2T), ${unitLabel()}. Comparable con 2026.`:`Devengado anual 2019–2025 y crédito 2026 (sancionado y vigente), ${unitLabel()}. El proyecto 2027 no abre el gasto por partida, así que no hay dato oficial de 2027.`;
   const y0=ys[0], y1=ys[ys.length-1]; const pk=ys.reduce((a,y)=>dev[y]>dev[a]?y:a,ys[0]); const ch=dev[y1]/dev[y0]-1;
   document.getElementById('lupa-txt').innerHTML=L.d+(U!=='nom'?` <b>Entre ${y0} y ${y1}${ytd?' (ene–jun)':''} varió ${pct(ch)} en términos reales; el máximo fue en ${pk}.</b>`:'');
   const tj=Object.values(byJ).reduce((a,b)=>a+b,0)||1;
