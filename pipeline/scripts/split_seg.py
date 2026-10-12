@@ -28,12 +28,10 @@ script_all=s[s.index('<script src="https://cdnjs'):]
 head_js=s[s.index('(function(){'):s.index('// ---------- KPIs + conclusions')]
 opts_fn=[l for l in lines if l.startswith('function opts(')][0]
 sjs=sg_js
-# gasto seguridad precomputado
-sjs=sjs.replace("const fi=GD.fun_desc.indexOf('Seguridad interior'); const dv={}; let v26=0;\n  G.rows.forEach(r=>{if(r[3]!==fi||r[4]===GAM)return; if(r[1]===4) dv[r[0]]=(dv[r[0]]||0)+r[9]*fac(r[0]); if(r[0]===2026&&r[1]===lastT[2026]) v26+=r[8]*fac(2026);});",
- "const SGG=D.seggasto; const dv={}; Object.entries(SGG.dev).forEach(([y,v])=>dv[y]=v*fac(+y)); const v26=SGG.v26*fac(2026);")
 assert 'SGG' in sjs
 tail='''
 function renderAll(){ themeChart(); seguridad(); const n=document.getElementById('unitnote'); if(n) n.textContent='';}
+initPeriodUI(()=>renderAll()); initPNG();
 document.querySelectorAll('[data-u]').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.u===U); b.addEventListener('click',()=>{U=b.dataset.u; try{localStorage.setItem('ceer-unit',U);}catch(e){} document.querySelectorAll('[data-u]').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderAll();});});
 document.getElementById('themebtn').addEventListener('click',()=>{const r=document.documentElement; const cur=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'); r.setAttribute('data-theme',cur==='dark'?'light':'dark'); renderAll();});
 matchMedia('(prefers-color-scheme: light)').addEventListener('change',renderAll);
