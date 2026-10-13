@@ -579,7 +579,7 @@ h2 .tag,.eyebrow{display:none!important}
   <div class="grid">
     <div class="card span4 cmmap zmap"><h3>Las cuatro zonas</h3><p class="cap">Agrupamiento de comunas usado en esta página</p><div id="cm-zsvg"></div><div class="cmleg" id="cm-zleg"></div></div>
     <div class="card span8"><h3 id="cm-ztitle">Gasto por habitante en cada zona</h3><p class="cap" id="cm-zcap1"></p><div class="seg" style="margin-bottom:10px" role="group" aria-label="Medida zonas"><button data-zm="pc" aria-pressed="true">Por habitante</button><button data-zm="km" aria-pressed="false">Por km²</button></div><div class="chart tall"><canvas id="ch-cm-zline" aria-label="Gasto por habitante por zona"></canvas></div></div>
-    <div class="card span12"><h3>Composición por zona</h3><p class="cap" id="cm-zcap2"></p><div class="chart tall"><canvas id="ch-cm-zstack" aria-label="Composición por zona"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data). El año sigue al reproductor del mapa.</p></div>
+    <div class="card span12"><h3>Composición por zona o comuna</h3><p class="cap" id="cm-zcap2"></p><div class="filters" style="margin-bottom:10px"><div class="f"><label for="cm-zcl">Clasificación</label><select id="cm-zcl"><option value="fun">Por función</option><option value="inc">Por inciso</option></select></div><div class="f"><label for="cm-zby">Abrir por</label><select id="cm-zby"><option value="z">Zona</option><option value="c">Comuna</option></select></div></div><div class="chart tall"><canvas id="ch-cm-zstack" aria-label="Composición por zona"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data). El año sigue al reproductor del mapa.</p></div>
   </div>
 </section>
 </div>
@@ -1329,7 +1329,7 @@ const ZON={Norte:['2','12','13','14'],'Este (centro)':['1','3','5','6','15'],Oes
 let CMI=CMY.indexOf(2025)>=0?CMY.indexOf(2025):CMY.length-1, CMSEL='8', CMT=null;
 let ZM='pc';
 document.querySelectorAll('[data-zm]').forEach(b=>b.addEventListener('click',()=>{ZM=b.dataset.zm; document.querySelectorAll('[data-zm]').forEach(x=>x.setAttribute('aria-pressed',x===b)); comunasZonas();}));
-(function(){ const pg=document.getElementById('cm-pgf'); pg.innerHTML='<option value="all">Todas</option>'+CM.groups.map((g,i)=>`<option value="${i}">${g}</option>`).join(''); ['cm-pgf','cm-pgy'].forEach(id=>document.getElementById(id).addEventListener('change',cmProgs)); ['cm-mxby','cm-mxmed'].forEach(id=>document.getElementById(id).addEventListener('change',cmMatrix)); })();
+(function(){ const pg=document.getElementById('cm-pgf'); pg.innerHTML='<option value="all">Todas</option>'+CM.groups.map((g,i)=>`<option value="${i}">${g}</option>`).join(''); ['cm-pgf','cm-pgy'].forEach(id=>document.getElementById(id).addEventListener('change',cmProgs)); ['cm-mxby','cm-mxmed'].forEach(id=>document.getElementById(id).addEventListener('change',cmMatrix)); ['cm-zcl','cm-zby'].forEach(id=>document.getElementById(id).addEventListener('change',()=>comunasStack())); })();
 (function(){ const sel=document.getElementById('cm-rubro'); sel.innerHTML='<option value="all">Todo el gasto</option>'+CM.groups.map((g,i)=>`<option value="g${i}">${g}</option>`).join('')+'<option value="bu">Obras y equipos (bienes de uso)</option>'; sel.value='all';
   const sl=document.getElementById('cm-slider'); sl.max=CMY.length-1; sl.value=CMI;
   sl.addEventListener('input',()=>{CMI=+sl.value; comunasYear();}); ['cm-rubro','cm-med'].forEach(id=>document.getElementById(id).addEventListener('change',()=>comunas()));
@@ -1370,12 +1370,17 @@ function comunasStack(){
   if(!c){ c=mk('ch-cm-stack',{type:'bar',data:{labels:CMC.map(x=>'C'+x),datasets:G.map((g,i)=>({label:g,data:sh.map(r=>r[i]),backgroundColor:COLS[i%COLS.length],stack:'s'}))},options:baseOpts({pctAxis:true})}); c.options.scales.x.stacked=true; c.options.scales.y.stacked=true; c.options.scales.y.max=100; c.update(); }
   else { G.forEach((g,i)=>c.data.datasets[i].data=sh.map(r=>r[i])); c.options.animation={duration:700,easing:'easeOutQuart'}; c.update(); }
   document.getElementById('cm-compcap').textContent='Participación de cada rubro en el gasto registrado en cada comuna, '+yLab(y)+'.';
-  // zonas stack
-  const zs=ZK.map(z=>{const t=ZON[z].reduce((a,c)=>a+cmVal(y,c,'all'),0); return G.map((g,i)=>ZON[z].reduce((a,c)=>a+cmVal(y,c,'g'+i),0)/t*100);});
+  // zonas stack (función o inciso, por zona o comuna)
+  const cl=document.getElementById('cm-zcl').value, zb=document.getElementById('cm-zby').value;
+  const CATS=cl==='inc'?CM.incs:G; const ICOL=[H1(),css('--i5'),H2(),PJ(),css('--c2'),css('--fg'),css('--i4')]; const CC=cl==='inc'?ICOL:COLS;
+  const grp=zb==='z'?ZK.map(z=>[z,ZON[z]]):CMC.map(c=>['Comuna '+c,[c]]);
+  const iv=(y,cs,i)=>{let v=0; CM.irows.forEach(r=>{ if(r[0]===y&&cs.includes(r[1])&&r[2]===i) v+=(y===2026?r[3]:r[4]); }); return v;};
+  const zs=grp.map(([k,cs])=>{ const vals=CATS.map((g,i)=>cl==='inc'?iv(y,cs,i):cs.reduce((a,c)=>a+cmVal(y,c,'g'+i),0)); const t=vals.reduce((a,b)=>a+b,0)||1; return vals.map(v=>v/t*100); });
   let z=charts['ch-cm-zstack'];
-  if(!z){ z=mk('ch-cm-zstack',{type:'bar',data:{labels:ZK,datasets:G.map((g,i)=>({label:g,data:zs.map(r=>r[i]),backgroundColor:COLS[i%COLS.length],stack:'s'}))},options:baseOpts({pctAxis:true,extra:{indexAxis:'y'}})}); const o=z.options; o.scales.x.stacked=true; o.scales.y.stacked=true; o.scales.x.max=100; o.scales.x.ticks.callback=v=>v+'%'; o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)}; o.scales.y.grid={display:false}; o.scales.x.grid={color:css('--line')}; o.interaction={mode:'index',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': '+n1(x.parsed.x)+'%'; z.update(); }
-  else { G.forEach((g,i)=>z.data.datasets[i].data=zs.map(r=>r[i])); z.options.animation={duration:700,easing:'easeOutQuart'}; z.update(); }
-  document.getElementById('cm-zcap2').textContent='Participación de cada rubro en el gasto registrado en cada zona, '+yLab(y)+'.';
+  if(!z||z._k!==cl+zb){ z=mk('ch-cm-zstack',{type:'bar',data:{labels:grp.map(g=>g[0]),datasets:CATS.map((g,i)=>({label:g,data:zs.map(r=>r[i]),backgroundColor:CC[i%CC.length],stack:'s'}))},options:baseOpts({pctAxis:true,extra:{indexAxis:'y'}})}); z._k=cl+zb; const o=z.options; o.scales.x.stacked=true; o.scales.y.stacked=true; o.scales.x.max=100; o.scales.x.ticks.callback=v=>v+'%'; o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)}; o.scales.y.ticks.autoSkip=false; o.scales.y.grid={display:false}; o.scales.x.grid={color:css('--line')}; o.interaction={mode:'index',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': '+n1(x.parsed.x)+'%'; z.update(); }
+  else { CATS.forEach((g,i)=>z.data.datasets[i].data=zs.map(r=>r[i])); z.options.animation={duration:700,easing:'easeOutQuart'}; z.update(); }
+  document.getElementById('ch-cm-zstack').parentElement.style.height=(zb==='c'?620:420)+'px';
+  document.getElementById('cm-zcap2').textContent='Participación de cada '+(cl==='inc'?'inciso':'rubro')+' en el gasto registrado en cada '+(zb==='z'?'zona':'comuna')+', '+yLab(y)+'.';
 }
 function comunasSel(){
   const c=CMSEL, G=CM.groups, COLS=[...INF(),css('--m1'),css('--c8')];
