@@ -224,6 +224,17 @@ h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;f
 @media (max-width:980px){.eqgrid{grid-template-columns:minmax(0,1fr)}.pcap{grid-template-columns:repeat(2,minmax(0,1fr))}.wbox{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:520px){.tstrip{grid-template-columns:minmax(0,1fr)}.wleg{grid-template-columns:minmax(0,1fr)}}
 @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none}.waffle i{transform:none;opacity:1}.eq .bars i{width:var(--w)}}
+.hcount{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15;opacity:0;transform:translateY(-4px);transition:opacity .5s ease,transform .5s ease}
+.hcount.on{opacity:1;transform:none}
+.hcount span{font-size:11px;color:var(--muted)}
+.hcount b{font-family:var(--mono);font-size:16px;font-variant-numeric:tabular-nums;color:var(--fg)}
+@media (max-width:640px){.hcount span{display:none}.hcount b{font-size:13px}}
+@media (max-width:700px){.topin{row-gap:2px}.tabs{order:3;flex:1 1 100%;overflow-x:auto}.tabs button{padding:8px 10px;white-space:nowrap}.ctrl{margin-left:auto}}
+.subx{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.subx .eq>b{font-size:30px}
+@media (max-width:980px){.subx{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.subx{grid-template-columns:minmax(0,1fr)}}
+h2 .tag,.eyebrow{display:none!important}
 @media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}.span8,.span7,.span6,.span5,.span4{grid-column:span 12}.promesas,.list,.conc{grid-template-columns:minmax(0,1fr)}.method{columns:1}}
 @media (max-width:520px){.prom .facts{grid-template-columns:minmax(0,1fr)}.kpi b{font-size:22px}.barcell{width:90px;min-width:80px}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -235,11 +246,7 @@ h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;f
     <img class="logo l" alt="CEER" src="__LOGO_POS__">
     <nav class="tabs" aria-label="Secciones"><span class="pagename">Seguridad en la Ciudad de Buenos Aires</span></nav>
     <div class="ctrl">
-      <div class="seg" role="group" aria-label="Unidad">
-        <button id="u-p27" data-u="p27" aria-pressed="true" title="Pesos promedio de 2027: 2% mensual oct–dic 2026 y 18% de inflación 2027 (pauta del proyecto)">$ 2027</button>
-        <button id="u-hoy" data-u="hoy" aria-pressed="false" title="Pesos de septiembre de 2026 (IPCBA)">$ Hoy</button>
-        <button id="u-nom" data-u="nom" aria-pressed="false" title="Pesos corrientes de cada año">$ Nominal</button>
-      </div>
+      <div class="hcount" id="hcount" hidden aria-live="off"><span>Gasto 2027 en el tiempo que llevás acá</span><b id="hcount-v">$0</b></div>
       <button class="iconbtn" id="themebtn" aria-label="Cambiar tema">◐ Tema</button>
     </div>
   </div>
@@ -249,6 +256,12 @@ h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;f
     <span class="sep"></span>
     <label for="yr-from">Desde</label><select id="yr-from"></select>
     <label for="yr-to">Hasta</label><select id="yr-to"></select>
+    <span class="sep"></span>
+<div class="seg" role="group" aria-label="Unidad">
+        <button id="u-p27" data-u="p27" aria-pressed="true" title="Pesos promedio de 2027: 2% mensual oct–dic 2026 y 18% de inflación 2027 (pauta del proyecto)">$ 2027</button>
+        <button id="u-hoy" data-u="hoy" aria-pressed="false" title="Pesos de septiembre de 2026 (IPCBA)">$ Hoy</button>
+        <button id="u-nom" data-u="nom" aria-pressed="false" title="Pesos corrientes de cada año">$ Nominal</button>
+      </div>
     <span id="pernote"></span>
   </div></div>
 </header>
