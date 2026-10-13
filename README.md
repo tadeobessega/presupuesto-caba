@@ -6,7 +6,7 @@ Tablero que compara el Proyecto de Presupuesto 2027 de la Ciudad de Buenos Aires
 
 | Ruta | Qué es |
 |---|---|
-| `index.html` | El sitio (un solo archivo, datos embebidos). Es lo que publica GitHub Pages. |
+| `index.html` | El sitio (un solo archivo, datos embebidos). Es lo que publica Cloudflare. |
 | `site/template.html` | Plantilla del sitio; `__DATA__` y los logos se reemplazan al construir. |
 | `data/dashboard.json` | Datos que usa el sitio (cubos de gasto, CAIF, recaudación, deflactores, proyecto 2027). |
 | `bases/base_gasto_CABA_trimestral_2019-2026.csv.gz` | Base de gasto 2019–2026 T2, por año y trimestre, hasta partida subparcial (543 mil filas, pesos corrientes). |
@@ -16,13 +16,12 @@ Tablero que compara el Proyecto de Presupuesto 2027 de la Ciudad de Buenos Aires
 
 ## Publicar
 
-1. En GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-2. Cada push a `main` publica el sitio en `https://tadeobessega.github.io/presupuesto-caba/`.
+El sitio se publica en Cloudflare a partir de este repositorio. No hay workflow de GitHub Actions.
 
 ## Metodología (resumen)
 
 - **Pesos de hoy**: IPCBA (IDECBA) septiembre de 2026. Promedios anuales desde 2013; 1995–2012 con la serie alternativa de la base CEER (IPC provincias), porque el IPC del INDEC 2007–2015 no es confiable.
-- **Pesos de 2027**: pesos de hoy × 1,02³ (oct–dic 2026 al 2% mensual) × 1,18 (pauta de inflación 2027 del proyecto).
+- **Pesos de 2027**: precios promedio de 2027: 2% mensual oct–dic 2026 y 18% anual en 2027 (pauta del proyecto), promediado.
 - **Gasto**: presupuesto ejecutado trimestral de BA Data (2019–2026 T2; 2020 y 2021 al cierre desde la base propia). Las amortizaciones de deuda se separan para comparar con el proyecto 2027.
 - **Proyecto 2027**: Planillas Anexas (3, 4, 11, 16), presentación del 30/9/2026 y versión taquigráfica de la Comisión de Presupuesto del 7/10/2026.
 
