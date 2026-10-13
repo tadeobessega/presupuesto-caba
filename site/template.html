@@ -246,6 +246,9 @@ h2 .tag,.eyebrow{display:none!important}
 .playbar input[type=range]{flex:1;min-width:180px;accent-color:var(--accent)}
 .playbar .yr{font-family:var(--mono);font-size:26px;font-weight:700;min-width:5ch}
 .zmap path{stroke:var(--panel);stroke-width:1}
+.mx td.h{text-align:right;font-family:var(--mono);font-size:12px;white-space:nowrap}
+.mx th{font-size:12px}
+#ch-cm-comp{cursor:pointer}
 @media (max-width:980px){.cmwrap{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}.span8,.span7,.span6,.span5,.span4{grid-column:span 12}.promesas,.list,.conc{grid-template-columns:minmax(0,1fr)}.method{columns:1}}
 @media (max-width:520px){.prom .facts{grid-template-columns:minmax(0,1fr)}.kpi b{font-size:22px}.barcell{width:90px;min-width:80px}}
@@ -529,6 +532,10 @@ h2 .tag,.eyebrow{display:none!important}
   <div class="filters"><div class="f"><label for="pc-year">Año</label><select id="pc-year"></select></div></div>
   <div class="minikpis" id="pc-kpis" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px"></div>
   <div class="grid">
+    <div class="card span12"><h3>El mapa</h3><p class="cap" id="pc-mapcap"></p>
+      <div class="filters" style="margin-bottom:10px"><div class="f"><label for="pc-mmed">Indicador</label><select id="pc-mmed"><option value="gas">Gasto por habitante</option><option value="ing">Recursos por habitante</option><option value="tn">Coparticipación por habitante</option><option value="prop">% de recursos propios</option><option value="ca">Gasto de capital por habitante</option></select></div></div>
+      <div class="cmwrap" style="grid-template-columns:minmax(0,340px) minmax(0,1fr)"><div class="cmmap" id="pc-map"></div><div><div class="cmleg" id="pc-mleg" style="margin-bottom:12px"></div><div class="tablewrap"><table id="pc-mtable"></table></div></div></div>
+      <p class="src">Fuente: DNAP e INDEC, Censo 2022. Límites provinciales: Instituto Geográfico Nacional. La Ciudad se marca con un círculo para que se vea.</p></div>
     <div class="card span6"><h3>Gasto por habitante</h3><p class="cap" id="pc-cap1"></p><div class="chart" style="height:640px"><canvas id="ch-pc-gas" aria-label="Gasto por habitante por jurisdicción"></canvas></div><p class="src">Fuente: Dirección Nacional de Asuntos Provinciales, ejecución presupuestaria de la Administración Pública No Financiera (2025 provisorio), e INDEC, Censo 2022 (resultados definitivos).</p></div>
     <div class="card span6"><h3>Recursos por habitante</h3><p class="cap" id="pc-cap2"></p><div class="chart" style="height:640px"><canvas id="ch-pc-ing" aria-label="Recursos por habitante por jurisdicción"></canvas></div><p class="src">Fuente: Dirección Nacional de Asuntos Provinciales e INDEC, Censo 2022. Propios: tributos provinciales, no tributarios, ventas y rentas. Nacionales: coparticipación y transferencias.</p></div>
     <div class="card span12"><h3>Tabla por jurisdicción</h3><p class="cap" id="pc-cap3"></p><div class="tablewrap"><table id="pc-table"></table></div></div>
@@ -554,10 +561,13 @@ h2 .tag,.eyebrow{display:none!important}
   <div class="playbar"><button id="cm-play" type="button">▶ Reproducir</button><span class="yr" id="cm-yr">2025</span><input type="range" id="cm-slider" min="0" max="4" step="1" value="3" aria-label="Año"></div>
   <div class="cmwrap">
     <div class="card cmmap"><h3 id="cm-maptitle">Gasto por comuna</h3><p class="cap" id="cm-mapcap"></p><div id="cm-svg"></div><div class="cmleg" id="cm-leg"></div><p class="src">Fuente: presupuesto ejecutado (BA Data), campo de ubicación geográfica; población: INDEC, Censo 2022. 2026: crédito vigente al 2.º trimestre. Comunas 1 y 4 concentran el gasto de la administración central (sedes de gobierno).</p></div>
-    <div class="card"><h3 id="cm-seltitle">Comuna</h3><p class="cap" id="cm-selcap"></p><div class="minikpis" id="cm-selkpis" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px"></div><div class="chart"><canvas id="ch-cm-comp" aria-label="Composición de la comuna"></canvas></div><p class="cap" style="margin-top:10px">Programas con más gasto registrado en la comuna, 2025</p><div class="tablewrap" style="max-height:260px;overflow-y:auto"><table id="cm-progs"></table></div></div>
+    <div class="card"><h3 id="cm-seltitle">Comuna</h3><p class="cap" id="cm-selcap"></p><div class="minikpis" id="cm-selkpis" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px"></div><div class="chart"><canvas id="ch-cm-comp" aria-label="Composición de la comuna"></canvas></div><div class="filters" style="margin:10px 0 6px"><div class="f"><label for="cm-pgf">Función</label><select id="cm-pgf"></select></div><div class="f"><label for="cm-pgy">Año</label><select id="cm-pgy"><option>2025</option><option value="2026">2026 (vigente)</option><option>2019</option></select></div></div><p class="cap" id="cm-pgcap">Tocá una barra del gráfico para ver los programas de esa función</p><div class="tablewrap" style="max-height:300px;overflow-y:auto"><table id="cm-progs"></table></div></div>
   </div>
   <div class="grid" style="margin-top:16px">
     <div class="card span12"><h3>Ranking de comunas</h3><p class="cap" id="cm-rankcap"></p><div class="chart"><canvas id="ch-cm-rank" aria-label="Ranking de comunas"></canvas></div></div>
+    <div class="card span12"><h3>Dónde se registra cada función</h3><p class="cap" id="cm-mxcap"></p>
+      <div class="filters" style="margin-bottom:10px"><div class="f"><label for="cm-mxby">Abrir por</label><select id="cm-mxby"><option value="z">Zona</option><option value="c">Comuna</option></select></div><div class="f"><label for="cm-mxmed">Medida</label><select id="cm-mxmed"><option value="sh">% del gasto de la función</option><option value="pc">Por habitante</option></select></div></div>
+      <div class="tablewrap"><table id="cm-mx" class="mx"></table></div><p class="src">Fuente: presupuesto ejecutado (BA Data), ubicación geográfica. El año sigue al reproductor del mapa.</p></div>
     <div class="card span12"><h3>Composición por comuna</h3><p class="cap" id="cm-compcap"></p><div class="chart tall"><canvas id="ch-cm-stack" aria-label="Composición del gasto por comuna"></canvas></div><p class="src">El año se cambia con el reproductor de arriba.</p></div>
   </div>
 </section>
@@ -1309,7 +1319,7 @@ function sxPick(){
 // ======== Perspectiva nacional: por habitante
 const PC=D.percap||{years:[],j:{},pop:{}};
 document.getElementById('pc-year').innerHTML=PC.years.filter(y=>y>=2022).map(y=>`<option ${y===PC.years[PC.years.length-1]?'selected':''}>${y}</option>`).join('');
-document.getElementById('pc-year').addEventListener('change',()=>provincias());
+document.getElementById('pc-year').addEventListener('change',()=>provincias()); document.getElementById('pc-mmed').addEventListener('change',()=>provincias());
 function provincias(){
   const y=+document.getElementById('pc-year').value; const yi=PC.years.indexOf(y); const f=fac(y); const ul=unitLabel();
   const g=(j,k)=>{const a=PC.j[j][k]; return a&&a[yi]!=null?a[yi]:0;};
@@ -1323,6 +1333,15 @@ function provincias(){
     o.scales.y.ticks.font=ctx=>({weight:rows[ctx.index]&&rows[ctx.index].j==='Ciudad'?'700':'400'}); o.scales.y.ticks.color=ctx=>rows[ctx.index]&&rows[ctx.index].j==='Ciudad'?css('--fg'):css('--muted');
     o.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': $'+Math.round(x.parsed.x).toLocaleString('es-AR'); o.plugins.tooltip.callbacks.footer=x=>{const r=rows[x[0].dataIndex];return 'Total: $'+Math.round(id==='ch-pc-gas'?r.gas:r.ing).toLocaleString('es-AR');}; c.update(); };
   const rg=[...R].sort((a,b)=>b.gas-a.gas), ri=[...R].sort((a,b)=>b.ing-a.ing);
+  { const M=PC.map; const med=document.getElementById('pc-mmed').value; const val=r=>med==='prop'?r.prop*100:r[med]; const fm=v=>med==='prop'?n1(v)+'%':'$'+Math.round(v).toLocaleString('es-AR');
+    const byJ={}; R.forEach(r=>byJ[r.j]=val(r)); const vs=Object.values(byJ).sort((a,b)=>a-b); const q=k=>vs[Math.min(vs.length-1,Math.floor(k*vs.length))]; const br=[q(.2),q(.4),q(.6),q(.8)]; const pal=['#d6e3f5','#9dbbe8','#5a8ed8','#2563c4','#0b2a5c']; const col=v=>v==null?'var(--line)':pal[br.filter(b=>v>=b).length];
+    let h=`<svg viewBox="0 0 ${M.W} ${M.H}" role="img" aria-label="Mapa de provincias">`; Object.entries(M.p).forEach(([j,g])=>{ if(j==='Ciudad') return; h+=`<path d="${g.d}" fill="${col(byJ[j])}"><title>${j}: ${byJ[j]==null?'sin dato':fm(byJ[j])}</title></path>`; });
+    const ca=M.p['Ciudad']; h+=`<circle cx="${ca.cx}" cy="${ca.cy}" r="7" fill="${col(byJ['Ciudad'])}" stroke="${css('--fg')}" stroke-width="1.5"><title>Ciudad de Buenos Aires: ${fm(byJ['Ciudad'])}</title></circle><text x="${ca.cx+10}" y="${ca.cy+4}" style="font:700 11px var(--font)">CABA</text></svg>`;
+    document.getElementById('pc-map').innerHTML=h; const lb=[vs[0],...br,vs[vs.length-1]];
+    document.getElementById('pc-mleg').innerHTML=pal.map((c,i)=>`<div><i style="background:${c}"></i>${fm(lb[i])} – ${fm(lb[i+1])}</div>`).join('');
+    const ml=document.getElementById('pc-mmed').selectedOptions[0].textContent; const ord=[...R].sort((a,b)=>val(b)-val(a));
+    document.getElementById('pc-mapcap').textContent=ml+', '+y+(med==='prop'?'':', en '+ul)+'. Colores por quintiles.';
+    document.getElementById('pc-mtable').innerHTML='<thead><tr><th>#</th><th>Jurisdicción</th><th class="n">'+ml+'</th></tr></thead><tbody>'+ord.map((r,i)=>`<tr${r.j==='Ciudad'?' style="font-weight:700"':''}><td>${i+1}</td><td><i style="display:inline-block;width:10px;height:10px;background:${col(val(r))};margin-right:6px"></i>${r.j==='Ciudad'?'Ciudad de Buenos Aires':r.j}</td><td class="n nw">${fm(val(r))}</td></tr>`).join('')+'</tbody>'; }
   hb('ch-pc-gas',rg,[['Personal','pe',H1()],['Gasto de capital','ca',PJ()],['Intereses','it',css('--m5')],['Resto corriente','re',H2()]]);
   hb('ch-pc-ing',ri,[['Tributos provinciales','tp',H1()],['Otros propios','otp',H3()],['Coparticipación','tn',H2()],['Transferencias nacionales','tr',css('--m5')]]);
   const ca=R.find(r=>r.j==='Ciudad'); const rkG=rg.indexOf(ca)+1, rkI=ri.indexOf(ca)+1; const rkP=[...R].sort((a,b)=>b.prop-a.prop).indexOf(ca)+1;
@@ -1341,6 +1360,7 @@ const CM=D.comunas||{rows:[],groups:[],pop:{},map:{c:{}},progs:{}};
 const CMY=[...new Set(CM.rows.map(r=>r[0]))].sort(); const CMC=Object.keys(CM.pop).sort((a,b)=>a-b);
 const ZON={Norte:['2','12','13','14'],'Este (centro)':['1','3','5','6','15'],Oeste:['7','10','11'],Sur:['4','8','9']}; const ZK=Object.keys(ZON); const zOf=c=>ZK.find(z=>ZON[z].includes(c));
 let CMI=CMY.indexOf(2025)>=0?CMY.indexOf(2025):CMY.length-1, CMSEL='8', CMT=null;
+(function(){ const pg=document.getElementById('cm-pgf'); pg.innerHTML='<option value="all">Todas</option>'+CM.groups.map((g,i)=>`<option value="${i}">${g}</option>`).join(''); ['cm-pgf','cm-pgy'].forEach(id=>document.getElementById(id).addEventListener('change',cmProgs)); ['cm-mxby','cm-mxmed'].forEach(id=>document.getElementById(id).addEventListener('change',cmMatrix)); })();
 (function(){ const sel=document.getElementById('cm-rubro'); sel.innerHTML='<option value="all">Todo el gasto</option>'+CM.groups.map((g,i)=>`<option value="g${i}">${g}</option>`).join('')+'<option value="bu">Obras y equipos (bienes de uso)</option>'; sel.value='all';
   const sl=document.getElementById('cm-slider'); sl.max=CMY.length-1; sl.value=CMI;
   sl.addEventListener('input',()=>{CMI=+sl.value; comunasYear();}); ['cm-rubro','cm-med'].forEach(id=>document.getElementById(id).addEventListener('change',()=>comunas()));
@@ -1395,7 +1415,24 @@ function comunasSel(){
   const y0=CMY[0]; const g0=cmVal(y0,c,'all'), g1=cmVal(CMY.indexOf(2025)>=0?2025:y,c,'all');
   document.getElementById('cm-selkpis').innerHTML=[['Gasto por habitante, '+yLab(y),'$'+Math.round(pc).toLocaleString('es-AR')],['Puesto entre 15',rk+'.º'],['Variación real '+y0+'–2025',pct(g1/g0-1)],['Educación + Salud, '+yLab(y),n1((cmVal(y,c,'g0')+cmVal(y,c,'g1'))/cmVal(y,c,'all')*100)+'%']].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
   const ch=mk('ch-cm-comp',{type:'bar',data:{labels:CMY.map(yLab),datasets:G.map((g,i)=>({label:g,data:CMY.map(yy=>cmVal(yy,c,'g'+i)*1e6/CM.pop[c]),backgroundColor:COLS[i%COLS.length],stack:'s'}))},options:baseOpts({div:1e3,ytitle:'Miles de '+unitLabel()+' por habitante'})}); ch.options.scales.x.stacked=true; ch.options.scales.y.stacked=true; ch.options.plugins.legend.labels.font={size:10}; ch.options.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': $'+Math.round(x.parsed.y).toLocaleString('es-AR'); ch.update();
-  const P=(CM.progs[c]||[]); const f5=fac(2025); document.getElementById('cm-progs').innerHTML='<thead><tr><th>Programa</th><th class="n">2025</th></tr></thead><tbody>'+P.map(r=>`<tr><td>${r[1]}<div style="color:var(--muted);font-size:11.5px">${r[0]}</div></td><td class="n nw">${fmt(r[2]*f5)}</td></tr>`).join('')+'</tbody>';
+  ch.options.onClick=(e,els)=>{ if(!els.length) return; const di=els[0].datasetIndex, yi=els[0].index; document.getElementById('cm-pgf').value=String(di); const yy=CMY[yi]; const opt=[...document.getElementById('cm-pgy').options].map(o=>+o.value); document.getElementById('cm-pgy').value=String(opt.includes(yy)?yy:2025); cmProgs(); }; ch.update();
+  cmProgs();
+}
+function cmProgs(){
+  const c=CMSEL, gi=document.getElementById('cm-pgf').value, y=+document.getElementById('cm-pgy').value; const f=fac(y);
+  const rows=(CM.pf||[]).filter(r=>r[0]===y&&r[1]===c&&(gi==='all'||r[2]===+gi)).sort((a,b)=>b[5]-a[5]); const T=rows.reduce((a,r)=>a+r[5],0)||1;
+  const gl=gi==='all'?'todas las funciones':CM.groups[+gi].toLowerCase();
+  document.getElementById('cm-pgcap').textContent=`Comuna ${c}, ${gl}, ${y===2026?'2026 (vigente)':y}: ${rows.length} programas, ${fmt(T*f)} en ${unitLabel()}.`;
+  document.getElementById('cm-progs').innerHTML='<thead><tr><th>Programa</th><th class="n">Monto</th><th class="n">%</th></tr></thead><tbody>'+rows.slice(0,60).map(r=>`<tr><td>${r[4]}<div style="color:var(--muted);font-size:11.5px">${r[3]}</div></td><td class="n nw">${fmt(r[5]*f)}</td><td class="n">${n1(r[5]/T*100)}</td></tr>`).join('')+'</tbody>';
+}
+function cmMatrix(){
+  const y=CMY[CMI], by=document.getElementById('cm-mxby').value, med=document.getElementById('cm-mxmed').value; const G=[...CM.groups.map((g,i)=>['g'+i,g]),['bu','Obras y equipos (bienes de uso)'],['all','Todo el gasto']];
+  const cols=by==='z'?ZK.map(z=>[z,ZON[z]]):CMC.map(c=>['C'+c,[c]]); const pops=cols.map(([k,cs])=>cs.reduce((a,c)=>a+CM.pop[c],0));
+  const M=G.map(([rk])=>{ const v=cols.map(([k,cs])=>cs.reduce((a,c)=>a+cmVal(y,c,rk),0)); const t=v.reduce((a,b)=>a+b,0)||1; return med==='sh'?v.map(x=>x/t*100):v.map((x,i)=>x*1e6/pops[i]); });
+  const shade=(v,row)=>{ const mx=Math.max(...row); const a=mx?v/mx:0; return `background:rgba(37,99,196,${(0.08+a*0.72).toFixed(2)});color:${a>0.55?'#fff':'inherit'}`; };
+  const fmv=v=>med==='sh'?n1(v)+'%':'$'+Math.round(v/1e3).toLocaleString('es-AR')+' mil';
+  document.getElementById('cm-mx').innerHTML='<thead><tr><th>Función</th>'+cols.map(([k])=>`<th class="n">${k}</th>`).join('')+'</tr></thead><tbody>'+G.map(([rk,rl],i)=>`<tr${rk==='all'?' style="font-weight:700"':''}><td>${rl}</td>${M[i].map(v=>`<td class="h" style="${shade(v,M[i])}">${fmv(v)}</td>`).join('')}</tr>`).join('')+'</tbody>';
+  document.getElementById('cm-mxcap').textContent=(med==='sh'?'Qué parte del gasto de cada función se registra en cada '+(by==='z'?'zona':'comuna'):'Gasto de cada función por habitante de cada '+(by==='z'?'zona':'comuna')+', '+unitLabel())+', '+yLab(y)+'. Cuanto más oscuro, mayor dentro de la fila.';
 }
 function comunasZonas(){
   const zsvg=document.getElementById('cm-zsvg'); if(!zsvg.innerHTML){ const zc=ZC(); zsvg.innerHTML=window._zmk(c=>zc[ZK.indexOf(zOf(c))],true); document.getElementById('cm-zleg').innerHTML=ZK.map((z,i)=>`<div><i style="background:${zc[i]}"></i>${z}: ${ZON[z].join(', ')}</div>`).join(''); }
@@ -1407,7 +1444,7 @@ function comunasZonas(){
   document.getElementById('cm-zcap1').textContent='Gasto registrado en las comunas de cada zona dividido por su población (Censo 2022), '+unitLabel()+'. 2026: vigente.';
   document.getElementById('cm-zlead').innerHTML=`Sur: Comunas 4, 8 y 9. Norte: 2, 12, 13 y 14. Oeste: 7, 10 y 11. Este (centro): 1, 3, 5, 6 y 15. Sur y Este quedan arriba porque incluyen las Comunas 4 y 1, donde se registra el gasto central. <b>Sin la Comuna 4, el sur (Comunas 8 y 9) registró en 2025 $${Math.round(pcS[y5]).toLocaleString('es-AR')} por habitante, contra $${Math.round(pcN[y5]).toLocaleString('es-AR')} del norte</b>.`;
 }
-function comunasYear(){ comunasPaint(); comunasStack(); comunasSel(); }
+function comunasYear(){ comunasPaint(); comunasStack(); comunasSel(); cmMatrix(); }
 function comunas(){ if(charts['ch-cm-rank']){charts['ch-cm-rank'].destroy(); delete charts['ch-cm-rank'];} if(charts['ch-cm-stack']){charts['ch-cm-stack'].destroy(); delete charts['ch-cm-stack'];} if(charts['ch-cm-zstack']){charts['ch-cm-zstack'].destroy(); delete charts['ch-cm-zstack'];} comunasYear(); comunasZonas(); }
 
 // ======== Pauta oficial
