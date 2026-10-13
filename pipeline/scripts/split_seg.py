@@ -10,7 +10,7 @@ sg_js=s[a:b]
 # ---- main template without seguridad
 m=s.replace(btn+'\n','').replace(sg_html,'').replace(sg_js,'')
 m=m.replace("if(TAB==='sg'){seguridad();} ","").replace(" else if(h==='seguridad')TAB='sg';","")
-m=m.replace("['p27','ej','tb','sg'].forEach","['p27','ej','tb'].forEach")
+m=m.replace("['p27','ej','tb','pn','sg'].forEach","['p27','ej','tb','pn'].forEach")
 m=m.replace("try{const h=location.hash.replace('#',''); const st=localStorage.getItem('ceer-tab');","try{const h=location.hash.replace('#',''); let st=localStorage.getItem('ceer-tab'); if(st==='sg')st='p27';")
 open('site/template_main.html','w').write(m)
 # ---- seguridad page
