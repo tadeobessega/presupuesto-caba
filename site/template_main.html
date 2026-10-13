@@ -1071,10 +1071,17 @@ function ministerio(){
   if(keys.length>7) ser.push({label:'Resto',data:[...cols.map(y=>keys.slice(7).reduce((a,k)=>a+(agg[k][y]||0),0)),...pad],color:css('--c8')});
   const p27=P27J[jn]?Object.values(P27J[jn]).reduce((a,b)=>a+b,0)*fac('2027P'):null;
   const labels=ytd?yrs.map(y=>y+' T'+LT):[...yrs.map(String),'2026 Vig.','2027 P'];
-  stackBar('ch-mi',labels,ser,ytBill(),(!ytd&&fte<0&&p27)?{label:'Proyecto 2027',data:[...cols.map(()=>null),p27]}:null);
+  // 2027 abierto por inciso o función cuando el proyecto lo permite
+  let p27open=false;
+  if(!ytd&&fte<0&&p27&&(by==='inc'||by==='fun')){ const src=by==='inc'?(P27J[jn]||{}):((D.p27jf||{})[jn]||{}); const m={}; Object.entries(src).forEach(([k,v])=>{const i=GD[bn].findIndex(x=>norm(x)===norm(k)); m[i>=0?i:'x'+k]=(m[i>=0?i:'x'+k]||0)+v*fac('2027P');});
+    const top=keys.slice(0,7); ser.forEach((s,i)=>{ if(i<top.length) s.data[s.data.length-1]=m[top[i]]||0; else s.data[s.data.length-1]=Object.entries(m).filter(([k])=>!top.includes(k)).reduce((a,[,v])=>a+v,0); });
+    if(keys.length<=7){ const extra=Object.entries(m).filter(([k])=>!keys.includes(k)).reduce((a,[,v])=>a+v,0); if(extra>0) ser.push({label:'Otros (2027)',data:[...cols.map(()=>null),extra],color:css('--c8')}); }
+    p27open=true; }
+  const cmi=stackBar('ch-mi',labels,ser,ytBill(),(!ytd&&fte<0&&p27&&!p27open)?{label:'Proyecto 2027',data:[...cols.map(()=>null),p27]}:null);
+  if(p27open){ const L=labels.length-1; cmi.data.datasets.forEach(d=>{ d.borderColor=labels.map((_,i)=>i===L?PJ():css('--panel')); d.borderWidth=labels.map((_,i)=>i===L?2:1); }); cmi.update(); }
   const etl=['Sancionado','Vigente','Devengado'][et];
   document.getElementById('mi-title').textContent=jn;
-  document.getElementById('mi-cap').textContent=ytd?`${etl} acumulado al ${LT}.º trimestre de cada año (acumulado 2T), por ${({inc:'inciso',fun:'función',fte:'fuente'})[by]}. Billones de ${unitLabel()}. Comparable con 2026; 2020 no tiene dato al T2.`:`${etl} al cierre de 2019–2025, presupuesto vigente 2026 y proyecto 2027, por ${({inc:'inciso',fun:'función',fte:'fuente'})[by]}. Billones de ${unitLabel()}. Sin amortizaciones de deuda.`;
+  document.getElementById('mi-cap').textContent=ytd?`${etl} acumulado al ${LT}.º trimestre de cada año (acumulado 2T), por ${({inc:'inciso',fun:'función',fte:'fuente'})[by]}. Billones de ${unitLabel()}. Comparable con 2026; 2020 no tiene dato al T2.`:`${etl} al cierre de 2019–2025, presupuesto vigente 2026 y proyecto 2027, por ${({inc:'inciso',fun:'función',fte:'fuente'})[by]}. Billones de ${unitLabel()}. Sin amortizaciones de deuda.${by==='fte'?' El proyecto 2027 no abre por fuente: se muestra el total.':' 2027 (borde naranja): Planilla 5 por inciso o descripción de programas por función.'}`;
   const val=(y,t,vi2)=>{let s=0;G.rows.forEach(r=>{if(r[0]===y&&r[1]===t&&r[2]===j&&r[4]!==GAM&&(fte<0||r[6]===fte))s+=r[vi2];});return s;};
   const d25=val(2025,4,9)*fac(2025), d19=val(2019,4,9)*fac(2019), v26=val(2026,LT,8)*fac(2026), s26=val(2026,LT,7)*fac(2026);
   const t26=val(2026,LT,9)*fac(2026,LT), t25=val(2025,LT,9)*fac(2025,LT);

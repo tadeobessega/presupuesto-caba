@@ -9,7 +9,7 @@ def build(tpl,data,out):
 last26=max(r[1] for r in D['G']['rows'] if r[0]==2026)
 lastM26=max(r[1] for r in D['reca']['rows'] if r[0]==2026)
 main={k:v for k,v in D.items() if k not in ('delitos','seg','logo_neg','logo_pos')}
-main.update(lastT26=last26,lastM26=lastM26,ymin=1995,aif2t=json.load(open('raw/aif_2t.json')),a27=json.load(open('analysis27.json')),percap=json.load(open('raw/dnap/percap.json')),comunas=json.load(open('raw/comunas/comunas.json')),pauta27=[[r['jcode'],r['prog'],r['ue'],r['v']/1e6] for r in json.load(open('p2027_prog.json')) if r['ppal'].lower().startswith('publicidad')])
+main.update(lastT26=last26,lastM26=lastM26,ymin=1995,aif2t=json.load(open('raw/aif_2t.json')),a27=json.load(open('analysis27.json')),p27jf=json.load(open('raw/p27_jur_fun.json')),percap=json.load(open('raw/dnap/percap.json')),comunas=json.load(open('raw/comunas/comunas.json')),pauta27=[[r['jcode'],r['prog'],r['ue'],r['v']/1e6] for r in json.load(open('p2027_prog.json')) if r['ppal'].lower().startswith('publicidad')])
 build('site/template_main.html',main,'site/presupuesto-caba-2027.html')
 G=D['G']; gd=G['dims']; fi=gd['fun_desc'].index('Seguridad interior'); am=gd['inc_desc'].index('Amortización de deuda')
 last26=max(r[1] for r in G['rows'] if r[0]==2026)
