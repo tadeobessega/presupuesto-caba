@@ -559,17 +559,17 @@ h2 .tag,.eyebrow{display:none!important}
   <p class="sub" id="cm-lead"></p>
   <div class="filters">
     <div class="f"><label for="cm-rubro">Rubro</label><select id="cm-rubro"></select></div>
-    <div class="f"><label for="cm-med">Medida</label><select id="cm-med"><option value="pc">Por habitante</option><option value="tot">Total</option><option value="sh">% del total de la Ciudad</option></select></div>
+    <div class="f"><label for="cm-med">Medida</label><select id="cm-med"><option value="pc">Por habitante</option><option value="km">Por km²</option><option value="tot">Total</option><option value="sh">% del total de la Ciudad</option></select></div>
   </div>
   <div class="playbar"><button id="cm-play" type="button">▶ Reproducir</button><span class="yr" id="cm-yr">2025</span><input type="range" id="cm-slider" min="0" max="4" step="1" value="3" aria-label="Año"></div>
   <div class="cmwrap">
-    <div class="card cmmap"><h3 id="cm-maptitle">Gasto por comuna</h3><p class="cap" id="cm-mapcap"></p><div id="cm-svg"></div><div class="cmleg" id="cm-leg"></div><p class="src">Fuente: presupuesto ejecutado (BA Data), campo de ubicación geográfica; población: INDEC, Censo 2022. 2026: crédito vigente al 2.º trimestre. Comunas 1 y 4 concentran el gasto de la administración central (sedes de gobierno).</p></div>
+    <div class="card cmmap"><h3 id="cm-maptitle">Gasto por comuna</h3><p class="cap" id="cm-mapcap"></p><div id="cm-svg"></div><div class="cmleg" id="cm-leg"></div><p class="src">Fuente: presupuesto ejecutado (BA Data), campo de ubicación geográfica; población: INDEC, Censo 2022; superficie: BA Data. 2026: crédito vigente al 2.º trimestre. Comunas 1 y 4 concentran el gasto de la administración central (sedes de gobierno).</p></div>
     <div class="card"><h3 id="cm-seltitle">Comuna</h3><p class="cap" id="cm-selcap"></p><div class="minikpis" id="cm-selkpis" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px"></div><div class="chart"><canvas id="ch-cm-comp" aria-label="Composición de la comuna"></canvas></div><div class="filters" style="margin:10px 0 6px"><div class="f"><label for="cm-pgf">Función</label><select id="cm-pgf"></select></div><div class="f"><label for="cm-pgy">Año</label><select id="cm-pgy"><option>2025</option><option value="2026">2026 (vigente)</option><option>2019</option></select></div></div><p class="cap" id="cm-pgcap">Tocá una barra del gráfico para ver los programas de esa función</p><div class="tablewrap" style="max-height:300px;overflow-y:auto"><table id="cm-progs"></table></div></div>
   </div>
   <div class="grid" style="margin-top:16px">
     <div class="card span12"><h3>Ranking de comunas</h3><p class="cap" id="cm-rankcap"></p><div class="chart"><canvas id="ch-cm-rank" aria-label="Ranking de comunas"></canvas></div></div>
     <div class="card span12"><h3>Dónde se registra cada función</h3><p class="cap" id="cm-mxcap"></p>
-      <div class="filters" style="margin-bottom:10px"><div class="f"><label for="cm-mxby">Abrir por</label><select id="cm-mxby"><option value="z">Zona</option><option value="c">Comuna</option></select></div><div class="f"><label for="cm-mxmed">Medida</label><select id="cm-mxmed"><option value="sh">% del gasto de la función</option><option value="pc">Por habitante</option></select></div></div>
+      <div class="filters" style="margin-bottom:10px"><div class="f"><label for="cm-mxby">Abrir por</label><select id="cm-mxby"><option value="z">Zona</option><option value="c">Comuna</option></select></div><div class="f"><label for="cm-mxmed">Medida</label><select id="cm-mxmed"><option value="sh">% del gasto de la función</option><option value="pc">Por habitante</option><option value="km">Por km²</option></select></div></div>
       <div class="tablewrap"><table id="cm-mx" class="mx"></table></div><p class="src">Fuente: presupuesto ejecutado (BA Data), ubicación geográfica. El año sigue al reproductor del mapa.</p></div>
     <div class="card span12"><h3>Composición por comuna</h3><p class="cap" id="cm-compcap"></p><div class="chart tall"><canvas id="ch-cm-stack" aria-label="Composición del gasto por comuna"></canvas></div><p class="src">El año se cambia con el reproductor de arriba.</p></div>
   </div>
@@ -579,7 +579,7 @@ h2 .tag,.eyebrow{display:none!important}
   <p class="sub" id="cm-zlead"></p>
   <div class="grid">
     <div class="card span4 cmmap zmap"><h3>Las cuatro zonas</h3><p class="cap">Agrupamiento de comunas usado en esta página</p><div id="cm-zsvg"></div><div class="cmleg" id="cm-zleg"></div></div>
-    <div class="card span8"><h3>Gasto por habitante en cada zona</h3><p class="cap" id="cm-zcap1"></p><div class="chart tall"><canvas id="ch-cm-zline" aria-label="Gasto por habitante por zona"></canvas></div></div>
+    <div class="card span8"><h3 id="cm-ztitle">Gasto por habitante en cada zona</h3><p class="cap" id="cm-zcap1"></p><div class="seg" style="margin-bottom:10px" role="group" aria-label="Medida zonas"><button data-zm="pc" aria-pressed="true">Por habitante</button><button data-zm="km" aria-pressed="false">Por km²</button></div><div class="chart tall"><canvas id="ch-cm-zline" aria-label="Gasto por habitante por zona"></canvas></div></div>
     <div class="card span12"><h3>Composición por zona</h3><p class="cap" id="cm-zcap2"></p><div class="chart tall"><canvas id="ch-cm-zstack" aria-label="Composición por zona"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data). El año sigue al reproductor del mapa.</p></div>
   </div>
 </section>
@@ -1370,6 +1370,8 @@ const CM=D.comunas||{rows:[],groups:[],pop:{},map:{c:{}},progs:{}};
 const CMY=[...new Set(CM.rows.map(r=>r[0]))].sort(); const CMC=Object.keys(CM.pop).sort((a,b)=>a-b);
 const ZON={Norte:['2','12','13','14'],'Este (centro)':['1','3','5','6','15'],Oeste:['7','10','11'],Sur:['4','8','9']}; const ZK=Object.keys(ZON); const zOf=c=>ZK.find(z=>ZON[z].includes(c));
 let CMI=CMY.indexOf(2025)>=0?CMY.indexOf(2025):CMY.length-1, CMSEL='8', CMT=null;
+let ZM='pc';
+document.querySelectorAll('[data-zm]').forEach(b=>b.addEventListener('click',()=>{ZM=b.dataset.zm; document.querySelectorAll('[data-zm]').forEach(x=>x.setAttribute('aria-pressed',x===b)); comunasZonas();}));
 (function(){ const pg=document.getElementById('cm-pgf'); pg.innerHTML='<option value="all">Todas</option>'+CM.groups.map((g,i)=>`<option value="${i}">${g}</option>`).join(''); ['cm-pgf','cm-pgy'].forEach(id=>document.getElementById(id).addEventListener('change',cmProgs)); ['cm-mxby','cm-mxmed'].forEach(id=>document.getElementById(id).addEventListener('change',cmMatrix)); })();
 (function(){ const sel=document.getElementById('cm-rubro'); sel.innerHTML='<option value="all">Todo el gasto</option>'+CM.groups.map((g,i)=>`<option value="g${i}">${g}</option>`).join('')+'<option value="bu">Obras y equipos (bienes de uso)</option>'; sel.value='all';
   const sl=document.getElementById('cm-slider'); sl.max=CMY.length-1; sl.value=CMI;
@@ -1382,8 +1384,8 @@ let CMI=CMY.indexOf(2025)>=0?CMY.indexOf(2025):CMY.length-1, CMSEL='8', CMT=null
 const ZC=()=>[H1(),PJ(),css('--m5'),css('--c2')];
 const cmVal=(y,c,rub)=>{ let v=0; CM.rows.forEach(r=>{ if(r[0]!==y||r[1]!==c) return; if(rub==='all'||(rub==='bu'&&r[3]===1)||(rub[0]==='g'&&r[2]===+rub.slice(1))) v+=(y===2026?r[4]:r[5]); }); return v*fac(y); };
 const cmTot=(y,rub)=>{ let v=0; CM.rows.forEach(r=>{ if(r[0]!==y) return; if(rub==='all'||(rub==='bu'&&r[3]===1)||(rub[0]==='g'&&r[2]===+rub.slice(1))) v+=(y===2026?r[4]:r[5]); }); return v*fac(y); };
-function cmMeasure(y,c,rub,med){ const v=cmVal(y,c,rub); if(med==='pc') return v*1e6/CM.pop[c]; if(med==='sh') return v/cmTot(y,rub)*100; return v; }
-const cmFmt=(x,med)=>med==='pc'?'$'+Math.round(x).toLocaleString('es-AR'):med==='sh'?n1(x)+'%':fmt(x);
+function cmMeasure(y,c,rub,med){ const v=cmVal(y,c,rub); if(med==='km') return v/CM.area[c]; if(med==='pc') return v*1e6/CM.pop[c]; if(med==='sh') return v/cmTot(y,rub)*100; return v; }
+const cmFmt=(x,med)=>med==='km'?fmt(x)+'/km²':med==='pc'?'$'+Math.round(x).toLocaleString('es-AR'):med==='sh'?n1(x)+'%':fmt(x);
 const yLab=y=>y===2026?'2026 (vigente)':String(y);
 function comunasPaint(){
   const y=CMY[CMI], rub=document.getElementById('cm-rubro').value, med=document.getElementById('cm-med').value;
@@ -1393,14 +1395,14 @@ function comunasPaint(){
   const lb=[vs[0],...br,vs[vs.length-1]]; document.getElementById('cm-leg').innerHTML=pal.map((c,i)=>`<div><i style="background:${c}"></i>${cmFmt(lb[i],med)} – ${cmFmt(lb[i+1],med)}</div>`).join('');
   const rl=document.getElementById('cm-rubro').selectedOptions[0].textContent;
   document.getElementById('cm-maptitle').textContent=rl+', '+yLab(y);
-  document.getElementById('cm-mapcap').textContent=({pc:'Por habitante',tot:'Total',sh:'% del total de la Ciudad'})[med]+', en '+unitLabel()+'. Colores por quintiles: cada tono agrupa tres comunas.';
+  document.getElementById('cm-mapcap').textContent=({pc:'Por habitante',km:'Por km² de superficie',tot:'Total',sh:'% del total de la Ciudad'})[med]+', en '+unitLabel()+'. Colores por quintiles: cada tono agrupa tres comunas.';
   document.getElementById('cm-yr').textContent=y===2026?'2026':y;
   // ranking
   const ord=[...CMC].sort((a,b)=>V[b]-V[a]);
   let c=charts['ch-cm-rank'];
-  if(!c||c._med!==med||c._rub!==rub){ c=mk('ch-cm-rank',{type:'bar',data:{labels:ord.map(x=>'Comuna '+x),datasets:[{label:rl,data:ord.map(x=>V[x]),backgroundColor:ord.map(x=>col(V[x]))}]},options:baseOpts({div:med==='pc'?1e3:med==='sh'?1:1e3,pctAxis:med==='sh'})}); c._med=med; c._rub=rub; c.options.plugins.legend.display=false; c.options.plugins.tooltip.callbacks.label=x=>' '+cmFmt(x.parsed.y,med); if(med==='pc') c.options.scales.y.title={display:true,text:'Miles de '+unitLabel()+' por habitante',color:css('--muted')}; else if(med==='tot') c.options.scales.y.title={display:true,text:'Miles de millones de '+unitLabel(),color:css('--muted')}; c.update(); }
+  if(!c||c._med!==med||c._rub!==rub){ c=mk('ch-cm-rank',{type:'bar',data:{labels:ord.map(x=>'Comuna '+x),datasets:[{label:rl,data:ord.map(x=>V[x]),backgroundColor:ord.map(x=>col(V[x]))}]},options:baseOpts({div:med==='pc'?1e3:med==='sh'?1:1e3,pctAxis:med==='sh'})}); if(med==='km') c.options.scales.y.title={display:true,text:'Miles de millones de '+unitLabel()+' por km²',color:css('--muted')}; c._med=med; c._rub=rub; c.options.plugins.legend.display=false; c.options.plugins.tooltip.callbacks.label=x=>' '+cmFmt(x.parsed.y,med); if(med==='pc') c.options.scales.y.title={display:true,text:'Miles de '+unitLabel()+' por habitante',color:css('--muted')}; else if(med==='tot') c.options.scales.y.title={display:true,text:'Miles de millones de '+unitLabel(),color:css('--muted')}; c.update(); }
   else { c.data.labels=ord.map(x=>'Comuna '+x); c.data.datasets[0].data=ord.map(x=>V[x]); c.data.datasets[0].backgroundColor=ord.map(x=>col(V[x])); c.options.animation={duration:700,easing:'easeOutQuart'}; c.update(); }
-  document.getElementById('cm-rankcap').textContent=rl+', '+yLab(y)+'. '+({pc:'Por habitante',tot:'Total',sh:'% del total'})[med]+', '+unitLabel()+'.';
+  document.getElementById('cm-rankcap').textContent=rl+', '+yLab(y)+'. '+({pc:'Por habitante',km:'Por km²',tot:'Total',sh:'% del total'})[med]+', '+unitLabel()+'.';
   const top=ord[0], bot=ord[ord.length-1]; const ex=ord.filter(x=>x!=='1'&&x!=='4');
   document.getElementById('cm-lead').innerHTML=`<b>Ojo con las Comunas 1 y 4:</b> ahí están las sedes del Gobierno, la Legislatura, los ministerios y la Policía, y el presupuesto les imputa buena parte del gasto central. Sacándolas, en ${yLab(y)} la comuna con más ${rl.toLowerCase()} por habitante es la ${ex.sort((a,b)=>cmMeasure(y,b,rub,'pc')-cmMeasure(y,a,rub,'pc'))[0]} y la que menos, la ${ex[ex.length-1]}. Elegí un rubro como Educación, Salud u Obras para ver dónde está la infraestructura: escuelas, hospitales y obras se registran donde funcionan.`;
 }
@@ -1420,7 +1422,7 @@ function comunasStack(){
 }
 function comunasSel(){
   const c=CMSEL, G=CM.groups, COLS=[...INF(),css('--m1'),css('--c8')];
-  document.getElementById('cm-seltitle').textContent='Comuna '+c; document.getElementById('cm-selcap').textContent=CM.map.c[c].barrios+'. Población 2022: '+CM.pop[c].toLocaleString('es-AR')+'. Zona: '+zOf(c)+'.';
+  document.getElementById('cm-seltitle').textContent='Comuna '+c; document.getElementById('cm-selcap').textContent=CM.map.c[c].barrios+'. Población 2022: '+CM.pop[c].toLocaleString('es-AR')+'. Superficie: '+n1(CM.area[c])+' km². Zona: '+zOf(c)+'.';
   const y=CMY[CMI]; const pc=cmVal(y,c,'all')*1e6/CM.pop[c]; const rk=[...CMC].sort((a,b)=>cmVal(y,b,'all')/CM.pop[b]-cmVal(y,a,'all')/CM.pop[a]).indexOf(c)+1;
   const y0=CMY[0]; const g0=cmVal(y0,c,'all'), g1=cmVal(CMY.indexOf(2025)>=0?2025:y,c,'all');
   document.getElementById('cm-selkpis').innerHTML=[['Gasto por habitante, '+yLab(y),'$'+Math.round(pc).toLocaleString('es-AR')],['Puesto entre 15',rk+'.º'],['Variación real '+y0+'–2025',pct(g1/g0-1)],['Educación + Salud, '+yLab(y),n1((cmVal(y,c,'g0')+cmVal(y,c,'g1'))/cmVal(y,c,'all')*100)+'%']].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
@@ -1437,21 +1439,22 @@ function cmProgs(){
 }
 function cmMatrix(){
   const y=CMY[CMI], by=document.getElementById('cm-mxby').value, med=document.getElementById('cm-mxmed').value; const G=[...CM.groups.map((g,i)=>['g'+i,g]),['bu','Obras y equipos (bienes de uso)'],['all','Todo el gasto']];
-  const cols=by==='z'?ZK.map(z=>[z,ZON[z]]):CMC.map(c=>['C'+c,[c]]); const pops=cols.map(([k,cs])=>cs.reduce((a,c)=>a+CM.pop[c],0));
-  const M=G.map(([rk])=>{ const v=cols.map(([k,cs])=>cs.reduce((a,c)=>a+cmVal(y,c,rk),0)); const t=v.reduce((a,b)=>a+b,0)||1; return med==='sh'?v.map(x=>x/t*100):v.map((x,i)=>x*1e6/pops[i]); });
+  const cols=by==='z'?ZK.map(z=>[z,ZON[z]]):CMC.map(c=>['C'+c,[c]]); const pops=cols.map(([k,cs])=>cs.reduce((a,c)=>a+CM.pop[c],0)); const areas=cols.map(([k,cs])=>cs.reduce((a,c)=>a+CM.area[c],0));
+  const M=G.map(([rk])=>{ const v=cols.map(([k,cs])=>cs.reduce((a,c)=>a+cmVal(y,c,rk),0)); const t=v.reduce((a,b)=>a+b,0)||1; return med==='sh'?v.map(x=>x/t*100):med==='km'?v.map((x,i)=>x/areas[i]):v.map((x,i)=>x*1e6/pops[i]); });
   const shade=(v,row)=>{ const mx=Math.max(...row); const a=mx?v/mx:0; return `background:rgba(37,99,196,${(0.08+a*0.72).toFixed(2)});color:${a>0.55?'#fff':'inherit'}`; };
-  const fmv=v=>med==='sh'?n1(v)+'%':'$'+Math.round(v/1e3).toLocaleString('es-AR')+' mil';
+  const fmv=v=>med==='sh'?n1(v)+'%':med==='km'?fmt(v):'$'+Math.round(v/1e3).toLocaleString('es-AR')+' mil';
   document.getElementById('cm-mx').innerHTML='<thead><tr><th>Función</th>'+cols.map(([k])=>`<th class="n">${k}</th>`).join('')+'</tr></thead><tbody>'+G.map(([rk,rl],i)=>`<tr${rk==='all'?' style="font-weight:700"':''}><td>${rl}</td>${M[i].map(v=>`<td class="h" style="${shade(v,M[i])}">${fmv(v)}</td>`).join('')}</tr>`).join('')+'</tbody>';
-  document.getElementById('cm-mxcap').textContent=(med==='sh'?'Qué parte del gasto de cada función se registra en cada '+(by==='z'?'zona':'comuna'):'Gasto de cada función por habitante de cada '+(by==='z'?'zona':'comuna')+', '+unitLabel())+', '+yLab(y)+'. Cuanto más oscuro, mayor dentro de la fila.';
+  document.getElementById('cm-mxcap').textContent=(med==='sh'?'Qué parte del gasto de cada función se registra en cada '+(by==='z'?'zona':'comuna'):'Gasto de cada función '+(med==='km'?'por km² de superficie':'por habitante')+' de cada '+(by==='z'?'zona':'comuna')+', '+unitLabel())+', '+yLab(y)+'. Cuanto más oscuro, mayor dentro de la fila.';
 }
 function comunasZonas(){
   const zsvg=document.getElementById('cm-zsvg'); if(!zsvg.innerHTML){ const zc=ZC(); zsvg.innerHTML=window._zmk(c=>zc[ZK.indexOf(zOf(c))],true); document.getElementById('cm-zleg').innerHTML=ZK.map((z,i)=>`<div><i style="background:${zc[i]}"></i>${z}: ${ZON[z].join(', ')}</div>`).join(''); }
-  const zc=ZC(); const pz=z=>ZON[z].reduce((a,c)=>a+CM.pop[c],0);
-  const c=mk('ch-cm-zline',{type:'line',data:{labels:CMY.map(yLab),datasets:ZK.map((z,i)=>({label:z,data:CMY.map(y=>ZON[z].reduce((a,c)=>a+cmVal(y,c,'all'),0)*1e6/pz(z)),borderColor:zc[i],backgroundColor:zc[i],borderWidth:3,pointRadius:4}))},options:baseOpts({div:1e3,ytitle:'Miles de '+unitLabel()+' por habitante'})});
-  c.options.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': $'+Math.round(x.parsed.y).toLocaleString('es-AR'); c.update();
+  const zc=ZC(); const km=ZM==='km'; const pz=z=>km?ZON[z].reduce((a,c)=>a+CM.area[c],0):ZON[z].reduce((a,c)=>a+CM.pop[c],0)/1e6;
+  const c=mk('ch-cm-zline',{type:'line',data:{labels:CMY.map(yLab),datasets:ZK.map((z,i)=>({label:z,data:CMY.map(y=>ZON[z].reduce((a,c)=>a+cmVal(y,c,'all'),0)/pz(z)),borderColor:zc[i],backgroundColor:zc[i],borderWidth:3,pointRadius:4}))},options:baseOpts({div:km?1e3:1e3,ytitle:km?'Miles de millones de '+unitLabel()+' por km²':'Miles de '+unitLabel()+' por habitante'})});
+  c.options.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': '+(km?fmt(x.parsed.y)+'/km²':'$'+Math.round(x.parsed.y).toLocaleString('es-AR')); c.update();
+  document.getElementById('cm-ztitle').textContent=km?'Gasto por km² en cada zona':'Gasto por habitante en cada zona';
   const exS=['8','9'], exN=['2','12','13','14']; const pcS=CMY.map(y=>exS.reduce((a,c)=>a+cmVal(y,c,'all'),0)*1e6/exS.reduce((a,c)=>a+CM.pop[c],0)), pcN=CMY.map(y=>exN.reduce((a,c)=>a+cmVal(y,c,'all'),0)*1e6/exN.reduce((a,c)=>a+CM.pop[c],0));
   const L=CMY.length-1, y5=CMY.indexOf(2025);
-  document.getElementById('cm-zcap1').textContent='Gasto registrado en las comunas de cada zona dividido por su población (Censo 2022), '+unitLabel()+'. 2026: vigente.';
+  document.getElementById('cm-zcap1').textContent='Gasto registrado en las comunas de cada zona dividido por su '+(km?'superficie (km², BA Data)':'población (Censo 2022)')+', '+unitLabel()+'. 2026: vigente.';
   document.getElementById('cm-zlead').innerHTML=`Sur: Comunas 4, 8 y 9. Norte: 2, 12, 13 y 14. Oeste: 7, 10 y 11. Este (centro): 1, 3, 5, 6 y 15. Sur y Este quedan arriba porque incluyen las Comunas 4 y 1, donde se registra el gasto central. <b>Sin la Comuna 4, el sur (Comunas 8 y 9) registró en 2025 $${Math.round(pcS[y5]).toLocaleString('es-AR')} por habitante, contra $${Math.round(pcN[y5]).toLocaleString('es-AR')} del norte</b>.`;
 }
 function comunasYear(){ comunasPaint(); comunasStack(); comunasSel(); cmMatrix(); }
