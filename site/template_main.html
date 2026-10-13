@@ -74,7 +74,7 @@ h1 em{font-style:normal;color:inherit}
 section{padding-block:46px 8px;scroll-margin-top:70px}
 h2{font-size:clamp(22px,2.6vw,32px);letter-spacing:-.025em;margin:0 0 6px;font-weight:750;text-wrap:balance}
 h2 .tag{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);display:block;margin-bottom:6px;font-weight:600}
-.sub{color:var(--fg2);max-width:72ch;margin:0 0 20px}
+.sub{color:var(--fg2);max-width:none;margin:0 0 20px}
 .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);padding:16px 18px;min-width:0}
 .span12{grid-column:span 12}.span8{grid-column:span 8}.span7{grid-column:span 7}.span6{grid-column:span 6}.span5{grid-column:span 5}.span4{grid-column:span 4}
@@ -235,6 +235,18 @@ h2 .tag{text-transform:none;letter-spacing:0;color:var(--muted);font-size:13px;f
 @media (max-width:980px){.subx{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.subx{grid-template-columns:minmax(0,1fr)}}
 h2 .tag,.eyebrow{display:none!important}
+.cmwrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px}
+.cmmap svg{width:100%;height:auto;display:block}
+.cmmap path{stroke:var(--panel);stroke-width:1.2;cursor:pointer;transition:fill .8s ease,opacity .3s}
+.cmmap path:hover{opacity:.85}.cmmap path.sel{stroke:var(--fg);stroke-width:2.4}
+.cmmap text{font:600 12px var(--font);fill:var(--fg);pointer-events:none;paint-order:stroke;stroke:var(--panel);stroke-width:3px}
+.cmleg{display:flex;gap:0;margin-top:8px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}.cmleg div{display:flex;align-items:center;gap:5px;margin-right:12px}.cmleg i{width:14px;height:10px;display:block}
+.playbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 12px}
+.playbar button{font:600 13px var(--font);background:var(--fg);color:var(--bg);border:0;padding:7px 14px;cursor:pointer}
+.playbar input[type=range]{flex:1;min-width:180px;accent-color:var(--accent)}
+.playbar .yr{font-family:var(--mono);font-size:26px;font-weight:700;min-width:5ch}
+.zmap path{stroke:var(--panel);stroke-width:1}
+@media (max-width:980px){.cmwrap{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:980px){.hero{grid-template-columns:minmax(0,1fr)}.span8,.span7,.span6,.span5,.span4{grid-column:span 12}.promesas,.list,.conc{grid-template-columns:minmax(0,1fr)}.method{columns:1}}
 @media (max-width:520px){.prom .facts{grid-template-columns:minmax(0,1fr)}.kpi b{font-size:22px}.barcell{width:90px;min-width:80px}}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -249,6 +261,7 @@ h2 .tag,.eyebrow{display:none!important}
       <button role="tab" id="tabbtn-ej" data-tab="ej" aria-selected="false">Ejecución</button>
       <button role="tab" id="tabbtn-tb" data-tab="tb" aria-selected="false">Tablero</button>
       <button role="tab" id="tabbtn-pn" data-tab="pn" aria-selected="false">Perspectiva nacional</button>
+      <button role="tab" id="tabbtn-cm" data-tab="cm" aria-selected="false">Comunas</button>
     </nav>
     <div class="ctrl">
       <div class="hcount" id="hcount" hidden aria-live="off"><span>Gasto 2027 en el tiempo que llevás acá</span><b id="hcount-v">$0</b></div>
@@ -401,6 +414,7 @@ h2 .tag,.eyebrow{display:none!important}
   <p class="sub" id="sx-lead"></p>
   <div class="minikpis" id="sx-kpis" style="grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:16px"></div>
   <div class="grid">
+    <div class="card span12"><h3>Ejecución acumulada por trimestre</h3><p class="cap">Devengado sobre crédito vigente al cierre de cada trimestre, por año</p><div class="chart"><canvas id="ch-sx-q" aria-label="Ejecución acumulada por trimestre"></canvas></div><p class="src">Fuente: presupuesto ejecutado trimestral (BA Data). Sin amortizaciones de deuda. 2020 y 2021 no tienen todos los trimestres.</p></div>
     <div class="card span7"><h3>Los programas grandes que menos ejecutan</h3><p class="cap" id="sx-cap1"></p><div class="chart tall" style="height:520px"><canvas id="ch-sx-low" aria-label="Programas con menor ejecución"></canvas></div><p class="src">Fuente: presupuesto ejecutado al 2.º trimestre de 2026 (BA Data). Devengado sobre crédito vigente. La línea marca el 50%, lo que correspondería a medio año.</p></div>
     <div class="card span5"><h3>Bajo la lupa</h3><p class="cap" id="sx-cap2">Ejecución a junio de cada año, devengado sobre vigente</p><div class="tablewrap" style="max-height:520px;overflow-y:auto"><table id="sx-table"></table></div><p class="src">Programas y partidas que suelen discutirse. Higiene urbana se suma entre Espacio Público y Jefatura de Gabinete por el traspaso de 2026.</p></div>
     <div class="card span12"><h3>Elegí qué mirar</h3><p class="cap">Cualquier programa o partida principal: ejecución a junio de cada año y montos</p>
@@ -518,6 +532,41 @@ h2 .tag,.eyebrow{display:none!important}
     <div class="card span6"><h3>Recursos por habitante</h3><p class="cap" id="pc-cap2"></p><div class="chart" style="height:640px"><canvas id="ch-pc-ing" aria-label="Recursos por habitante por jurisdicción"></canvas></div><p class="src">Fuente: Dirección Nacional de Asuntos Provinciales e INDEC, Censo 2022. Propios: tributos provinciales, no tributarios, ventas y rentas. Nacionales: coparticipación y transferencias.</p></div>
     <div class="card span12"><h3>Tabla por jurisdicción</h3><p class="cap" id="pc-cap3"></p><div class="tablewrap"><table id="pc-table"></table></div></div>
     <div class="card span12"><h3>Recursos propios y nacionales por provincia, 2023</h3><p class="cap">La Ciudad es el distrito que menos depende de la coparticipación</p><div class="chart tall"><canvas id="ch-ronrop" aria-label="Recursos de origen provincial y nacional por provincia"></canvas></div><p class="src">Fuente: Informe CEER sobre la base de DNAP.</p></div>
+  </div>
+</section>
+</div>
+<div class="tab" id="tab-cm" role="tabpanel" aria-labelledby="tabbtn-cm" hidden>
+<section class="hero ej">
+  <div>
+    <h1>Comunas</h1>
+    <p class="lead">Cada gasto del presupuesto ejecutado lleva una ubicación geográfica. Con ella se puede ver cuánto se registra en cada comuna, cómo cambió desde 2019 y cómo se reparte entre el norte, el sur, el oeste y el este de la Ciudad.</p>
+    <p class="unitnote" id="unitnote5"></p>
+  </div>
+</section>
+<section id="cm-mapa">
+  <h2>El mapa del gasto</h2>
+  <p class="sub" id="cm-lead"></p>
+  <div class="filters">
+    <div class="f"><label for="cm-rubro">Rubro</label><select id="cm-rubro"></select></div>
+    <div class="f"><label for="cm-med">Medida</label><select id="cm-med"><option value="pc">Por habitante</option><option value="tot">Total</option><option value="sh">% del total de la Ciudad</option></select></div>
+  </div>
+  <div class="playbar"><button id="cm-play" type="button">▶ Reproducir</button><span class="yr" id="cm-yr">2025</span><input type="range" id="cm-slider" min="0" max="4" step="1" value="3" aria-label="Año"></div>
+  <div class="cmwrap">
+    <div class="card cmmap"><h3 id="cm-maptitle">Gasto por comuna</h3><p class="cap" id="cm-mapcap"></p><div id="cm-svg"></div><div class="cmleg" id="cm-leg"></div><p class="src">Fuente: presupuesto ejecutado (BA Data), campo de ubicación geográfica; población: INDEC, Censo 2022. 2026: crédito vigente al 2.º trimestre. Comunas 1 y 4 concentran el gasto de la administración central (sedes de gobierno).</p></div>
+    <div class="card"><h3 id="cm-seltitle">Comuna</h3><p class="cap" id="cm-selcap"></p><div class="minikpis" id="cm-selkpis" style="grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px"></div><div class="chart"><canvas id="ch-cm-comp" aria-label="Composición de la comuna"></canvas></div><p class="cap" style="margin-top:10px">Programas con más gasto registrado en la comuna, 2025</p><div class="tablewrap" style="max-height:260px;overflow-y:auto"><table id="cm-progs"></table></div></div>
+  </div>
+  <div class="grid" style="margin-top:16px">
+    <div class="card span12"><h3>Ranking de comunas</h3><p class="cap" id="cm-rankcap"></p><div class="chart"><canvas id="ch-cm-rank" aria-label="Ranking de comunas"></canvas></div></div>
+    <div class="card span12"><h3>Composición por comuna</h3><p class="cap" id="cm-compcap"></p><div class="chart tall"><canvas id="ch-cm-stack" aria-label="Composición del gasto por comuna"></canvas></div><p class="src">El año se cambia con el reproductor de arriba.</p></div>
+  </div>
+</section>
+<section id="cm-zonas">
+  <h2>Norte, sur, oeste y este</h2>
+  <p class="sub" id="cm-zlead"></p>
+  <div class="grid">
+    <div class="card span4 cmmap zmap"><h3>Las cuatro zonas</h3><p class="cap">Agrupamiento de comunas usado en esta página</p><div id="cm-zsvg"></div><div class="cmleg" id="cm-zleg"></div></div>
+    <div class="card span8"><h3>Gasto por habitante en cada zona</h3><p class="cap" id="cm-zcap1"></p><div class="chart tall"><canvas id="ch-cm-zline" aria-label="Gasto por habitante por zona"></canvas></div></div>
+    <div class="card span12"><h3>Composición por zona</h3><p class="cap" id="cm-zcap2"></p><div class="chart tall"><canvas id="ch-cm-zstack" aria-label="Composición por zona"></canvas></div><p class="src">Fuente: presupuesto ejecutado (BA Data). El año sigue al reproductor del mapa.</p></div>
   </div>
 </section>
 </div>
@@ -669,7 +718,7 @@ function kpis(){
    ['Gasto de capital 2027',fmt(k27),vs(k27,k25,'2025')],
    ['Intereses de la deuda 2027',fmt(i27),vs(i27,i25,'2025')]
   ].map(k=>`<div class="kpi"><span>${k[0]}</span><b>${k[1]}</b><div class="ksub">${k[2]}</div></div>`).join('');
-  const _un='Montos en '+unitLabel()+'. '+(U==='p27'?'Precios promedio de 2027: IPCBA hasta septiembre de 2026, 2% mensual de octubre a diciembre y la pauta de 18% del proyecto para 2027. Cada año anterior se deflacta por su IPC promedio.':U==='hoy'?'Deflactado con IPCBA (promedio anual o del período acumulado). El proyecto 2027 se lleva a septiembre de 2026 con la pauta del 18% y el 2% mensual del último trimestre de 2026, en promedio anual.':'Sin ajustar por inflación.'); document.getElementById('unitnote').textContent=_un; document.getElementById('unitnote2').textContent=_un; document.getElementById('unitnote3').textContent=_un; const _u4=document.getElementById('unitnote4'); if(_u4) _u4.textContent=_un;
+  const _un='Montos en '+unitLabel()+'. '+(U==='p27'?'Precios promedio de 2027: IPCBA hasta septiembre de 2026, 2% mensual de octubre a diciembre y la pauta de 18% del proyecto para 2027. Cada año anterior se deflacta por su IPC promedio.':U==='hoy'?'Deflactado con IPCBA (promedio anual o del período acumulado). El proyecto 2027 se lleva a septiembre de 2026 con la pauta del 18% y el 2% mensual del último trimestre de 2026, en promedio anual.':'Sin ajustar por inflación.'); document.getElementById('unitnote').textContent=_un; document.getElementById('unitnote2').textContent=_un; document.getElementById('unitnote3').textContent=_un; const _u4=document.getElementById('unitnote4'); if(_u4) _u4.textContent=_un; const _u5=document.getElementById('unitnote5'); if(_u5) _u5.textContent=_un;
 }
 const CONC=[
  `<b>El gasto 2027 cae 2,7% real frente al vigente 2026</b>, aunque supera en 8,1% a lo ejecutado en 2025 y queda en el nivel de 2023 (−0,5%).`,
@@ -1182,7 +1231,11 @@ const SXX=[['Partida: Publicidad y propaganda',()=>sxPart(r=>r[4]===OD.ppal_desc
 function sxSeries(v){ if(v[0]==='P') return sxSum(SXP[+v.slice(1)][1]); if(v[0]==='X') return SXX[+v.slice(1)][1](); if(v[0]==='Q'){ const n=decodeURIComponent(v.slice(1)); const i=OD.ppal_desc.indexOf(n); return sxPart(r=>r[4]===i);} const k=decodeURIComponent(v.slice(1)); return SX.M[k]; }
 const sxPct=a=>a&&a[0]>0?a[1]/a[0]*100:null;
 const line50={id:'line50',afterDatasetsDraw(ch,a,o){ if(!o||o.v==null) return; const {ctx,chartArea:ca,scales}=ch; const sc=o.axis==='x'?scales.x:scales.y; const px=sc.getPixelForValue(o.v); ctx.save(); ctx.strokeStyle=css('--fg'); ctx.setLineDash([4,4]); ctx.lineWidth=1; ctx.beginPath(); if(o.axis==='x'){ctx.moveTo(px,ca.top);ctx.lineTo(px,ca.bottom);}else{ctx.moveTo(ca.left,px);ctx.lineTo(ca.right,px);} ctx.stroke(); ctx.fillStyle=css('--muted'); ctx.font='11px '+css('--font'); ctx.fillText('50%',o.axis==='x'?px+4:ca.left+4,o.axis==='x'?ca.top+10:px-4); ctx.restore(); }};
-function subejec(){
+function sxQuarter(){ const am=PG.dims.inc_desc.indexOf('Amortización de deuda'); const Q={}; PG.rows.forEach(r=>{ if(r[4]===am) return; const k=r[0]+'-'+r[1]; const a=(Q[k]=Q[k]||[0,0]); a[0]+=r[7]; a[1]+=r[8]; });
+  const ys=[...new Set(PG.rows.map(r=>r[0]))].sort(); const CL=[css('--m2'),css('--m3'),css('--m4'),css('--m6'),H2(),H3(),H1(),PJ()];
+  const c=mk('ch-sx-q',{type:'line',data:{labels:['1.er trim.','2.º trim.','3.er trim.','4.º trim.'],datasets:ys.map((y,i)=>({label:String(y),data:[1,2,3,4].map(t=>Q[y+'-'+t]&&Q[y+'-'+t][0]?Q[y+'-'+t][1]/Q[y+'-'+t][0]*100:null),borderColor:y===2026?PJ():CL[i%CL.length],backgroundColor:y===2026?PJ():CL[i%CL.length],borderWidth:y===2026?4:2,pointRadius:y===2026?5:3,spanGaps:true}))},options:baseOpts({pctAxis:true}),plugins:[line50]});
+  c.options.plugins.line50={v:50,axis:'y'}; c.options.scales.y.min=0; c.options.scales.y.max=100; c.options.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': '+n1(x.parsed.y)+'%'; c.update(); }
+function subejec(){ sxQuarter();
   const f6=fac(2026); const ul=unitLabel(); const tot=sxSum(()=>true); const e=y=>sxPct(tot[y]);
   const bu=SXX[2][1](); const low=Object.keys(SX.M).filter(k=>{const a=SX.M[k][2026]; return a&&a[0]>15000;});
   const L=low.map(k=>({k,p:SX.nm[k].p,j:SX.nm[k].j,v:SX.M[k][2026][0],d:SX.M[k][2026][1]})).map(x=>Object.assign(x,{e:x.d/x.v*100})).sort((a,b)=>a.e-b.e);
@@ -1238,6 +1291,81 @@ function provincias(){
   document.getElementById('pc-cap3').textContent=`${y}, ${ul} por habitante. Ordenado por gasto.`;
   document.getElementById('pc-table').innerHTML='<thead><tr><th>Jurisdicción</th><th class="n">Población 2022</th><th class="n">Gasto</th><th class="n">Personal</th><th class="n">Capital</th><th class="n">Recursos</th><th class="n">Coparticipación</th><th class="n">% propios</th></tr></thead><tbody>'+rg.map(r=>`<tr${r.j==='Ciudad'?' style="font-weight:700"':''}><td>${r.j==='Ciudad'?'Ciudad de Buenos Aires':r.j}</td><td class="n">${PC.pop[r.j].toLocaleString('es-AR')}</td><td class="n nw">$${Math.round(r.gas).toLocaleString('es-AR')}</td><td class="n nw">$${Math.round(r.pe).toLocaleString('es-AR')}</td><td class="n nw">$${Math.round(r.ca).toLocaleString('es-AR')}</td><td class="n nw">$${Math.round(r.ing).toLocaleString('es-AR')}</td><td class="n nw">$${Math.round(r.tn).toLocaleString('es-AR')}</td><td class="n">${n1(r.prop*100)}%</td></tr>`).join('')+`<tr style="color:var(--muted)"><td>Promedio del país</td><td class="n">${PC.pop['Consolidado'].toLocaleString('es-AR')}</td><td class="n nw">$${Math.round(C).toLocaleString('es-AR')}</td><td></td><td></td><td class="n nw">$${Math.round(CI).toLocaleString('es-AR')}</td><td></td><td></td></tr></tbody>`;
 }
+
+
+// ======== Comunas
+const CM=D.comunas||{rows:[],groups:[],pop:{},map:{c:{}},progs:{}};
+const CMY=[...new Set(CM.rows.map(r=>r[0]))].sort(); const CMC=Object.keys(CM.pop).sort((a,b)=>a-b);
+const ZON={Norte:['2','12','13','14'],'Este (centro)':['1','3','5','6','15'],Oeste:['7','10','11'],Sur:['4','8','9']}; const ZK=Object.keys(ZON); const zOf=c=>ZK.find(z=>ZON[z].includes(c));
+let CMI=CMY.indexOf(2025)>=0?CMY.indexOf(2025):CMY.length-1, CMSEL='8', CMT=null;
+(function(){ const sel=document.getElementById('cm-rubro'); sel.innerHTML='<option value="all">Todo el gasto</option>'+CM.groups.map((g,i)=>`<option value="g${i}">${g}</option>`).join('')+'<option value="bu">Obras y equipos (bienes de uso)</option>'; sel.value='all';
+  const sl=document.getElementById('cm-slider'); sl.max=CMY.length-1; sl.value=CMI;
+  sl.addEventListener('input',()=>{CMI=+sl.value; comunasYear();}); ['cm-rubro','cm-med'].forEach(id=>document.getElementById(id).addEventListener('change',()=>comunas()));
+  document.getElementById('cm-play').addEventListener('click',()=>{ const b=document.getElementById('cm-play'); if(CMT){clearInterval(CMT);CMT=null;b.textContent='▶ Reproducir';return;} b.textContent='❚❚ Pausa'; if(CMI>=CMY.length-1) CMI=-1; CMT=setInterval(()=>{ CMI++; if(CMI>=CMY.length){CMI=CMY.length-1; clearInterval(CMT); CMT=null; b.textContent='▶ Reproducir'; return;} document.getElementById('cm-slider').value=CMI; comunasYear(); },1400); });
+  const mk1=(fill,lab)=>{ const W=CM.map.W, H=CM.map.H; let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mapa de comunas">`; CMC.forEach(c=>{const g=CM.map.c[c]; s+=`<path data-c="${c}" d="${g.d}" fill="${fill(c)}"><title>Comuna ${c}: ${g.barrios}</title></path>`;}); if(lab) CMC.forEach(c=>{const g=CM.map.c[c]; s+=`<text x="${g.cx}" y="${g.cy}" text-anchor="middle" dominant-baseline="middle">${c}</text>`;}); return s+'</svg>'; };
+  document.getElementById('cm-svg').innerHTML=mk1(()=> 'var(--line)',true);
+  document.getElementById('cm-svg').addEventListener('click',e=>{const p=e.target.closest('path'); if(!p)return; CMSEL=p.dataset.c; comunasSel(); comunasPaint();});
+  window._zmk=mk1; })();
+const ZC=()=>[H1(),PJ(),css('--m5'),css('--c2')];
+const cmVal=(y,c,rub)=>{ let v=0; CM.rows.forEach(r=>{ if(r[0]!==y||r[1]!==c) return; if(rub==='all'||(rub==='bu'&&r[3]===1)||(rub[0]==='g'&&r[2]===+rub.slice(1))) v+=(y===2026?r[4]:r[5]); }); return v*fac(y); };
+const cmTot=(y,rub)=>{ let v=0; CM.rows.forEach(r=>{ if(r[0]!==y) return; if(rub==='all'||(rub==='bu'&&r[3]===1)||(rub[0]==='g'&&r[2]===+rub.slice(1))) v+=(y===2026?r[4]:r[5]); }); return v*fac(y); };
+function cmMeasure(y,c,rub,med){ const v=cmVal(y,c,rub); if(med==='pc') return v*1e6/CM.pop[c]; if(med==='sh') return v/cmTot(y,rub)*100; return v; }
+const cmFmt=(x,med)=>med==='pc'?'$'+Math.round(x).toLocaleString('es-AR'):med==='sh'?n1(x)+'%':fmt(x);
+const yLab=y=>y===2026?'2026 (vigente)':String(y);
+function comunasPaint(){
+  const y=CMY[CMI], rub=document.getElementById('cm-rubro').value, med=document.getElementById('cm-med').value;
+  const V={}; CMC.forEach(c=>V[c]=cmMeasure(y,c,rub,med)); const vs=CMC.map(c=>V[c]).sort((a,b)=>a-b); const q=k=>vs[Math.min(vs.length-1,Math.floor(k*vs.length))];
+  const br=[q(.2),q(.4),q(.6),q(.8)]; const pal=['#d6e3f5','#9dbbe8','#5a8ed8','#2563c4','#0b2a5c']; const col=v=>pal[br.filter(b=>v>=b).length];
+  document.querySelectorAll('#cm-svg path').forEach(p=>{p.setAttribute('fill',col(V[p.dataset.c])); p.classList.toggle('sel',p.dataset.c===CMSEL); p.querySelector('title').textContent=`Comuna ${p.dataset.c}: ${cmFmt(V[p.dataset.c],med)}`;});
+  const lb=[vs[0],...br,vs[vs.length-1]]; document.getElementById('cm-leg').innerHTML=pal.map((c,i)=>`<div><i style="background:${c}"></i>${cmFmt(lb[i],med)} – ${cmFmt(lb[i+1],med)}</div>`).join('');
+  const rl=document.getElementById('cm-rubro').selectedOptions[0].textContent;
+  document.getElementById('cm-maptitle').textContent=rl+', '+yLab(y);
+  document.getElementById('cm-mapcap').textContent=({pc:'Por habitante',tot:'Total',sh:'% del total de la Ciudad'})[med]+', en '+unitLabel()+'. Colores por quintiles: cada tono agrupa tres comunas.';
+  document.getElementById('cm-yr').textContent=y===2026?'2026':y;
+  // ranking
+  const ord=[...CMC].sort((a,b)=>V[b]-V[a]);
+  let c=charts['ch-cm-rank'];
+  if(!c||c._med!==med||c._rub!==rub){ c=mk('ch-cm-rank',{type:'bar',data:{labels:ord.map(x=>'Comuna '+x),datasets:[{label:rl,data:ord.map(x=>V[x]),backgroundColor:ord.map(x=>col(V[x]))}]},options:baseOpts({div:med==='pc'?1e3:med==='sh'?1:1e3,pctAxis:med==='sh'})}); c._med=med; c._rub=rub; c.options.plugins.legend.display=false; c.options.plugins.tooltip.callbacks.label=x=>' '+cmFmt(x.parsed.y,med); if(med==='pc') c.options.scales.y.title={display:true,text:'Miles de '+unitLabel()+' por habitante',color:css('--muted')}; else if(med==='tot') c.options.scales.y.title={display:true,text:'Miles de millones de '+unitLabel(),color:css('--muted')}; c.update(); }
+  else { c.data.labels=ord.map(x=>'Comuna '+x); c.data.datasets[0].data=ord.map(x=>V[x]); c.data.datasets[0].backgroundColor=ord.map(x=>col(V[x])); c.options.animation={duration:700,easing:'easeOutQuart'}; c.update(); }
+  document.getElementById('cm-rankcap').textContent=rl+', '+yLab(y)+'. '+({pc:'Por habitante',tot:'Total',sh:'% del total'})[med]+', '+unitLabel()+'.';
+  const top=ord[0], bot=ord[ord.length-1]; const ex=ord.filter(x=>x!=='1'&&x!=='4');
+  document.getElementById('cm-lead').innerHTML=`<b>Ojo con las Comunas 1 y 4:</b> ahí están las sedes del Gobierno, la Legislatura, los ministerios y la Policía, y el presupuesto les imputa buena parte del gasto central. Sacándolas, en ${yLab(y)} la comuna con más ${rl.toLowerCase()} por habitante es la ${ex.sort((a,b)=>cmMeasure(y,b,rub,'pc')-cmMeasure(y,a,rub,'pc'))[0]} y la que menos, la ${ex[ex.length-1]}. Elegí un rubro como Educación, Salud u Obras para ver dónde está la infraestructura: escuelas, hospitales y obras se registran donde funcionan.`;
+}
+function comunasStack(){
+  const y=CMY[CMI]; const G=CM.groups; const COLS=[...INF(),css('--m1'),css('--c8')];
+  const sh=CMC.map(c=>{const t=cmVal(y,c,'all'); return G.map((g,i)=>cmVal(y,c,'g'+i)/t*100);});
+  let c=charts['ch-cm-stack'];
+  if(!c){ c=mk('ch-cm-stack',{type:'bar',data:{labels:CMC.map(x=>'C'+x),datasets:G.map((g,i)=>({label:g,data:sh.map(r=>r[i]),backgroundColor:COLS[i%COLS.length],stack:'s'}))},options:baseOpts({pctAxis:true})}); c.options.scales.x.stacked=true; c.options.scales.y.stacked=true; c.options.scales.y.max=100; c.update(); }
+  else { G.forEach((g,i)=>c.data.datasets[i].data=sh.map(r=>r[i])); c.options.animation={duration:700,easing:'easeOutQuart'}; c.update(); }
+  document.getElementById('cm-compcap').textContent='Participación de cada rubro en el gasto registrado en cada comuna, '+yLab(y)+'.';
+  // zonas stack
+  const zs=ZK.map(z=>{const t=ZON[z].reduce((a,c)=>a+cmVal(y,c,'all'),0); return G.map((g,i)=>ZON[z].reduce((a,c)=>a+cmVal(y,c,'g'+i),0)/t*100);});
+  let z=charts['ch-cm-zstack'];
+  if(!z){ z=mk('ch-cm-zstack',{type:'bar',data:{labels:ZK,datasets:G.map((g,i)=>({label:g,data:zs.map(r=>r[i]),backgroundColor:COLS[i%COLS.length],stack:'s'}))},options:baseOpts({pctAxis:true,extra:{indexAxis:'y'}})}); const o=z.options; o.scales.x.stacked=true; o.scales.y.stacked=true; o.scales.x.max=100; o.scales.x.ticks.callback=v=>v+'%'; o.scales.y.ticks.callback=function(v){return this.getLabelForValue(v)}; o.scales.y.grid={display:false}; o.scales.x.grid={color:css('--line')}; o.interaction={mode:'index',axis:'y',intersect:false}; o.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': '+n1(x.parsed.x)+'%'; z.update(); }
+  else { G.forEach((g,i)=>z.data.datasets[i].data=zs.map(r=>r[i])); z.options.animation={duration:700,easing:'easeOutQuart'}; z.update(); }
+  document.getElementById('cm-zcap2').textContent='Participación de cada rubro en el gasto registrado en cada zona, '+yLab(y)+'.';
+}
+function comunasSel(){
+  const c=CMSEL, G=CM.groups, COLS=[...INF(),css('--m1'),css('--c8')];
+  document.getElementById('cm-seltitle').textContent='Comuna '+c; document.getElementById('cm-selcap').textContent=CM.map.c[c].barrios+'. Población 2022: '+CM.pop[c].toLocaleString('es-AR')+'. Zona: '+zOf(c)+'.';
+  const y=CMY[CMI]; const pc=cmVal(y,c,'all')*1e6/CM.pop[c]; const rk=[...CMC].sort((a,b)=>cmVal(y,b,'all')/CM.pop[b]-cmVal(y,a,'all')/CM.pop[a]).indexOf(c)+1;
+  const y0=CMY[0]; const g0=cmVal(y0,c,'all'), g1=cmVal(CMY.indexOf(2025)>=0?2025:y,c,'all');
+  document.getElementById('cm-selkpis').innerHTML=[['Gasto por habitante, '+yLab(y),'$'+Math.round(pc).toLocaleString('es-AR')],['Puesto entre 15',rk+'.º'],['Variación real '+y0+'–2025',pct(g1/g0-1)],['Educación + Salud, '+yLab(y),n1((cmVal(y,c,'g0')+cmVal(y,c,'g1'))/cmVal(y,c,'all')*100)+'%']].map(k=>`<div><span>${k[0]}</span><b>${k[1]}</b></div>`).join('');
+  const ch=mk('ch-cm-comp',{type:'bar',data:{labels:CMY.map(yLab),datasets:G.map((g,i)=>({label:g,data:CMY.map(yy=>cmVal(yy,c,'g'+i)*1e6/CM.pop[c]),backgroundColor:COLS[i%COLS.length],stack:'s'}))},options:baseOpts({div:1e3,ytitle:'Miles de '+unitLabel()+' por habitante'})}); ch.options.scales.x.stacked=true; ch.options.scales.y.stacked=true; ch.options.plugins.legend.labels.font={size:10}; ch.options.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': $'+Math.round(x.parsed.y).toLocaleString('es-AR'); ch.update();
+  const P=(CM.progs[c]||[]); const f5=fac(2025); document.getElementById('cm-progs').innerHTML='<thead><tr><th>Programa</th><th class="n">2025</th></tr></thead><tbody>'+P.map(r=>`<tr><td>${r[1]}<div style="color:var(--muted);font-size:11.5px">${r[0]}</div></td><td class="n nw">${fmt(r[2]*f5)}</td></tr>`).join('')+'</tbody>';
+}
+function comunasZonas(){
+  const zsvg=document.getElementById('cm-zsvg'); if(!zsvg.innerHTML){ const zc=ZC(); zsvg.innerHTML=window._zmk(c=>zc[ZK.indexOf(zOf(c))],true); document.getElementById('cm-zleg').innerHTML=ZK.map((z,i)=>`<div><i style="background:${zc[i]}"></i>${z}: ${ZON[z].join(', ')}</div>`).join(''); }
+  const zc=ZC(); const pz=z=>ZON[z].reduce((a,c)=>a+CM.pop[c],0);
+  const c=mk('ch-cm-zline',{type:'line',data:{labels:CMY.map(yLab),datasets:ZK.map((z,i)=>({label:z,data:CMY.map(y=>ZON[z].reduce((a,c)=>a+cmVal(y,c,'all'),0)*1e6/pz(z)),borderColor:zc[i],backgroundColor:zc[i],borderWidth:3,pointRadius:4}))},options:baseOpts({div:1e3,ytitle:'Miles de '+unitLabel()+' por habitante'})});
+  c.options.plugins.tooltip.callbacks.label=x=>' '+x.dataset.label+': $'+Math.round(x.parsed.y).toLocaleString('es-AR'); c.update();
+  const exS=['8','9'], exN=['2','12','13','14']; const pcS=CMY.map(y=>exS.reduce((a,c)=>a+cmVal(y,c,'all'),0)*1e6/exS.reduce((a,c)=>a+CM.pop[c],0)), pcN=CMY.map(y=>exN.reduce((a,c)=>a+cmVal(y,c,'all'),0)*1e6/exN.reduce((a,c)=>a+CM.pop[c],0));
+  const L=CMY.length-1, y5=CMY.indexOf(2025);
+  document.getElementById('cm-zcap1').textContent='Gasto registrado en las comunas de cada zona dividido por su población (Censo 2022), '+unitLabel()+'. 2026: vigente.';
+  document.getElementById('cm-zlead').innerHTML=`Sur: Comunas 4, 8 y 9. Norte: 2, 12, 13 y 14. Oeste: 7, 10 y 11. Este (centro): 1, 3, 5, 6 y 15. Sur y Este quedan arriba porque incluyen las Comunas 4 y 1, donde se registra el gasto central. <b>Sin la Comuna 4, el sur (Comunas 8 y 9) registró en 2025 $${Math.round(pcS[y5]).toLocaleString('es-AR')} por habitante, contra $${Math.round(pcN[y5]).toLocaleString('es-AR')} del norte</b>.`;
+}
+function comunasYear(){ comunasPaint(); comunasStack(); comunasSel(); }
+function comunas(){ if(charts['ch-cm-rank']){charts['ch-cm-rank'].destroy(); delete charts['ch-cm-rank'];} if(charts['ch-cm-stack']){charts['ch-cm-stack'].destroy(); delete charts['ch-cm-stack'];} if(charts['ch-cm-zstack']){charts['ch-cm-zstack'].destroy(); delete charts['ch-cm-zstack'];} comunasYear(); comunasZonas(); }
 
 // ======== Pauta oficial
 function pauta(){
@@ -1351,17 +1479,17 @@ document.getElementById('a27-foco').addEventListener('click',e=>{const b=e.targe
 // ---------- tabs
 document.documentElement.lang='es';
 let TAB='p27';
-function showTab(t,scroll){TAB=t;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));['p27','ej','tb','pn'].forEach(k=>document.getElementById('tab-'+k).hidden=t!==k);try{localStorage.setItem('ceer-tab',t)}catch(e){} renderAll(); if(scroll)window.scrollTo(0,0);}
+function showTab(t,scroll){TAB=t;document.querySelectorAll('[data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===t));['p27','ej','tb','pn','cm'].forEach(k=>document.getElementById('tab-'+k).hidden=t!==k);try{localStorage.setItem('ceer-tab',t)}catch(e){} renderAll(); if(scroll)window.scrollTo(0,0);}
 document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>showTab(b.dataset.tab,true)));
 // ---------- render all
-function renderAll(){ themeChart(); kpis(); if(TAB==='p27'){cmp(); caifChart(); promCharts(); recCharts(); ajustes27(); pauta(); practica();} if(TAB==='ej'){recCharts(); gastoCharts(); subejec(); empleo(); fisCharts();} if(TAB==='pn'){recCharts(); provincias();} if(TAB==='tb'){ministerio(); deuda(); lupa(); tb();} }
+function renderAll(){ themeChart(); kpis(); if(TAB==='p27'){cmp(); caifChart(); promCharts(); recCharts(); ajustes27(); pauta(); practica();} if(TAB==='ej'){recCharts(); gastoCharts(); subejec(); empleo(); fisCharts();} if(TAB==='pn'){recCharts(); provincias();} if(TAB==='cm'){comunas();} if(TAB==='tb'){ministerio(); deuda(); lupa(); tb();} }
 document.querySelectorAll('.card, .prom, .conc li, .minikpis, .kpis').forEach(el=>{ if(el.closest('.eqgrid')) return; el.classList.add('reveal'); watch(el); });
 initPeriodUI(k=>{ if(k==='per'){const t=document.getElementById('tb-trim'); if(t) t.value=PERIOD==='ytd'?'last':'4';} renderAll(); }); initPNG();
 if(PERIOD==='ytd'){const t=document.getElementById('tb-trim'); if(t) t.value='last';}
 document.querySelectorAll('[data-u]').forEach(b=>{b.setAttribute('aria-pressed',b.dataset.u===U); b.addEventListener('click',()=>{U=b.dataset.u; try{localStorage.setItem('ceer-unit',U);}catch(e){} document.querySelectorAll('[data-u]').forEach(x=>x.setAttribute('aria-pressed',x===b)); renderAll();});});
 document.getElementById('themebtn').addEventListener('click',()=>{const r=document.documentElement; const cur=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'); r.setAttribute('data-theme',cur==='dark'?'light':'dark'); renderAll();});
 matchMedia('(prefers-color-scheme: light)').addEventListener('change',renderAll);
-try{const h=location.hash.replace('#',''); let st=localStorage.getItem('ceer-tab'); if(st==='sg')st='p27'; if(h==='ejecucion')TAB='ej'; else if(h==='presupuesto')TAB='p27'; else if(h==='tablero')TAB='tb'; else if(h==='nacional')TAB='pn'; else if(st)TAB=st;}catch(e){}
+try{const h=location.hash.replace('#',''); let st=localStorage.getItem('ceer-tab'); if(st==='sg')st='p27'; if(h==='ejecucion')TAB='ej'; else if(h==='presupuesto')TAB='p27'; else if(h==='tablero')TAB='tb'; else if(h==='nacional')TAB='pn'; else if(h==='comunas')TAB='cm'; else if(st)TAB=st;}catch(e){}
 showTab(TAB,false);
 })();
 </script>
